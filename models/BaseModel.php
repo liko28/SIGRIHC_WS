@@ -16,7 +16,7 @@ class BaseModel {
      */
     function __construct(Connection $connection, $tableName = NULL, $schema = NULL) {
         $this->setTableName($tableName);
-        $this->setSchema($schema);
+        $this->setSchema($schema ? $schema : $connection->getSchema());
         $this->connection = $connection;
     }
 
@@ -111,7 +111,7 @@ class BaseModel {
         if ($this->connection) {
             $preparedStatement = db2_prepare($this->connection->getConnectionResource(), utf8_encode(db2_escape_string($sql)));
             if ($preparedStatement) {
-                $executedStatement = db2_execute($preparedStatement);
+                $executedStatement = db2_execute($preparedStatement,'SET SCHEMA '.$this->schema);
                 if ($executedStatement) {
                     //For INSERT
                     if (strpos($sql,"INSERT") !== false) {

@@ -18,14 +18,25 @@ class Connection {
     private $connectionString;
     private $connectionResource;
     private $options;
+    private $defaultSchema;
 
-    function __construct($bd = NULL, $host = NULL, $port = NULL, $userName = NULL, $password = NULL) {
+    /**
+     * Connection constructor.
+     * @param string $bd
+     * @param string $host
+     * @param integer $port
+     * @param string $userName
+     * @param string $password
+     * @param string $defaultSchema
+     */
+    function __construct($bd = NULL, $host = NULL, $port = NULL, $userName = NULL, $password = NULL, $defaultSchema = NULL) {
         $this->database = $bd;
         $this->host = $host;
         $this->port = $port;
         $this->userName = $userName;
         $this->password = $password;
-        $this->connectionString = "DRIVER={IBM DB2 ODBC DRIVER}; DATABASE={$this->database}; HOSTNAME={$this->host}; PORT={$this->port}; PROTOCOL=TCPIP; UID={$this->userName}; PWD={$this->password};";
+        $this->defaultSchema = $defaultSchema;
+        $this->connectionString = "DRIVER={IBM DB2 ODBC DRIVER}; DATABASE={$this->database}; HOSTNAME={$this->host}; PORT={$this->port}; PROTOCOL=TCPIP; UID={$this->userName}; PWD={$this->password}; SCHEMA={$this->defaultSchema}";
         $this->options = array("autocomit" => DB2_AUTOCOMMIT_OFF,"DB2_ATTR_CASE" => DB2_CASE_UPPER);
         try {
             $this->connect();
@@ -34,6 +45,10 @@ class Connection {
         }
     }
 
+    /**
+     * @throws \ErrorException
+     * @return void
+     */
     public function connect() {
         $this->connectionResource = db2_connect($this->connectionString,$this->userName,$this->password,$this->options);
         if(!$this->connectionResource) {
@@ -41,10 +56,16 @@ class Connection {
         }
     }
 
+    /**
+     * @return void
+     */
     public function disconnect() {
         db2_close($this->connectionResource);
     }
 
+    /**
+     * @return void
+     */
     public function __destruct() {
         $this->disconnect();
     }
@@ -176,4 +197,22 @@ class Connection {
     {
         $this->options = $options;
     }
+
+    /**
+     * @return string
+     */
+    public function getDefaultSchema()
+    {
+        return $this->defaultSchema;
+    }
+
+    /**
+     * @param string $defaultSchema
+     */
+    public function setDefaultSchema($defaultSchema)
+    {
+        $this->defaultSchema = $defaultSchema;
+    }
+
+
 }
