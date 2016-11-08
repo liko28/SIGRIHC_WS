@@ -5,6 +5,7 @@ namespace Model;
 class BaseModel {
     protected $tableName;
     protected $schema;
+    protected $primaryKey;
     protected $connection;
     protected $query;
     protected $result;
@@ -13,11 +14,13 @@ class BaseModel {
      * @param Connection $connection
      * @param string $tableName
      * @param string $schema
+     * @param mixed $primaryKey
      */
-    function __construct(Connection $connection, $tableName = NULL, $schema = NULL) {
+    function __construct(Connection $connection, $schema = null, $tableName = null, $primaryKey = null) {
         $this->setTableName($tableName);
         $this->setSchema($schema ? $schema : $connection->getSchema());
-        $this->connection = $connection;
+        $this->setConnection($connection);
+        $this->setPrimaryKey($primaryKey);
     }
 
     /**
@@ -100,6 +103,24 @@ class BaseModel {
     {
         $this->result = $result;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+    /**
+     * @param mixed $primaryKey
+     */
+    public function setPrimaryKey($primaryKey)
+    {
+        $this->primaryKey = $primaryKey;
+    }
+
+
 
     /**
      * @param string $sql
