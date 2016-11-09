@@ -1,6 +1,6 @@
 <?php
 
-namespace Model;
+namespace Models;
 
 class BaseModel {
     protected $tableName;
@@ -18,7 +18,7 @@ class BaseModel {
      */
     function __construct(Connection $connection, $schema = null, $tableName = null, $primaryKey = null) {
         $this->setTableName($tableName);
-        $this->setSchema($schema ? $schema : $connection->getSchema());
+        $this->setSchema($schema ? $schema : $connection->getDefaultSchema());
         $this->setConnection($connection);
         $this->setPrimaryKey($primaryKey);
     }
@@ -127,12 +127,13 @@ class BaseModel {
      * @param string $sqlName
      * @param bool $labels
      * @return void
+     * @throws \Exception
      * */
     function query($sql,$sqlName,$labels) {
-        if ($this->connection) {
-            $preparedStatement = db2_prepare($this->connection->getConnectionResource(), utf8_encode(db2_escape_string($sql)));
+        if ($this->getConnection()->getConnectionResource()) {
+            $preparedStatement = db2_prepare($this->getConnection()->getConnectionResource(), utf8_encode(db2_escape_string($sql)));
             if ($preparedStatement) {
-                $executedStatement = db2_execute($preparedStatement,'SET SCHEMA '.$this->schema);
+                $executedStatement = db2_execute($preparedStatement);
                 if ($executedStatement) {
                     //For INSERT
                     if (strpos($sql,"INSERT") !== false) {
@@ -154,10 +155,10 @@ class BaseModel {
                         $this->setResult($resultSet);
                     }
                 } else {
-                    throw new Exception('Falló la Ejecucion -'.$sqlName."-\n".'SQLSTATE:'.db2_stmt_error($executedStatement)."\n".'Mensaje de Error:'.db2_stmt_errormsg($executedStatement));
+                    throw new \Exception('Falló la Ejecucion -'.$sqlName."-\n".'SQLSTATE:'.db2_stmt_error($preparedStatement)."\n".'Mensaje de Error:'.db2_stmt_errormsg($preparedStatement));
                 }
             } else {
-                throw new Exception('Falló la Preparacion -'.$sqlName."-\n".'SQLSTATE:'.db2_stmt_error($preparedStatement)."-\n".'Mensaje de Error:'.db2_stmt_errormsg($preparedStatement));
+                throw new \Exception('Falló la Preparacion -'.$sqlName."-\n".'SQLSTATE:'.db2_stmt_error($preparedStatement)."-\n".'Mensaje de Error:'.db2_stmt_errormsg($preparedStatement));
             }
         }
     }

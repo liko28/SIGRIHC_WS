@@ -9,7 +9,7 @@
 namespace Controllers;
 
 
-use Model\BaseModel;
+use Models\BaseModel;
 
 class BaseController {
     /** @var  $model BaseModel */
@@ -20,13 +20,13 @@ class BaseController {
     }
 
     public function getById($id) {
-        $this->model->query("SELECT * FROM {$this->model->getSchema()} WHERE {$this->model->getPrimaryKey()} = {$id}",
+        $this->model->query("SELECT * FROM {$this->model->getSchema()}.{$this->model->getTableName()} WHERE {$this->model->getPrimaryKey()} = {$id}",
             "getById $id in {$this->model->getSchema()}.{$this->model->getTableName()}",
             true);
     }
 
     public function getByColumName($columnName, $value) {
-        $this->model->query("SELECT * FROM {$this->model->getSchema()} WHERE {$columnName} = {$value}");
+        $this->model->query("SELECT * FROM {$this->model->getSchema()}.{$this->model->getTableName()} WHERE {$columnName} = {$value}",get_class($this)." Column $columnName Value $value",true);
     }
 
     /**

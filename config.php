@@ -1,3 +1,6 @@
 <?php
 
-const CONNECTION_CREDENTIALS = array('BD' => 'SALUD', 'HOST' => '192.168.1.247', 'PORT' => 50000, 'USERNAME' => 'db2inst1', 'PASSWORD' => 'db2inst1', 'SCHEMA' => 'SALFAM2');
+//TEST
+//const CONNECTION_CREDENTIALS = array('SALUD', '192.168.1.247', 50000, 'db2inst1','db2inst1', 'SALFAM2');
+//PRODUCCION
+const CONNECTION_CREDENTIALS = array('SIGRI', '192.168.1.249', 50000, 'salfam','salfam2015', 'SALUD');

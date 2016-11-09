@@ -37,7 +37,7 @@ class Connection {
         $this->password = $password;
         $this->defaultSchema = $defaultSchema;
         $this->connectionString = "DRIVER={IBM DB2 ODBC DRIVER}; DATABASE={$this->database}; HOSTNAME={$this->host}; PORT={$this->port}; PROTOCOL=TCPIP; UID={$this->userName}; PWD={$this->password}; SCHEMA={$this->defaultSchema}";
-        $this->options = array("autocomit" => DB2_AUTOCOMMIT_OFF,"DB2_ATTR_CASE" => DB2_CASE_UPPER);
+        $this->options = array("AUTOCOMMIT" => DB2_AUTOCOMMIT_OFF,"DB2_ATTR_CASE" => DB2_CASE_UPPER);
         try {
             $this->connect();
         } catch (\ErrorException $e) {
@@ -52,7 +52,7 @@ class Connection {
     public function connect() {
         $this->connectionResource = db2_connect($this->connectionString,$this->userName,$this->password,$this->options);
         if(!$this->connectionResource) {
-            throw new \ErrorException(db2_conn_error(),db2_conn_errormsg());
+            throw new \ErrorException(db2_conn_error()." ".db2_conn_errormsg());
         }
     }
 
