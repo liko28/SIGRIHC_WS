@@ -50,9 +50,10 @@ class Connection {
      * @return void
      */
     public function connect() {
-        $this->connectionResource = db2_connect($this->connectionString,$this->userName,$this->password,$this->options);
+        $this->connectionResource = db2_connect($this->connectionString,'','');
         if(!$this->connectionResource) {
-            throw new \ErrorException(db2_conn_error()." ".db2_conn_errormsg());
+            //TODO especificar los errores de conexion
+            throw new \ErrorException("ERROR DE CONEXION: ".db2_conn_error().":".db2_conn_errormsg());
         }
     }
 

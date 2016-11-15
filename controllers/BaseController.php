@@ -19,16 +19,6 @@ class BaseController {
         $this->setModel($model);
     }
 
-    public function getById($id) {
-        $this->model->query("SELECT * FROM {$this->model->getSchema()}.{$this->model->getTableName()} WHERE {$this->model->getPrimaryKey()} = {$id}",
-            "getById $id in {$this->model->getSchema()}.{$this->model->getTableName()}",
-            true);
-    }
-
-    public function getByColumName($columnName, $value) {
-        $this->model->query("SELECT * FROM {$this->model->getSchema()}.{$this->model->getTableName()} WHERE {$columnName} = {$value}",get_class($this)." Column $columnName Value $value",true);
-    }
-
     /**
      * @return BaseModel
      */
@@ -43,6 +33,14 @@ class BaseController {
     public function setModel($model)
     {
         $this->model = $model;
+    }
+
+    public function convertToUtf8(&$item) {
+        if(is_array($item)) {
+            array_walk_recursive($item,'convertToUtf8');
+        } else {
+            utf8_encode($item);
+        }
     }
 
 

@@ -3,16 +3,14 @@
 namespace Helpers;
 
 
-use Controllers\UsersController;
-use Models\UsersModel;
+use Controllers\UsersController as Users;
 use Models\Connection;
 
 abstract class Authenticator {
     public function authenticate() {
-        $user = new UsersController(new Connection(...CONNECTION_CREDENTIALS));
         if($_SERVER['PHP_AUTH_USER']) {
-            $user->getByUserName("'{$_SERVER['PHP_AUTH_USER']}'");
-            if($user->getModel()->getResult()[0]['PASSWORD'] == $_SERVER['PHP_AUTH_PW']) {
+            $user = new Users(new Connection(...CONNECTION_CREDENTIALS));
+            if($user->getPassword($_SERVER['PHP_AUTH_USER']) == $_SERVER['PHP_AUTH_PW']) {
                 return true;
             } else {
                 return false;

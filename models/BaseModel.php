@@ -120,46 +120,11 @@ class BaseModel {
         $this->primaryKey = $primaryKey;
     }
 
+    public function query($sql) {
+        return $this->getConnection()->getConnectionResource()->query($sql);
+    }
 
-
-    /**
-     * @param string $sql
-     * @param string $sqlName
-     * @param bool $labels
-     * @return void
-     * @throws \Exception
-     * */
-    function query($sql,$sqlName,$labels) {
-        if ($this->getConnection()->getConnectionResource()) {
-            $preparedStatement = db2_prepare($this->getConnection()->getConnectionResource(), utf8_encode(db2_escape_string($sql)));
-            if ($preparedStatement) {
-                $executedStatement = db2_execute($preparedStatement);
-                if ($executedStatement) {
-                    //For INSERT
-                    if (strpos($sql,"INSERT") !== false) {
-                        $resultSet = db2_last_insert_id($this->connection->getConnectionResource());
-                        $this->setResult($resultSet);
-                    }
-                    //For SELECT
-                    if (strpos($sql,"SELECT") !== false) {
-                        $resultSet = array();
-                        if ($labels && $labels == true) {
-                            while ($result = db2_fetch_assoc($preparedStatement)) {
-                                array_push($resultSet, $result);
-                            }
-                        } else {
-                            while ($result = db2_fetch_array($preparedStatement)) {
-                                array_push($resultSet, $result);
-                            }
-                        }
-                        $this->setResult($resultSet);
-                    }
-                } else {
-                    throw new \Exception('Falló la Ejecucion -'.$sqlName."-\n".'SQLSTATE:'.db2_stmt_error($preparedStatement)."\n".'Mensaje de Error:'.db2_stmt_errormsg($preparedStatement));
-                }
-            } else {
-                throw new \Exception('Falló la Preparacion -'.$sqlName."-\n".'SQLSTATE:'.db2_stmt_error($preparedStatement)."-\n".'Mensaje de Error:'.db2_stmt_errormsg($preparedStatement));
-            }
-        }
+    public function getRow($sql) {
+        return \JsonSerializable::
     }
 }

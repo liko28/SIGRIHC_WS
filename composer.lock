@@ -4,9 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "23c69ba96f0e5e545430e9ed8cb1528d",
-    "content-hash": "193120e77f0ae2d93f56e64c07757b92",
+    "hash": "802b39347586381375ffd1fb631d02f6",
+    "content-hash": "f68081f034004328478b40d7fb85e9e4",
     "packages": [
+        {
+            "name": "adodb/adodb-php",
+            "version": "v5.20.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ADOdb/ADOdb.git",
+                "reference": "5022ed61cdda0950b404bedb01c52020f736526f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ADOdb/ADOdb/zipball/5022ed61cdda0950b404bedb01c52020f736526f",
+                "reference": "5022ed61cdda0950b404bedb01c52020f736526f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "adodb.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "John Lim",
+                    "email": "jlim@natsoft.com",
+                    "role": "Author"
+                },
+                {
+                    "name": "Damien Regad",
+                    "role": "Current maintainer"
+                },
+                {
+                    "name": "Mark Newnham",
+                    "role": "Developer"
+                }
+            ],
+            "description": "ADOdb is a PHP database abstraction layer library",
+            "homepage": "http://adodb.org/",
+            "keywords": [
+                "abstraction",
+                "database",
+                "layer",
+                "library",
+                "php"
+            ],
+            "time": "2016-09-20 06:29:42"
+        },
         {
             "name": "container-interop/container-interop",
             "version": "1.1.0",

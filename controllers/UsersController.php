@@ -9,7 +9,7 @@
 namespace Controllers;
 
 
-use Models\Connection;
+use Models\Connection as Connection;
 use Models\UsersModel;
 
 class UsersController extends BaseController {
@@ -19,8 +19,11 @@ class UsersController extends BaseController {
     }
 
     public function getByUserName($userName) {
-        //$this->getByColumName('NOMBRE',$userName);
-        $this->getModel()->query("SELECT * FROM {$this->getModel()->getSchema()}.{$this->getModel()->getTableName()} WHERE NOMBRE = $userName",get_class($this)." $userName",true);
+        return $this->getModel()->getByUserName($userName);
+    }
+
+    public function getPassword($userName) {
+        return $this->getModel()->getPassword($userName)['PASSWORD'];
     }
 
 

@@ -10,4 +10,11 @@ class UsersModel extends BaseModel {
         $this->setPrimaryKey("ID");
     }
 
+    public function getByUserName($userName) {
+        return $this->getConnection()->getConnectionResource()->getRow("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE NOMBRE = ?",$userName);
+    }
+
+    public function getPassword($userName) {
+        return $this->getConnection()->getConnectionResource()->getRow("SELECT PASSWORD FROM {$this->getSchema()}.{$this->getTableName()} WHERE NOMBRE = ?", $userName);
+    }
 }
