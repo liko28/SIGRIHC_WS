@@ -13,7 +13,7 @@ use Models\BaseModel;
 
 class BaseController {
     /** @var  $model BaseModel */
-    private $model;
+    protected $model;
 
     public function __construct(BaseModel $model) {
         $this->setModel($model);
