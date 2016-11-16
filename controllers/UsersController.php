@@ -19,11 +19,11 @@ class UsersController extends BaseController {
     }
 
     public function getByUserName($userName) {
-        return $this->getModel()->getByUserName($userName);
+        return $this->model->getByUserName($userName);
     }
 
     public function getPassword($userName) {
-        return $this->getModel()->getPassword($userName)['PASSWORD'];
+        return $this->model->getPassword($userName)[0]->PASSWORD;
     }
 
 
