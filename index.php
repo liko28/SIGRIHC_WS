@@ -8,11 +8,8 @@ use Models\Connection as Connection;
 use Helpers\Authenticator as Authenticator;
 use Controllers\ReferenceListController as ReferenceList;
 
-/** Configuracion de Errores detallados */
-$config['displayErrorDetails'] = true;
-
 /** Instanciacion de la APP $app */
-$app = new \Slim\App(["settings" => $config]);
+$app = new \Slim\App(CONFIG);
 
 /** Contenedor de Custom Classes*/
 $container = $app->getContainer();
@@ -25,9 +22,13 @@ $container['db'] = function () {
 /** Error 500 */
 $container['errorHandler'] = function ($c) {
   return function ($request, $response, $exception) use ($c) {
-      return $c['response']->withStatus(500)
-          ->write("ERROR\n")
-          ->write($exception);
+        if($c->get('settings')['displayErrorDetails']) {
+            return $c['response']->withStatus(500)
+                ->withJson($exception);
+        } else {
+            return $c['response']->withStatus(500)
+                ->withJson(array("ERROR" => $exception->getMessage()));
+        }
   };
 };
 
@@ -67,7 +68,7 @@ $app->get('/test', function(Request $request, Response $response) {
     $customArray = new \Helpers\CustomArray();
     $customArray["UNO"] = ["DOS"=>"TRES"];
     $customArray[] = "DOS";
-    return $response->withJson($customArray->values());
+    return $response->withJson($customArray);
 });
 
 

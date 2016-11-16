@@ -1,7 +1,6 @@
 {
     "require": {
-        "slim/slim": "^3.5",
-        "adodb/adodb-php": "^5.20"
+        "slim/slim": "^3.5"
     },
     "autoload": {
       "psr-4": {
