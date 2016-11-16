@@ -17,7 +17,11 @@ class ReferenceListController extends BaseController {
     }
 
     public function getAll() {
-        $res = $this->getModel()->getAll()->getArray();
-        return $res;
+        return $this->model->getAll();
+    }
+
+    public function getUpdates($lastSyncDate){
+        $lastSyncDate = new \DateTime($lastSyncDate);
+        return $this->model->getUpdates($lastSyncDate->format('Y-m-d H:i:s'));
     }
 }
