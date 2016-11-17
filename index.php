@@ -59,6 +59,12 @@ $container['logger'] = function ($c) {
     $logger = new Logger($c['userName']);
     return $logger->getInstance();
 };
+/**
+ *************
+ * MIDDLEWARE *
+ * ***********
+ **/
+$app->add();
 
 /**
  *************
