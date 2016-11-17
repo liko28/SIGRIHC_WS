@@ -36,7 +36,7 @@ $container['errorHandler'] = function ($c) {
 $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
         return $c['response']->withStatus(404)
-            ->write(ERROR_404);
+            ->withJson(array("ERROR"=>ERROR_404));
     };
 };
 
