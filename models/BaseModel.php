@@ -176,12 +176,11 @@ class BaseModel{
      */
     public function query($SQLsentence,...$arguments) {
         $this->setQuery($SQLsentence);
-        $one = 1;
         if($this->connection->getConnectionResource()) {
             $preparedStmt = db2_prepare($this->connection->getConnectionResource(),$SQLsentence);
-            foreach ($arguments as $index => $argument) {
+            foreach ($arguments as $argument) {
                 $parameters[] = $argument;
-                $this->setQuery(str_replace('?',$argument,$this->getQuery(),$one));
+                $this->query = substr_replace($this->query,$argument,strpos($this->query,'?'),strlen('?'));
             }
             if($preparedStmt) {
                 if($this->execute($preparedStmt,$parameters)) {
@@ -225,11 +224,10 @@ class BaseModel{
     /** @param array $parameters
      * @return bool
      */
-    public function execute(&$preparedStmt,&$parameters = null){
-        if(is_null($parameters)) {
-            return db2_execute($preparedStmt);
-        } else {
+    public function execute(&$preparedStmt,$parameters){
+        if(is_array($parameters)) {
             return db2_execute($preparedStmt,$parameters);
         }
+        return db2_execute($preparedStmt);
     }
 }

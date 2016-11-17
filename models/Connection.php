@@ -54,7 +54,6 @@ class Connection {
     public function connect() {
         $this->connectionResource = db2_connect($this->connectionString,'','');
         if(!$this->connectionResource) {
-            //TODO especificar los errores de conexion
             throw new \ErrorException("ERROR DE CONEXION: ".db2_conn_error().":".db2_conn_errormsg());
         }
     }
