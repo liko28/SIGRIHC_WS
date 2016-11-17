@@ -72,6 +72,7 @@ $app->get('/ReferenceList/get/all', function(Request $request, Response $respons
         $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
         return $response->withJson($referenceList->getAll());
     } else {
+        $this->logger->addError(ERROR_AUTH,array("userName"=>$this->userName,"password"=>$this->password));
         return $response->withStatus(401)->withJson(ERROR_AUTH);
     }
 });
@@ -83,6 +84,7 @@ $app->get('/ReferenceList/get/updates/{lastSyncDate}', function(Request $request
         $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
         return $response->withJson($referenceList->getUpdates($lastSyncDate));
     } else {
+        $this->logger->addError(ERROR_AUTH,array("userName"=>$this->userName,"password"=>$this->password));
         return $response->withStatus(401)->withJson(ERROR_AUTH);
     }
 });
