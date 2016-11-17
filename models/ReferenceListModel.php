@@ -20,6 +20,6 @@ class ReferenceListModel extends BaseModel {
 
     /** @return CustomArray */
     public function getUpdates($lastSyncDate) {
-        return $this->query("SELECT {$this->getColumns('ID_LISTA','PADRE','DESCRIPCION','CODLISTA','VALOR','ESTADO')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN '?' AND '?' OR FECCREA BETWEEN '?' AND '?'",$lastSyncDate,'CURRENT_TIMESTAMP',$lastSyncDate,'CURRENT_TIMESTAMP');
+        return $this->query("SELECT {$this->getColumns('ID_LISTA','PADRE','DESCRIPCION','CODLISTA','VALOR','ESTADO')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND ?",$lastSyncDate,CURRENT_TIMESTAMP);
     }
 }

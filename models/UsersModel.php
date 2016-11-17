@@ -15,7 +15,7 @@ class UsersModel extends BaseModel {
 
     /** @return CustomArray */
     public function getByUserName($userName) {
-        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE NOMBRE = '?'",$userName);
+        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE NOMBRE = ?",$userName);
     }
 
     /** @return CustomArray */

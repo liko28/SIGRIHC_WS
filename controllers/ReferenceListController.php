@@ -21,7 +21,8 @@ class ReferenceListController extends BaseController {
      * @param string $lastSyncDate
      * @return CustomArray */
     public function getUpdates($lastSyncDate){
-        $lastSyncDate = new \DateTime($lastSyncDate);
-        return $this->model->getUpdates($lastSyncDate->format('Y-m-d H:i:s'));
+        $_lastSyncDate = new \DateTime();
+        $_lastSyncDate->setTimeStamp($lastSyncDate);
+        return $this->model->getUpdates($_lastSyncDate->format('Y-m-d-H.i.s'));
     }
 }

@@ -139,8 +139,8 @@ class BaseModel{
      * */
     public function getColumns(...$columns)
     {
+        $filteredColumns = new CustomArray();
         foreach ($columns as $column) {
-            $filteredColumns = new CustomArray();
             if(array_key_exists($column,$this->getColumns())) {
                 $filteredColumns[$column] = $column;
             } else {
@@ -175,10 +175,13 @@ class BaseModel{
      * @throws \ErrorException
      */
     public function query($SQLsentence,...$arguments) {
+        $this->setQuery($SQLsentence);
+        $one = 1;
         if($this->connection->getConnectionResource()) {
             $preparedStmt = db2_prepare($this->connection->getConnectionResource(),$SQLsentence);
             foreach ($arguments as $index => $argument) {
                 $parameters[] = $argument;
+                $this->setQuery(str_replace('?',$argument,$this->getQuery(),$one));
             }
             if($preparedStmt) {
                 if($this->execute($preparedStmt,$parameters)) {
@@ -222,7 +225,7 @@ class BaseModel{
     /** @param array $parameters
      * @return bool
      */
-    public function execute($preparedStmt,$parameters = null){
+    public function execute(&$preparedStmt,&$parameters = null){
         if(is_null($parameters)) {
             return db2_execute($preparedStmt);
         } else {

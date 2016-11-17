@@ -84,21 +84,21 @@ $app->add(function (Request $request, Response $response, $next){
 /** Lista de Referencia Todos los Registros */
 $app->get('/ReferenceList/get/all', function(Request $request, Response $response){
     $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
-    return $response->withJson($referenceList->getAll());
+    return $response->withJson($referenceList->getAll()->values());
 });
 
 /** Lista de Referencia Registros Actualizados*/
 $app->get('/ReferenceList/get/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
     $lastSyncDate = $args['lastSyncDate'];
     $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
-    return $response->withJson($referenceList->getUpdates($lastSyncDate));
+    return $response->withJson($referenceList->getUpdates($lastSyncDate)->values());
 });
 
 /** Pruebas */
 $app->get('/test', function(Request $request, Response $response) {
     $customArray = new \Helpers\CustomArray();
     $customArray["UNO"] = ["DOS"=>"TRES"];
-    $customArray[] = "DOS";
+    $customArray["CUATRO"] = ["CINCO","SEIS"];
     $this->logger->addInfo($request->getUri(),array('response' => $customArray));
     return $response->withJson($customArray);
 });
