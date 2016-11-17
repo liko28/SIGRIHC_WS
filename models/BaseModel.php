@@ -6,19 +6,19 @@ use Helpers\CustomArray;
 use Helpers\Row;
 
 class BaseModel{
-    /** @var null|string  */
+    /** @var null|string */
     protected $tableName;
-    /** @var null|string  */
+    /** @var null|string */
     protected $schema;
-    /** @var mixed|null  */
+    /** @var mixed|null */
     protected $primaryKey;
-    /** @var Connection  */
+    /** @var Connection */
     protected $connection;
-    /** @var  string */
+    /** @var string */
     protected $query;
-    /** @var CustomArray  */
+    /** @var CustomArray */
     protected $result;
-    /** @var  CustomArray */
+    /** @var CustomArray */
     protected $columns;
 
     /**
@@ -168,6 +168,12 @@ class BaseModel{
         }
     }
 
+    /**
+     * @param string $SQLsentence
+     * @param mixed $arguments
+     * @return string|CustomArray|bool
+     * @throws \ErrorException
+     */
     public function query($SQLsentence,...$arguments) {
         if($this->connection->getConnectionResource()) {
             $preparedStmt = db2_prepare($this->connection->getConnectionResource(),$SQLsentence);
@@ -199,7 +205,7 @@ class BaseModel{
                             //Caso si Update
                             break;
                         default:
-                            return array("hola");
+                            return true;
                         break;
                     }
                 }else {
@@ -213,6 +219,9 @@ class BaseModel{
         }
     }
 
+    /** @param array $parameters
+     * @return bool
+     */
     public function execute($preparedStmt,$parameters = null){
         if(is_null($parameters)) {
             return db2_execute($preparedStmt);

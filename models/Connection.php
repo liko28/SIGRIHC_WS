@@ -1,23 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ramiro
- * Date: 3/11/16
- * Time: 12:42 PM
- */
 
 namespace Models;
 
-
 class Connection {
+    /** @var null|string $database */
     private $database;
+    /** @var null|string $host */
     private $host;
+    /** @var int|null $port */
     private $port;
+    /** @var null|string $userName */
     private $userName;
+    /** @var null|string $password */
     private $password;
+    /** @var string $connectionString */
     private $connectionString;
+    /** @var mixed $connectionResource */
     private $connectionResource;
+    /** @var array $options*/
     private $options;
+    /** @var null|string $defaultSchema */
     private $defaultSchema;
 
     /**
@@ -214,6 +216,4 @@ class Connection {
     {
         $this->defaultSchema = $defaultSchema;
     }
-
-
 }
