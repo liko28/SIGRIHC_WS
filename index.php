@@ -64,7 +64,16 @@ $container['logger'] = function ($c) {
  * MIDDLEWARE *
  * ***********
  **/
-$app->add();
+
+/** Autenticacion */
+$app->add(function (Request $request, Response $response, $next){
+    if(Authenticator::authenticate()) {
+        return $next($request, $response);
+    } else {
+        $this->logger->addError(ERROR_AUTH,array("userName"=>$this->userName,"password"=>$this->password));
+        return $response->withStatus(401)->withJson(ERROR_AUTH);
+    }
+});
 
 /**
  *************
@@ -74,25 +83,15 @@ $app->add();
 
 /** Lista de Referencia Todos los Registros */
 $app->get('/ReferenceList/get/all', function(Request $request, Response $response){
-    if(Authenticator::authenticate()) {
-        $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
-        return $response->withJson($referenceList->getAll());
-    } else {
-        $this->logger->addError(ERROR_AUTH,array("userName"=>$this->userName,"password"=>$this->password));
-        return $response->withStatus(401)->withJson(ERROR_AUTH);
-    }
+    $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
+    return $response->withJson($referenceList->getAll());
 });
 
 /** Lista de Referencia Registros Actualizados*/
 $app->get('/ReferenceList/get/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
     $lastSyncDate = $args['lastSyncDate'];
-    if(Authenticator::authenticate()) {
-        $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
-        return $response->withJson($referenceList->getUpdates($lastSyncDate));
-    } else {
-        $this->logger->addError(ERROR_AUTH,array("userName"=>$this->userName,"password"=>$this->password));
-        return $response->withStatus(401)->withJson(ERROR_AUTH);
-    }
+    $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
+    return $response->withJson($referenceList->getUpdates($lastSyncDate));
 });
 
 /** Pruebas */
