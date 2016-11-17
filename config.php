@@ -6,7 +6,6 @@
 //PRODUCCION
 const CONNECTION_CREDENTIALS = array('SIGRI', '192.168.1.249', 50000, 'salfam','salfam2015', 'SALUD');
 
-
 /** Labels Columnas DAO */
 const LABELS = true;
 
@@ -17,4 +16,4 @@ const ERROR_404 = "ELEMENTO NO ENCONTRADO";
 
 /** Configuracion de Slim */
 /** Errores detallados */
-const CONFIG = array("settings" => array("displayErrorDetails" => false));
+const CONFIG = array("settings" => array("displayErrorDetails" => true));
