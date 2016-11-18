@@ -4,12 +4,12 @@ namespace Controllers;
 
 use Helpers\CustomArray;
 use Models\Connection as Connection;
-use Models\UsersModel;
+use Models\UserModel;
 
-class UsersController extends BaseController {
+class UserController extends BaseController {
     /** @param Connection $connection */
     public function __construct(Connection $connection) {
-        parent::__construct(new UsersModel($connection));
+        parent::__construct(new UserModel($connection));
     }
 
     /**

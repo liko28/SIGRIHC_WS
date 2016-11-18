@@ -4,7 +4,7 @@ namespace Models;
 
 use Helpers\CustomArray;
 
-class UsersModel extends BaseModel {
+class UserModel extends BaseModel {
     /** @param Connection $connection */
     public function __construct(Connection $connection) {
         parent::__construct($connection);

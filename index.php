@@ -2,12 +2,13 @@
 include "vendor/autoload.php";
 include "config.php";
 
-use Controllers\ReferenceListController as ReferenceList;
 use Helpers\Authenticator as Authenticator;
 use Helpers\Logger as Logger;
 use Models\Connection as Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Controllers\ReferenceListController as ReferenceList;
+use Controllers\MunicipioController as Municipio;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -50,7 +51,7 @@ $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
         $c['logger']->addError($request->getUri(),array("ERROR"=>ERROR_404));
         return $c['response']->withStatus(404)
-            ->withJson(array("ERROR"=>ERROR_404));
+            ->withJson(ERROR_404);
     };
 };
 
@@ -83,15 +84,27 @@ $app->add(function (Request $request, Response $response, $next){
 
 /** Lista de Referencia Todos los Registros */
 $app->get('/ReferenceList/get/all', function(Request $request, Response $response){
-    $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
+    $referenceList = new ReferenceList($this->db);
     return $response->withJson($referenceList->getAll()->values());
 });
 
 /** Lista de Referencia Registros Actualizados*/
 $app->get('/ReferenceList/get/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
     $lastSyncDate = $args['lastSyncDate'];
-    $referenceList = new ReferenceList(new Connection(...CONNECTION_CREDENTIALS));
+    $referenceList = new ReferenceList($this->db);
     return $response->withJson($referenceList->getUpdates($lastSyncDate)->values());
+});
+
+/** Municipios */
+$app->get('/Municipios/get/all', function (Request $request, Response $response) {
+    $municipios = new Municipio($this->db);
+    return $response->withJson($municipios->getAll()->values());
+});
+
+$app->get('/Municipios/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+    $lastSyncDate = $args['lastSyncDate'];
+    $municipios = new Municipio($this->db);
+    return $response->withJson($municipios->getUpdates($lastSyncDate)->values());
 });
 
 /** Pruebas */

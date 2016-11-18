@@ -12,8 +12,8 @@ const LABELS = true;
 /** Mensajes */
 const ERROR_AUTH = array("ERROR" => "USARIO/CONTRASEÑA INVALIDOS");
 const ERROR_CONN = array("ERROR" => "NO SE PUEDE CONECTAR AL SERVIDOR");
-const ERROR_404 = "ELEMENTO NO ENCONTRADO";
+const ERROR_404 = array("ERROR" => "ELEMENTO NO ENCONTRADO");
 
 /** Configuracion de Slim */
 /** Errores detallados */
-const CONFIG = array("settings" => array("displayErrorDetails" => false));
+const CONFIG = array("settings" => array("displayErrorDetails" => true));
