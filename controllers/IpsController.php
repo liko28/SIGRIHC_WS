@@ -10,12 +10,12 @@ namespace Controllers;
 
 
 use Models\Connection;
-use Models\AreaModel;
+use Models\IpsModel;
 
 class IpsController extends BaseController {
     /** @param Connection $connection */
     public function __construct(Connection $connection) {
-        parent::__construct(new AreaModel($connection));
+        parent::__construct(new IpsModel($connection));
     }
 
     /** @return CustomArray */
