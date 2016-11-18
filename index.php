@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Controllers\ReferenceListController as ReferenceList;
 use Controllers\MunicipioController as Municipio;
 use Controllers\DepartamentoController as Departamento;
+use Controllers\CIE10Controller as CIE10;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -118,6 +119,12 @@ $app->get('/Departamentos/get/updates/{lastSyncDate}', function (Request $reques
     $lastSyncDate = $args['lastSyncDate'];
     $departamentos = new Departamento($this->db);
     return $response->withJson($departamentos->getUpdates($lastSyncDate)->values());
+});
+
+/** CIE10 */
+$app->get('/CIE10/get/all', function (Request $request, Response $response) {
+    $cie10 = new CIE10($this->db);
+    return $response->withJson($cie10->getAll()->values());
 });
 
 /** Pruebas */
