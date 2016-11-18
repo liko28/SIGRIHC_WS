@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Controllers\ReferenceListController as ReferenceList;
 use Controllers\MunicipioController as Municipio;
+use Controllers\DepartamentoController as Departamento;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -105,6 +106,18 @@ $app->get('/Municipios/get/updates/{lastSyncDate}', function (Request $request, 
     $lastSyncDate = $args['lastSyncDate'];
     $municipios = new Municipio($this->db);
     return $response->withJson($municipios->getUpdates($lastSyncDate)->values());
+});
+
+/** Departamentos */
+$app->get('/Departamentos/get/all', function (Request $request, Response $response) {
+    $departamentos = new Departamento($this->db);
+    return $response->withJson($departamentos->getAll()->values());
+});
+
+$app->get('/Departamentos/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+    $lastSyncDate = $args['lastSyncDate'];
+    $departamentos = new Departamento($this->db);
+    return $response->withJson($departamentos->getUpdates($lastSyncDate)->values());
 });
 
 /** Pruebas */
