@@ -11,6 +11,7 @@ use Controllers\ReferenceListController as ReferenceList;
 use Controllers\MunicipioController as Municipio;
 use Controllers\DepartamentoController as Departamento;
 use Controllers\CIE10Controller as CIE10;
+use Controllers\AreaController as Area;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -125,6 +126,18 @@ $app->get('/Departamentos/get/updates/{lastSyncDate}', function (Request $reques
 $app->get('/CIE10/get/all', function (Request $request, Response $response) {
     $cie10 = new CIE10($this->db);
     return $response->withJson($cie10->getAll()->values());
+});
+
+/** Areas */
+$app->get('/Areas/get/all', function (Request $request, Response $response) {
+    $areas = new Area($this->db);
+    return $response->withJson($areas->getAll()->values());
+});
+
+$app->get('/Areas/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+    $lastSyncDate = $args['lastSyncDate'];
+    $areas = new Area($this->db);
+    return $response->withJson($areas->getUpdates($lastSyncDate)->values());
 });
 
 /** Pruebas */
