@@ -12,6 +12,7 @@ use Controllers\MunicipioController as Municipio;
 use Controllers\DepartamentoController as Departamento;
 use Controllers\CIE10Controller as CIE10;
 use Controllers\AreaController as Area;
+use Controllers\IpsController as Ips;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -138,6 +139,18 @@ $app->get('/Areas/get/updates/{lastSyncDate}', function (Request $request, Respo
     $lastSyncDate = $args['lastSyncDate'];
     $areas = new Area($this->db);
     return $response->withJson($areas->getUpdates($lastSyncDate)->values());
+});
+
+/** Ips */
+$app->get('/Ips/get/all', function (Request $request, Response $response) {
+    $ips = new Ips($this->db);
+    return $response->withJson($ips->getAll()->values());
+});
+
+$app->get('/Ips/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+    $lastSyncDate = $args['lastSyncDate'];
+    $ips = new Ips($this->db);
+    return $response->withJson($ips->getUpdates($lastSyncDate)->values());
 });
 
 /** Pruebas */
