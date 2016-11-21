@@ -13,6 +13,7 @@ use Controllers\DepartamentoController as Departamento;
 use Controllers\CIE10Controller as CIE10;
 use Controllers\AreaController as Area;
 use Controllers\IpsController as Ips;
+use Controllers\UserTypeController as UserType;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -127,6 +128,12 @@ $app->get('/Departamentos/get/updates/{lastSyncDate}', function (Request $reques
 $app->get('/CIE10/get/all', function (Request $request, Response $response) {
     $cie10 = new CIE10($this->db);
     return $response->withJson($cie10->getAll()->values());
+});
+
+/** Tipos de Usuario */
+$app->get('UserType/get/all', function(Request $request, Response $response){
+    $tiposUsuario = new UserType($this->db);
+    return $response->withJson($tiposUsuario->getAll()->values());
 });
 
 /** Areas */
