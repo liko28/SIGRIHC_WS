@@ -14,6 +14,8 @@ use Controllers\CIE10Controller as CIE10;
 use Controllers\AreaController as Area;
 use Controllers\IpsController as Ips;
 use Controllers\UserTypeController as UserType;
+use Controllers\NovedadesTipoController as NovedadesTipo;
+use Controllers\NovedadesListaController as NovedadesLista;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -115,11 +117,11 @@ $app->group('/Municipios/get', function () {
 
 /** Departamentos */
 $app->group('/Departamentos/get', function () {
-    $this->get('/Departamentos/get/all', function (Request $request, Response $response) {
+    $this->get('/get/all', function (Request $request, Response $response) {
         $departamentos = new Departamento($this->db);
         return $response->withJson($departamentos->getAll()->values());
     });
-    $this->get('/Departamentos/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
         $lastSyncDate = $args['lastSyncDate'];
         $departamentos = new Departamento($this->db);
         return $response->withJson($departamentos->getUpdates($lastSyncDate)->values());
@@ -140,11 +142,11 @@ $app->get('/UserType/get/all', function(Request $request, Response $response){
 
 /** Areas */
 $app->group('/Areas/get', function () {
-    $this->get('/Areas/get/all', function (Request $request, Response $response) {
+    $this->get('/all', function (Request $request, Response $response) {
         $areas = new Area($this->db);
         return $response->withJson($areas->getAll()->values());
     });
-    $this->get('/Areas/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
         $lastSyncDate = $args['lastSyncDate'];
         $areas = new Area($this->db);
         return $response->withJson($areas->getUpdates($lastSyncDate)->values());
@@ -163,6 +165,32 @@ $app->group('/Ips/get', function () {
         return $response->withJson($ips->getUpdates($lastSyncDate)->values());
     });
 });
+
+/** Novedades */
+$app->group('/Novedades/', function () {
+    /** Novedades Tipo */
+    $this->get('tipo/get/all', function (Request $request, Response $response) {
+        $tipos = new NovedadesTipo($this->db);
+        return $response->withJson($tipos->getAll()->values());
+    });
+
+    $this->get('tipo/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $tipos = new NovedadesTipo($this->db);
+        return $response->withJson($tipos->getUpdates($args['lastSyncDate'])->values());
+    });
+
+    /** Novedades get */
+    $this->get('lista/get/all', function (Request $request, Response $response) {
+        $listas = new NovedadesLista($this->db);
+        return $response->withJson($listas->getAll()->values());
+    });
+
+    $this->get('lista/get/updates/{lastSyncDate}',function (Request $request, Response $response, $args){
+        $listas = new NovedadesLista($this->db);
+        return $response->withJson($listas->getUpdates($args['lastSyncDate'])->values());
+    });
+});
+
 
 /** Pruebas */
 $app->get('/test', function(Request $request, Response $response) {
