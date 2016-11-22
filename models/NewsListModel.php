@@ -9,7 +9,7 @@
 namespace models;
 
 
-class NovedadesListaModel extends BaseModel {
+class NewsListModel extends BaseModel {
     /** @param Connection $connection */
     public function __construct(Connection $connection) {
         parent::__construct($connection);

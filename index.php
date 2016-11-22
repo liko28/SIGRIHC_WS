@@ -14,8 +14,13 @@ use Controllers\CIE10Controller as CIE10;
 use Controllers\AreaController as Area;
 use Controllers\IpsController as Ips;
 use Controllers\UserTypeController as UserType;
-use Controllers\NovedadesTipoController as NovedadesTipo;
-use Controllers\NovedadesListaController as NovedadesLista;
+use Controllers\NewsTypeController as NovedadesTipo;
+use Controllers\NewsListController as NovedadesLista;
+use Controllers\PECGuideController as PECGuide;
+use Controllers\PECObjetiveController as PECObjetive;
+use Controllers\PECProcessController  as PECProcess;
+use Controllers\PECScheduleController  as PECSchedule;
+use Controllers\PECTopicController  as PECTopic;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -188,6 +193,38 @@ $app->group('/Novedades/', function () {
     $this->get('lista/get/updates/{lastSyncDate}',function (Request $request, Response $response, $args){
         $listas = new NovedadesLista($this->db);
         return $response->withJson($listas->getUpdates($args['lastSyncDate'])->values());
+    });
+});
+
+/** PEC */
+$app->group('/PEC/', function() {
+    $this->get('GruposObjetivo/get/all', function (Request $request, Response $response){
+        $gruposObjetivo = new PECObjetive($this->db);
+        return $response->withJson($gruposObjetivo->getAll()->values());
+    });
+    $this->get('Guias/get/all', function (Request $request, Response $response){
+        $guias = new PECGuide($this->db);
+        return $response->withJson($guias->getAll()->values());
+    });
+    $this->get('Guias/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $guias = new PECGuide($this->db);
+        return $response->withJson($guias->getUpdates($args['lastSyncDate'])->values());
+    });
+    $this->get('Procesos/get/all', function (Request $request, Response $response){
+        $procesos = new PECProcess($this->db);
+        return $response->withJson($procesos->getAll()->values());
+    });
+    $this->get('Programacion/get/all', function (Request $request, Response $response){
+        $programaciones = new PECSchedule($this->db);
+        return $response->withJson($programaciones->getAll()->values());
+    });
+    $this->get('Temas/get/all', function (Request $request, Response $response){
+        $temas = new PECTopic($this->db);
+        return $response->withJson($temas->getAll()->values());
+    });
+    $this->get('Temas/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $temas = new PECTopic($this->db);
+        return $response->withJson($temas->getUpdates($args['lastSyncDate'])->values());
     });
 });
 
