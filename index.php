@@ -88,39 +88,42 @@ $app->add(function (Request $request, Response $response, $next){
  **/
 
 /** Lista de Referencia */
-$app->get('/ReferenceList/get/all', function(Request $request, Response $response){
-    $referenceList = new ReferenceList($this->db);
-    return $response->withJson($referenceList->getAll()->values());
-});
-
-$app->get('/ReferenceList/get/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
-    $lastSyncDate = $args['lastSyncDate'];
-    $referenceList = new ReferenceList($this->db);
-    return $response->withJson($referenceList->getUpdates($lastSyncDate)->values());
+$app->group('/ReferenceList/get', function(){
+    $this->get('/all',function (Request $request, Response $response){
+        $referenceList = new ReferenceList($this->db);
+        return $response->withJson($referenceList->getAll()->values());
+    });
+    $this->get('/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
+        $lastSyncDate = $args['lastSyncDate'];
+        $referenceList = new ReferenceList($this->db);
+        return $response->withJson($referenceList->getUpdates($lastSyncDate)->values());
+    });
 });
 
 /** Municipios */
-$app->get('/Municipios/get/all', function (Request $request, Response $response) {
-    $municipios = new Municipio($this->db);
-    return $response->withJson($municipios->getAll()->values());
-});
-
-$app->get('/Municipios/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
-    $lastSyncDate = $args['lastSyncDate'];
-    $municipios = new Municipio($this->db);
-    return $response->withJson($municipios->getUpdates($lastSyncDate)->values());
+$app->group('/Municipios/get', function () {
+    $this->get('/all', function (Request $request, Response $response) {
+        $municipios = new Municipio($this->db);
+        return $response->withJson($municipios->getAll()->values());
+    });
+    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+        $lastSyncDate = $args['lastSyncDate'];
+        $municipios = new Municipio($this->db);
+        return $response->withJson($municipios->getUpdates($lastSyncDate)->values());
+    });
 });
 
 /** Departamentos */
-$app->get('/Departamentos/get/all', function (Request $request, Response $response) {
-    $departamentos = new Departamento($this->db);
-    return $response->withJson($departamentos->getAll()->values());
-});
-
-$app->get('/Departamentos/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
-    $lastSyncDate = $args['lastSyncDate'];
-    $departamentos = new Departamento($this->db);
-    return $response->withJson($departamentos->getUpdates($lastSyncDate)->values());
+$app->group('/Departamentos/get', function () {
+    $this->get('/Departamentos/get/all', function (Request $request, Response $response) {
+        $departamentos = new Departamento($this->db);
+        return $response->withJson($departamentos->getAll()->values());
+    });
+    $this->get('/Departamentos/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+        $lastSyncDate = $args['lastSyncDate'];
+        $departamentos = new Departamento($this->db);
+        return $response->withJson($departamentos->getUpdates($lastSyncDate)->values());
+    });
 });
 
 /** CIE10 */
@@ -136,27 +139,29 @@ $app->get('/UserType/get/all', function(Request $request, Response $response){
 });
 
 /** Areas */
-$app->get('/Areas/get/all', function (Request $request, Response $response) {
-    $areas = new Area($this->db);
-    return $response->withJson($areas->getAll()->values());
-});
-
-$app->get('/Areas/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
-    $lastSyncDate = $args['lastSyncDate'];
-    $areas = new Area($this->db);
-    return $response->withJson($areas->getUpdates($lastSyncDate)->values());
+$app->group('/Areas/get', function () {
+    $this->get('/Areas/get/all', function (Request $request, Response $response) {
+        $areas = new Area($this->db);
+        return $response->withJson($areas->getAll()->values());
+    });
+    $this->get('/Areas/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+        $lastSyncDate = $args['lastSyncDate'];
+        $areas = new Area($this->db);
+        return $response->withJson($areas->getUpdates($lastSyncDate)->values());
+    });
 });
 
 /** Ips */
-$app->get('/Ips/get/all', function (Request $request, Response $response) {
-    $ips = new Ips($this->db);
-    return $response->withJson($ips->getAll()->values());
-});
-
-$app->get('/Ips/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
-    $lastSyncDate = $args['lastSyncDate'];
-    $ips = new Ips($this->db);
-    return $response->withJson($ips->getUpdates($lastSyncDate)->values());
+$app->group('/Ips/get', function () {
+    $this->get('/all', function (Request $request, Response $response) {
+        $ips = new Ips($this->db);
+        return $response->withJson($ips->getAll()->values());
+    });
+    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+        $lastSyncDate = $args['lastSyncDate'];
+        $ips = new Ips($this->db);
+        return $response->withJson($ips->getUpdates($lastSyncDate)->values());
+    });
 });
 
 /** Pruebas */
