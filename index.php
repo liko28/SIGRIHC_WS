@@ -87,13 +87,12 @@ $app->add(function (Request $request, Response $response, $next){
  * ***********
  **/
 
-/** Lista de Referencia Todos los Registros */
+/** Lista de Referencia */
 $app->get('/ReferenceList/get/all', function(Request $request, Response $response){
     $referenceList = new ReferenceList($this->db);
     return $response->withJson($referenceList->getAll()->values());
 });
 
-/** Lista de Referencia Registros Actualizados*/
 $app->get('/ReferenceList/get/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
     $lastSyncDate = $args['lastSyncDate'];
     $referenceList = new ReferenceList($this->db);
@@ -131,7 +130,7 @@ $app->get('/CIE10/get/all', function (Request $request, Response $response) {
 });
 
 /** Tipos de Usuario */
-$app->get('UserType/get/all', function(Request $request, Response $response){
+$app->get('/UserType/get/all', function(Request $request, Response $response){
     $tiposUsuario = new UserType($this->db);
     return $response->withJson($tiposUsuario->getAll()->values());
 });
