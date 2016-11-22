@@ -17,18 +17,4 @@ class NovedadesListaController extends BaseController {
     public function __construct(Connection $connection) {
         parent::__construct(new NovedadesListaModel($connection));
     }
-
-    /** @return CustomArray */
-    public function getAll() {
-        return $this->model->getAll();
-    }
-
-    /**
-     * @param string $lastSyncDate
-     * @return CustomArray */
-    public function getUpdates($lastSyncDate){
-        $_lastSyncDate = new \DateTime();
-        return $this->model->getUpdates($_lastSyncDate->setTimeStamp($lastSyncDate)->format('Y-m-d-H.i.s'));
-    }
-
 }

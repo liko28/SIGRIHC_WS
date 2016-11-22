@@ -11,9 +11,4 @@ class UserTypeController extends BaseController {
     public function __construct(Connection $connection) {
         parent::__construct(new UserTypeModel($connection));
     }
-
-    /** @return CustomArray */
-    public function getAll() {
-        return $this->model->getAll();
-    }
 }

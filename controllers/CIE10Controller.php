@@ -17,10 +17,4 @@ class CIE10Controller extends BaseController {
     public function __construct(Connection $connection) {
         parent::__construct(new CIE10Model($connection));
     }
-
-    /** @return CustomArray */
-    public function getAll() {
-        return $this->model->getAll();
-    }
-
 }
