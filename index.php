@@ -90,7 +90,7 @@ $app->add(function (Request $request, Response $response, $next){
  **/
 
 /** Lista de Referencia */
-$app->group('/ReferenceList/get', function(){
+$app->group('/ListaReferencia/get', function(){
     $this->get('/all',function (Request $request, Response $response){
         $referenceList = new ReferenceList($this->db);
         return $response->withJson($referenceList->getAll()->values());
@@ -135,7 +135,7 @@ $app->get('/CIE10/get/all', function (Request $request, Response $response) {
 });
 
 /** Tipos de Usuario */
-$app->get('/UserType/get/all', function(Request $request, Response $response){
+$app->get('/TiposUsuario/get/all', function(Request $request, Response $response){
     $tiposUsuario = new UserType($this->db);
     return $response->withJson($tiposUsuario->getAll()->values());
 });
