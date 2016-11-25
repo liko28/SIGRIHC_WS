@@ -10,11 +10,11 @@ namespace Controllers;
 
 
 use Models\Connection;
-use Models\NovedadesTipoModel;
+use Models\NewsTypeModel;
 
-class NovedadesTipoController extends BaseController {
+class NewsTypeController extends BaseController {
     /** @param Connection $connection */
     public function __construct(Connection $connection) {
-        parent::__construct(new NovedadesTipoModel($connection));
+        parent::__construct(new NewsTypeModel($connection));
     }
 }
