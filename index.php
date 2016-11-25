@@ -123,7 +123,7 @@ $app->group('/Municipios/get', function () {
 
 /** Departamentos */
 $app->group('/Departamentos/get', function () {
-    $this->get('/get/all', function (Request $request, Response $response) {
+    $this->get('/all', function (Request $request, Response $response) {
         $departamentos = new Departamento($this->db);
         return $response->withJson($departamentos->getAll()->values());
     });
@@ -147,6 +147,7 @@ $app->get('/TiposUsuario/get/all', function(Request $request, Response $response
 });
 
 /** Areas */
+//TODO Areas especificas para el municipio o departamento del requesting User
 $app->group('/Areas/get', function () {
     $this->get('/all', function (Request $request, Response $response) {
         $areas = new Area($this->db);
@@ -160,6 +161,7 @@ $app->group('/Areas/get', function () {
 });
 
 /** Ips */
+//TODO IPS especificas para el municipio o departamento del requesting User
 $app->group('/Ips/get', function () {
     $this->get('/all', function (Request $request, Response $response) {
         $ips = new Ips($this->db);

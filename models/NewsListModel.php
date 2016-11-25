@@ -23,7 +23,7 @@ class NewsListModel extends BaseModel {
     }
 
     public function getUpdates($lastSyncDate) {
-        return $this->query("SELECT {$this->getColumns('COD_NOVEDAD', 'TIPO_NOVEDAD', 'DESCRIPCION', 'ESTADO', 'VALOR')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN '?' AND CURRENT_TIMESTAMP",$lastSyncDate);
+        return $this->query("SELECT {$this->getColumns('COD_NOVEDAD', 'TIPO_NOVEDAD', 'DESCRIPCION', 'ESTADO', 'VALOR')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
     }
 
 }
