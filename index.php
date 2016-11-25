@@ -261,14 +261,4 @@ $app->group('/Programacion/',function(){
     });
 });
 
-/** Pruebas */
-$app->get('/test', function(Request $request, Response $response) {
-    $programaciones = new \Controllers\ScheduleController($this->db);
-    return $response->withJson($programaciones->getAll('yenny.navarro')->values());
-});
-$app->get('/test/updates/{lastSyncDate}', function(Request $request, Response $response, $args) {
-    $programaciones = new \Controllers\ScheduleController($this->db);
-    return $response->withJson($programaciones->getUpdates('yenny.navarro',$args['lastSyncDate'])->values());
-});
-
 $app->run();
