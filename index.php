@@ -16,6 +16,7 @@ use Controllers\IpsController as Ips;
 use Controllers\UserTypeController as UserType;
 use Controllers\NovedadesTipoController as NovedadesTipo;
 use Controllers\NovedadesListaController as NovedadesLista;
+use Controllers\ScheduleController as Schedule;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -84,9 +85,9 @@ $app->add(function (Request $request, Response $response, $next){
 });
 
 /**
- *************
- * SERVICIOS *
- * ***********
+ ***********************
+ * SERVICIOS GENERICOS *
+ * *********************
  **/
 
 /** Lista de Referencia */
@@ -191,14 +192,35 @@ $app->group('/Novedades/', function () {
     });
 });
 
+/*************************
+ * SERVICIOS ESPECIFICOS *
+ * ***********************
+ **/
+
+/** Programacion */
+$app->group('/Programacion/',function(){
+    /** All */
+    $this->get('get/all', function(Request $request, Response $response){
+        $programaciones = new Schedule($this->db);
+        return $response->withJson($programaciones->getAll($this->userName)->values());
+    });
+
+    /** Updates */
+    $this->get('get/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
+        $lastSyncDate = $args['lastSyncDate'];
+        $programaciones = new Schedule($this->db);
+        return $response->withJson($programaciones->getUpdates($this->userName,$lastSyncDate)->values());
+    });
+});
 
 /** Pruebas */
 $app->get('/test', function(Request $request, Response $response) {
-    $customArray = new \Helpers\CustomArray();
-    $customArray["UNO"] = ["DOS"=>"TRES"];
-    $customArray["CUATRO"] = ["CINCO","SEIS"];
-    $this->logger->addInfo($request->getUri(),array('response' => $customArray));
-    return $response->withJson($customArray);
+    $programaciones = new \Controllers\ScheduleController($this->db);
+    return $response->withJson($programaciones->getAll('yenny.navarro')->values());
+});
+$app->get('/test/updates/{lastSyncDate}', function(Request $request, Response $response, $args) {
+    $programaciones = new \Controllers\ScheduleController($this->db);
+    return $response->withJson($programaciones->getUpdates('yenny.navarro',$args['lastSyncDate'])->values());
 });
 
 $app->run();
