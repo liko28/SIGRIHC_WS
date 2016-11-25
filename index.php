@@ -45,16 +45,16 @@ $container['password'] = function () {
 };
 
 //TODO OTROS MENSAJES DE ERROR
-/** Error 500 */
+/** Error Conn */
 $container['errorHandler'] = function ($c) {
     return function ($request, $response, $exception) use ($c) {
         $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
-        if($c->get('settings')['displayErrorDetails']) {
+        if($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
             return $c['response']->withStatus(500)
-                ->withJson(array("ERROR" => $exception));
+                ->write($exception);
         } else {
             return $c['response']->withStatus(500)
-                ->withJson(array("ERROR" => $exception->getMessage()));
+                ->write(ERROR_CONN);
         }
     };
 };
@@ -64,8 +64,17 @@ $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
         $c['logger']->addError($request->getUri(),array("ERROR"=>ERROR_404));
         return $c['response']->withStatus(404)
-            ->withJson(ERROR_404);
+            ->write(ERROR_404);
     };
+};
+
+/** Error 500 */
+$container['phpErrorHandler'] = function($c) {
+  return function ($request, $response, $exception) use ($c) {
+      $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
+      return $c['response']->withStatus(500)
+          ->write(ERROR_500);
+  };
 };
 
 /** Logger */
@@ -85,7 +94,7 @@ $app->add(function (Request $request, Response $response, $next){
         return $next($request, $response);
     } else {
         $this->logger->addError(ERROR_AUTH,array("userName"=>$this->userName,"password"=>$this->password));
-        return $response->withStatus(401)->withJson(ERROR_AUTH);
+        return $response->withStatus(401)->write(ERROR_AUTH);
     }
 });
 
@@ -250,16 +259,6 @@ $app->group('/Programacion/',function(){
         $programaciones = new Schedule($this->db);
         return $response->withJson($programaciones->getUpdates($this->userName,$lastSyncDate)->values());
     });
-});
-
-/** Pruebas */
-$app->get('/test', function(Request $request, Response $response) {
-    $programaciones = new \Controllers\ScheduleController($this->db);
-    return $response->withJson($programaciones->getAll('yenny.navarro')->values());
-});
-$app->get('/test/updates/{lastSyncDate}', function(Request $request, Response $response, $args) {
-    $programaciones = new \Controllers\ScheduleController($this->db);
-    return $response->withJson($programaciones->getUpdates('yenny.navarro',$args['lastSyncDate'])->values());
 });
 
 $app->run();

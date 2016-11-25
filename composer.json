@@ -9,5 +9,9 @@
         "Models\\":"models/",
         "Helpers\\":"helpers/"
       }
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.2",
+        "flow/jsonpath": "^0.3.4"
     }
 }
