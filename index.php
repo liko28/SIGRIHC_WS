@@ -23,6 +23,7 @@ use Controllers\PECScheduleController  as PECSchedule;
 use Controllers\PECTopicController  as PECTopic;
 use Controllers\ScheduleController as Schedule;
 use Controllers\MedicineController as Medicine;
+use Controllers\LaboratoryController as Laboratory;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -247,6 +248,14 @@ $app->group('/Medicamentos/get/', function() {
        $medicines = new Medicine($this->db);
        return $response->withJson($medicines->getAll()->values());
    });
+});
+
+/** Laboratorios */
+$app->group('/Laboratorios/get/', function() {
+    $this->get('all', function (Request $request, Response $response) {
+        $laboratories = new Laboratory($this->db);
+        return $response->withJson($laboratories->getAll()->values());
+    });
 });
 
 /*************************
