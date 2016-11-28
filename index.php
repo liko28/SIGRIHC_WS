@@ -14,14 +14,15 @@ use Controllers\CIE10Controller as CIE10;
 use Controllers\AreaController as Area;
 use Controllers\IpsController as Ips;
 use Controllers\UserTypeController as UserType;
-use Controllers\NewsTypeController as NovedadesTipo;
-use Controllers\NewsListController as NovedadesLista;
+use Controllers\NewsTypeController as NewsType;
+use Controllers\NewsListController as NewsList;
 use Controllers\PECGuideController as PECGuide;
 use Controllers\PECObjetiveController as PECObjetive;
 use Controllers\PECProcessController  as PECProcess;
 use Controllers\PECScheduleController  as PECSchedule;
 use Controllers\PECTopicController  as PECTopic;
 use Controllers\ScheduleController as Schedule;
+use Controllers\MedicineController as Medicine;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -187,23 +188,23 @@ $app->group('/Ips/get', function () {
 $app->group('/Novedades/', function () {
     /** Novedades Tipo */
     $this->get('tipo/get/all', function (Request $request, Response $response) {
-        $tipos = new NovedadesTipo($this->db);
+        $tipos = new NewsType($this->db);
         return $response->withJson($tipos->getAll()->values());
     });
 
     $this->get('tipo/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
-        $tipos = new NovedadesTipo($this->db);
+        $tipos = new NewsType($this->db);
         return $response->withJson($tipos->getUpdates($args['lastSyncDate'])->values());
     });
 
     /** Novedades get */
     $this->get('lista/get/all', function (Request $request, Response $response) {
-        $listas = new NovedadesLista($this->db);
+        $listas = new NewsList($this->db);
         return $response->withJson($listas->getAll()->values());
     });
 
     $this->get('lista/get/updates/{lastSyncDate}',function (Request $request, Response $response, $args){
-        $listas = new NovedadesLista($this->db);
+        $listas = new NewsList($this->db);
         return $response->withJson($listas->getUpdates($args['lastSyncDate'])->values());
     });
 });
@@ -238,6 +239,14 @@ $app->group('/PEC/', function() {
         $temas = new PECTopic($this->db);
         return $response->withJson($temas->getUpdates($args['lastSyncDate'])->values());
     });
+});
+
+/** Medicamentos */
+$app->group('/Medicamentos/get/', function() {
+   $this->get('all', function (Request $request, Response $response) {
+       $medicines = new Medicine($this->db);
+       return $response->withJson($medicines->getAll()->values());
+   });
 });
 
 /*************************
