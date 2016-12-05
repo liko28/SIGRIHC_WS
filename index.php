@@ -56,7 +56,7 @@ $container['errorHandler'] = function ($c) {
                 ->write($exception);
         } else {
             return $c['response']->withStatus(500)
-                ->write(ERROR_CONN);
+                ->write(ERROR_500);
         }
     };
 };
