@@ -24,6 +24,7 @@ use Controllers\PECTopicController  as PECTopic;
 use Controllers\ScheduleController as Schedule;
 use Controllers\MedicineController as Medicine;
 use Controllers\LaboratoryController as Laboratory;
+use Controllers\ModuleController as Module;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -255,6 +256,18 @@ $app->group('/Laboratorios/get/', function() {
     $this->get('all', function (Request $request, Response $response) {
         $laboratories = new Laboratory($this->db);
         return $response->withJson($laboratories->getAll()->values());
+    });
+});
+
+/** Modulos */
+$app->group('/Modulos/', function() {
+    $this->get('get/all', function (Request $request, Response $response){
+        $modulos = new Module($this->db);
+        return $response->withJson($modulos->getAll()->values());
+    });
+    $this->get('get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $modulos = new Module($this->db);
+        return $response->withJson($modulos->getUpdates($args['lastSyncDate'])->values());
     });
 });
 
