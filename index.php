@@ -25,6 +25,7 @@ use Controllers\ScheduleController as Schedule;
 use Controllers\MedicineController as Medicine;
 use Controllers\LaboratoryController as Laboratory;
 use Controllers\ModuleController as Module;
+use Controllers\QuestionController as Question;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -268,6 +269,18 @@ $app->group('/Modulos/', function() {
     $this->get('get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
         $modulos = new Module($this->db);
         return $response->withJson($modulos->getUpdates($args['lastSyncDate'])->values());
+    });
+});
+
+/** Preguntas */
+$app->group('/Preguntas/', function() {
+    $this->get('get/all', function (Request $request, Response $response){
+        $preguntas = new Question($this->db);
+        return $response->withJson($preguntas->getAll()->values());
+    });
+    $this->get('get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $preguntas = new Question($this->db);
+        return $response->withJson($preguntas->getUpdates($args['lastSyncDate'])->values());
     });
 });
 
