@@ -93,14 +93,14 @@ $container['logger'] = function ($c) {
  **/
 
 /** Autenticacion */
-$app->add(function (Request $request, Response $response, $next){
+/*$app->add(function (Request $request, Response $response, $next){
     if(Authenticator::authenticate()) {
         return $next($request, $response);
     } else {
         $this->logger->addError(ERROR_AUTH,array("userName"=>$this->userName,"password"=>$this->password));
         return $response->withStatus(401)->write(ERROR_AUTH);
     }
-});
+})*/;
 
 /**
  ***********************
