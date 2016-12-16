@@ -133,10 +133,10 @@ $dateMw = function ($request, $response, $next) {
  **/
 
 
-$app->group('/ListaReferencia', function(){
+$app->group('/ListasReferencia', function(){
     /**
-     * @api {GET} /ListaReferencia all
-     * @apiGroup ListaReferencia
+     * @api {GET} /ListasReferencia all
+     * @apiGroup ListasReferencia
      * @apiDescription Retorna La Lista de Referencia Completa
      * @apiPermission user
      * @apiSampleRequest off
@@ -162,12 +162,12 @@ $app->group('/ListaReferencia', function(){
      */
     $this->get('',function (Request $request, Response $response){
         $referenceList = new ReferenceList($this->db);
-        return $response->withJson(['LISTA_REFERENCIA' => $referenceList->getAll()->values()]);
+        return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getAll()->values()]);
     });
 
     /**
-     * @api {GET} /ListaReferencia/:date updates
-     * @apiGroup ListaReferencia
+     * @api {GET} /ListasReferencia/:date updates
+     * @apiGroup ListasReferencia
      * @apiDescription Retorna Los registros de Lista de Referencia que han sufrido modificaciones posteriores a :date
      * @apiPermission user
      * @apiSampleRequest off
@@ -198,7 +198,7 @@ $app->group('/ListaReferencia', function(){
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $referenceList = new ReferenceList($this->db);
-        return $response->withJson(['LISTA_REFERENCIA' => $referenceList->getUpdates($lastSyncDate)->values()]);
+        return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getUpdates($lastSyncDate)->values()]);
     });
 });
 
@@ -231,7 +231,7 @@ $app->group('/Municipios', function () {
      */
     $this->get('', function (Request $request, Response $response) {
         $municipios = new Municipio($this->db);
-        return $response->withJson(["MUNICIPIO" => $municipios->getAll()->values()]);
+        return $response->withJson(["MUNICIPIOS" => $municipios->getAll()->values()]);
     });
 
     /**
@@ -267,7 +267,7 @@ $app->group('/Municipios', function () {
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $municipios = new Municipio($this->db);
-        return $response->withJson(["MUNICIPIO" => $municipios->getUpdates($lastSyncDate)->values()]);
+        return $response->withJson(["MUNICIPIOS" => $municipios->getUpdates($lastSyncDate)->values()]);
     });
 });
 
@@ -298,9 +298,9 @@ $app->group('/Departamentos', function () {
      * {"DEPARTAMENTO":[{"ID" : "2","NOMBRE" : "ANTIOQUIA","PAIS" : "57","CODIGO" : "05","ACTIVO" : "0"}]}
      *
      */
-    $this->get('/all', function (Request $request, Response $response) {
+    $this->get('', function (Request $request, Response $response) {
         $departamentos = new Departamento($this->db);
-        return $response->withJson($departamentos->getAll()->values());
+        return $response->withJson(['DEPARTAMENTOS' => $departamentos->getAll()->values()]);
     });
 
     /**
@@ -332,11 +332,11 @@ $app->group('/Departamentos', function () {
      *  {"DEPARTAMENTO":[{"ID" : "2","NOMBRE" : "ANTIOQUIA","PAIS" : "57","CODIGO" : "05","ACTIVO" : "0"}]}
      *
      */
-    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
+    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $departamentos = new Departamento($this->db);
-        return $response->withJson($departamentos->getUpdates($lastSyncDate)->values());
+        return $response->withJson(['DEPARTAMENTOS' => $departamentos->getUpdates($lastSyncDate)->values()]);
     });
 });
 
@@ -399,7 +399,7 @@ $app->get('/CIE10', function (Request $request, Response $response) {
  */
 $app->get('/TiposUsuario', function(Request $request, Response $response){
     $tiposUsuario = new UserType($this->db);
-    return $response->withJson(["TIPO_USUARIO" => $tiposUsuario->getAll()->values()]);
+    return $response->withJson(["TIPOS_USUARIO" => $tiposUsuario->getAll()->values()]);
 });
 
 
@@ -433,7 +433,7 @@ $app->group('/Areas', function () {
      */
     $this->get('', function (Request $request, Response $response) {
         $areas = new Area($this->db);
-        return $response->withJson(['AREA' => $areas->getAll()->values()]);
+        return $response->withJson(['AREAS' => $areas->getAll()->values()]);
     });
 
     /**
@@ -469,7 +469,7 @@ $app->group('/Areas', function () {
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $areas = new Area($this->db);
-        return $response->withJson(['AREA' => $areas->getUpdates($lastSyncDate)->values()]);
+        return $response->withJson(['AREAS' => $areas->getUpdates($lastSyncDate)->values()]);
     });
 });
 
@@ -570,14 +570,14 @@ $app->group('/Novedades/', function () {
      * TODO EJEMPLO PENDIENTE
      *
      */
-    $this->get('tipo', function (Request $request, Response $response) {
+    $this->get('tipos', function (Request $request, Response $response) {
         $tipos = new NewsType($this->db);
-        return $response->withJson(['NOVEDAD_TIPO' => $tipos->getAll()->values()]);
+        return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getAll()->values()]);
     });
 
     /**
      * @api {GET} /Novedades/tipo/:date updates
-     * @apiGroup Novedades Tipo
+     * @apiGroup Novedades Tipos
      * @apiDescription Retorna Los registros de Tipos de Novedades que han sufrido modificaciones posteriores a :date
      * @apiPermission user
      * @apiSampleRequest off
@@ -604,16 +604,16 @@ $app->group('/Novedades/', function () {
      * TODO EJEMPLO PENDIENTE
      *
      */
-    $this->get('tipo/{lastSyncDate}', function (Request $request, Response $response, $args){
+    $this->get('tipos/{lastSyncDate}', function (Request $request, Response $response, $args){
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $tipos = new NewsType($this->db);
-        return $response->withJson(['NOVEDAD_TIPO' => $tipos->getUpdates($lastSyncDate)->values()]);
+        return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getUpdates($lastSyncDate)->values()]);
     });
 
     /**
-     * @api {GET} /Novedades/lista all
-     * @apiGroup Novedades Lista
+     * @api {GET} /Novedades/campo all
+     * @apiGroup Novedades Campos
      * @apiDescription Retorna las Listas de Novedades
      * @apiPermission user
      * @apiSampleRequest off
@@ -637,9 +637,9 @@ $app->group('/Novedades/', function () {
      * TODO EJEMPLO PENDIENTE
      *
      */
-    $this->get('lista', function (Request $request, Response $response) {
+    $this->get('campos', function (Request $request, Response $response) {
         $listas = new NewsList($this->db);
-        return $response->withJson(['NOVEDAD_LISTA' => $listas->getAll()->values()]);
+        return $response->withJson(['LISTAS_NOVEDAD' => $listas->getAll()->values()]);
     });
 
     /**
@@ -671,11 +671,11 @@ $app->group('/Novedades/', function () {
      * TODO EJEMPLO PENDIENTE
      *
      */
-    $this->get('lista/{lastSyncDate}',function (Request $request, Response $response, $args){
+    $this->get('campos/{lastSyncDate}',function (Request $request, Response $response, $args){
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $listas = new NewsList($this->db);
-        return $response->withJson(['NOVEDAD_LISTA' => $listas->getUpdates($lastSyncDate)->values()]);
+        return $response->withJson(['LISTAS_NOVEDAD' => $listas->getUpdates($lastSyncDate)->values()]);
     });
 });
 
@@ -708,7 +708,7 @@ $app->group('/PEC/', function() {
      */
     $this->get('GruposObjetivo', function (Request $request, Response $response){
         $gruposObjetivo = new PECObjetive($this->db);
-        return $response->withJson(['PEC_GRUPO_OBJETIVO' => $gruposObjetivo->getAll()->values()]);
+        return $response->withJson(['PEC_GRUPOS_OBJETIVO' => $gruposObjetivo->getAll()->values()]);
     });
 
     /**
@@ -739,7 +739,7 @@ $app->group('/PEC/', function() {
      */
     $this->get('Guias', function (Request $request, Response $response){
         $guias = new PECGuide($this->db);
-        return $response->withJson(['PEC_GUIA' => $guias->getAll()->values()]);
+        return $response->withJson(['PEC_GUIAS' => $guias->getAll()->values()]);
     });
 
     /**
@@ -774,7 +774,7 @@ $app->group('/PEC/', function() {
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $guias = new PECGuide($this->db);
-        return $response->withJson(['PEC_GUIA' => $guias->getUpdates($lastSyncDate)->values()]);
+        return $response->withJson(['PEC_GUIAS' => $guias->getUpdates($lastSyncDate)->values()]);
     });
 
     /**
@@ -805,7 +805,7 @@ $app->group('/PEC/', function() {
      */
     $this->get('Procesos', function (Request $request, Response $response){
         $procesos = new PECProcess($this->db);
-        return $response->withJson(['PEC_PROCESO' => $procesos->getAll()->values()]);
+        return $response->withJson(['PEC_PROCESOS' => $procesos->getAll()->values()]);
     });
 
     /**
@@ -836,7 +836,7 @@ $app->group('/PEC/', function() {
      */
     $this->get('Programacion', function (Request $request, Response $response){
         $programaciones = new PECSchedule($this->db);
-        return $response->withJson(['PEC_PROGRAMACION' => $programaciones->getAll()->values()]);
+        return $response->withJson(['PEC_PROGRAMACIONES' => $programaciones->getAll()->values()]);
     });
 
     /**
@@ -867,7 +867,7 @@ $app->group('/PEC/', function() {
      */
     $this->get('Temas', function (Request $request, Response $response){
         $temas = new PECTopic($this->db);
-        return $response->withJson(['PEC_TEMA' => $temas->getAll()->values()]);
+        return $response->withJson(['PEC_TEMAS' => $temas->getAll()->values()]);
     });
 
     /**
@@ -903,7 +903,7 @@ $app->group('/PEC/', function() {
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $temas = new PECTopic($this->db);
-        return $response->withJson(['PEC_TEMA' => $temas->getUpdates($lastSyncDate)->values()]);
+        return $response->withJson(['PEC_TEMAS' => $temas->getUpdates($lastSyncDate)->values()]);
     });
 });
 
@@ -936,7 +936,7 @@ $app->group('/PEC/', function() {
 $app->group('/Medicamentos', function() {
    $this->get('', function (Request $request, Response $response) {
        $medicines = new Medicine($this->db);
-       return $response->withJson($medicines->getAll()->values());
+       return $response->withJson(['MEDICAMENTOS' => $medicines->getAll()->values()]);
    });
 });
 
@@ -969,7 +969,7 @@ $app->group('/Medicamentos', function() {
 $app->group('/Laboratorios', function() {
     $this->get('', function (Request $request, Response $response) {
         $laboratories = new Laboratory($this->db);
-        return $response->withJson($laboratories->getAll()->values());
+        return $response->withJson(['LABORATORIOS' => $laboratories->getAll()->values()]);
     });
 });
 
@@ -1003,7 +1003,7 @@ $app->group('/Modulos', function() {
      */
     $this->get('', function (Request $request, Response $response){
         $modulos = new Module($this->db);
-        return $response->withJson($modulos->getAll()->values());
+        return $response->withJson(['MODULOS' => $modulos->getAll()->values()]);
     });
 
     /**
@@ -1039,7 +1039,7 @@ $app->group('/Modulos', function() {
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $modulos = new Module($this->db);
-        return $response->withJson($modulos->getUpdates($lastSyncDate)->values());
+        return $response->withJson(['MODULOS' => $modulos->getUpdates($lastSyncDate)->values()]);
     });
 });
 
@@ -1072,7 +1072,7 @@ $app->group('/Preguntas', function() {
      */
     $this->get('', function (Request $request, Response $response){
         $preguntas = new Question($this->db);
-        return $response->withJson($preguntas->getAll()->values());
+        return $response->withJson(['PREGUNTAS' => $preguntas->getAll()->values()]);
     });
 
     /**
@@ -1108,7 +1108,7 @@ $app->group('/Preguntas', function() {
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $preguntas = new Question($this->db);
-        return $response->withJson($preguntas->getUpdates($lastSyncDate)->values());
+        return $response->withJson(['PREGUNTAS' => $preguntas->getUpdates($lastSyncDate)->values()]);
     });
 });
 
@@ -1117,10 +1117,10 @@ $app->group('/Preguntas', function() {
  * ***********************
  **/
 
-$app->group('/Programacion',function(){
+$app->group('/Programaciones',function(){
     /**
-     * @api {GET} /Programacion all
-     * @apiGroup Programacion
+     * @api {GET} /Programaciones all
+     * @apiGroup Programaciones
      * @apiDescription Retorna la Programacion asignada al usuario que realiza la peticion
      * @apiPermission specific_user
      * @apiSampleRequest off
@@ -1146,12 +1146,12 @@ $app->group('/Programacion',function(){
      */
     $this->get('', function(Request $request, Response $response){
         $programaciones = new Schedule($this->db);
-        return $response->withJson($programaciones->getAll($this->userName)->values());
+        return $response->withJson(['PROGRAMACIONES' => $programaciones->getAll($this->userName)->values()]);
     });
 
     /**
-     * @api {GET} /Programacion/:date updates
-     * @apiGroup Programacion
+     * @api {GET} /Programaciones/:date updates
+     * @apiGroup Programaciones
      * @apiDescription Retorna la Programacion asignada al usuario que realiza la peticion y que haya sido modificado posterior a :date
      * @apiPermission specific_user
      * @apiSampleRequest off
@@ -1182,7 +1182,7 @@ $app->group('/Programacion',function(){
         $lastSyncDate = new \DateTime();
         $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $programaciones = new Schedule($this->db);
-        return $response->withJson($programaciones->getUpdates($this->userName,$lastSyncDate)->values());
+        return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName,$lastSyncDate)->values()]);
     });
 });
 
