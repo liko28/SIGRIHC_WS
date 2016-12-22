@@ -1,31 +1,31 @@
 <?php
 include "vendor/autoload.php";
-include "config.php";
+include "src/config.php";
 
-use Helpers\Authenticator as Authenticator;
-use Helpers\Logger as Logger;
-use Models\Connection as Connection;
+use SIGRI_HC\Helpers\Authenticator as Authenticator;
+use SIGRI_HC\Helpers\Logger as Logger;
+use SIGRI_HC\Models\Connection as Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Controllers\ReferenceListController as ReferenceList;
-use Controllers\MunicipioController as Municipio;
-use Controllers\DepartamentoController as Departamento;
-use Controllers\CIE10Controller as CIE10;
-use Controllers\AreaController as Area;
-use Controllers\IpsController as Ips;
-use Controllers\UserTypeController as UserType;
-use Controllers\NewsTypeController as NewsType;
-use Controllers\NewsListController as NewsList;
-use Controllers\PECGuideController as PECGuide;
-use Controllers\PECObjetiveController as PECObjetive;
-use Controllers\PECProcessController  as PECProcess;
-use Controllers\PECScheduleController  as PECSchedule;
-use Controllers\PECTopicController  as PECTopic;
-use Controllers\ScheduleController as Schedule;
-use Controllers\MedicineController as Medicine;
-use Controllers\LaboratoryController as Laboratory;
-use Controllers\ModuleController as Module;
-use Controllers\QuestionController as Question;
+use SIGRI_HC\Controllers\ReferenceListController as ReferenceList;
+use SIGRI_HC\Controllers\MunicipioController as Municipio;
+use SIGRI_HC\Controllers\DepartamentoController as Departamento;
+use SIGRI_HC\Controllers\CIE10Controller as CIE10;
+use SIGRI_HC\Controllers\AreaController as Area;
+use SIGRI_HC\Controllers\IpsController as Ips;
+use SIGRI_HC\Controllers\UserTypeController as UserType;
+use SIGRI_HC\Controllers\NewsTypeController as NewsType;
+use SIGRI_HC\Controllers\NewsListController as NewsList;
+use SIGRI_HC\Controllers\PECGuideController as PECGuide;
+use SIGRI_HC\Controllers\PECObjetiveController as PECObjetive;
+use SIGRI_HC\Controllers\PECProcessController  as PECProcess;
+use SIGRI_HC\Controllers\PECScheduleController  as PECSchedule;
+use SIGRI_HC\Controllers\PECTopicController  as PECTopic;
+use SIGRI_HC\Controllers\ScheduleController as Schedule;
+use SIGRI_HC\Controllers\MedicineController as Medicine;
+use SIGRI_HC\Controllers\LaboratoryController as Laboratory;
+use SIGRI_HC\Controllers\ModuleController as Module;
+use SIGRI_HC\Controllers\QuestionController as Question;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -74,11 +74,11 @@ $container['notFoundHandler'] = function ($c) {
 
 /** Error 500 */
 $container['phpErrorHandler'] = function($c) {
-  return function ($request, $response, $exception) use ($c) {
-      $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
-      return $c['response']->withStatus(500)
-          ->write(ERROR_500);
-  };
+    return function ($request, $response, $exception) use ($c) {
+        $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
+        return $c['response']->withStatus(500)
+            ->write(ERROR_500);
+    };
 };
 
 /** Logger */
@@ -92,217 +92,1102 @@ $container['logger'] = function ($c) {
  * ***********
  **/
 
+/**
+ * @apiDefine user Cualquier Usuario
+ * Requiere User y Password validos definidos en Header
+ */
+/**
+ * @apiDefine specific_user Usuario Especifico
+ * Requiere User y Password validos definidos en Header.
+ * Tenga en cuenta que se entregaran unicamente los registros relacionados con el usuario que realiza la peticion
+ */
+/**
+ * @apiDefine admin Permisos Elevados
+ * Requiere User y Password validos, de tipo admin o superior, definidos en Header
+ */
+//TODO MiddleWare de Authenticacion aun no soporta tipos de usuario o perfiles de acceso
+
 /** Autenticacion */
-/*$app->add(function (Request $request, Response $response, $next){
+$app->add(function (Request $request, Response $response, $next){
     if(Authenticator::authenticate()) {
         return $next($request, $response);
     } else {
         $this->logger->addError(ERROR_AUTH,array("userName"=>$this->userName,"password"=>$this->password));
-        return $response->withStatus(401)->write(ERROR_AUTH);
+        return $response->withStatus(401)->withJson(ERROR_AUTH);
     }
-})*/;
+});
+
+/** Date -SyncDate- */
+//TODO implementar este Mw cuando me respondan en Github
+$dateMw = function ($request, $response, $next) {
+    $lastSyncDate = $request->getAttribute('routeInfo')[2]['lastSyncDate'];
+    $date = new \DateTime();
+    $date->setTimeStamp(strtotime($lastSyncDate));
+    return $next($request, $response,[],$date);
+};
 
 /**
  ***********************
  * SERVICIOS GENERICOS *
- * *********************
+ ***********************
  **/
 
-/** Lista de Referencia */
-$app->group('/ListaReferencia/get', function(){
-    $this->get('/all',function (Request $request, Response $response){
+$app->group('/ListasReferencia', function(){
+    /**
+     * @api {GET} /ListasReferencia all
+     * @apiGroup ListasReferencia
+     * @apiDescription Retorna La Lista de Referencia Completa
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo LISTA_REFERENCIA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"LISTA_REFERENCIA":[{"ID_LISTA":"1","PADRE":"","DESCRIPCION":"Motivo Visita","CODLISTA":"","VALOR":"","ESTADO":""}]}
+     *
+     */
+    $this->get('',function (Request $request, Response $response){
         $referenceList = new ReferenceList($this->db);
-        return $response->withJson($referenceList->getAll()->values());
+        return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getAll()->values()]);
     });
-    $this->get('/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
-        $lastSyncDate = $args['lastSyncDate'];
+
+    /**
+     * @api {GET} /ListasReferencia/:date updates
+     * @apiGroup ListasReferencia
+     * @apiDescription Retorna Los registros de Lista de Referencia que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo LISTA_REFERENCIA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"LISTA_REFERENCIA":[{"ID_LISTA":"1","PADRE":"","DESCRIPCION":"Motivo Visita","CODLISTA":"","VALOR":"","ESTADO":""}]}
+     *
+     */
+    $this->get('/{lastSyncDate}', function(Request $request, Response $response, $args){
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $referenceList = new ReferenceList($this->db);
-        return $response->withJson($referenceList->getUpdates($lastSyncDate)->values());
+        return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/** Municipios */
-$app->group('/Municipios/get', function () {
-    $this->get('/all', function (Request $request, Response $response) {
+$app->group('/Municipios', function () {
+    /**
+     * @api {GET} /Municipios all
+     * @apiGroup Municipios
+     * @apiDescription Retorna La Lista de Municipios Completa
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo MUNICIPIO
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"MUNICIPIO":[{"ID":"25","NOMBRE":"AMAGÁ Antioquia","ID_DPTO":"05","NOMBRE_DPTO":"Antioquia","CODIGO":"030","ID_CIUDAD":"05030","ESTADO":"0"}]}
+     *
+     */
+    $this->get('', function (Request $request, Response $response) {
         $municipios = new Municipio($this->db);
-        return $response->withJson($municipios->getAll()->values());
+        return $response->withJson(["MUNICIPIOS" => $municipios->getAll()->values()]);
     });
-    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
-        $lastSyncDate = $args['lastSyncDate'];
+
+    /**
+     * @api {GET} /Municipios/:date updates
+     * @apiGroup Municipios
+     * @apiDescription Retorna Los registros de Municipios que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo MUNICIPIO
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"MUNICIPIO":[{"ID":"25","NOMBRE":"AMAGÁ Antioquia","ID_DPTO":"05","NOMBRE_DPTO":"Antioquia","CODIGO":"030","ID_CIUDAD":"05030","ESTADO":"0"}]}
+     *
+     */
+    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $municipios = new Municipio($this->db);
-        return $response->withJson($municipios->getUpdates($lastSyncDate)->values());
+        return $response->withJson(["MUNICIPIOS" => $municipios->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/** Departamentos */
-$app->group('/Departamentos/get', function () {
-    $this->get('/all', function (Request $request, Response $response) {
+$app->group('/Departamentos', function () {
+    /**
+     * @api {GET} /Departamentos all
+     * @apiGroup Departamentos
+     * @apiDescription Retorna La Lista de Departamentos Completa
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo DEPARTAMENTO
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"DEPARTAMENTO":[{"ID" : "2","NOMBRE" : "ANTIOQUIA","PAIS" : "57","CODIGO" : "05","ACTIVO" : "0"}]}
+     *
+     */
+    $this->get('', function (Request $request, Response $response) {
         $departamentos = new Departamento($this->db);
-        return $response->withJson($departamentos->getAll()->values());
+        return $response->withJson(['DEPARTAMENTOS' => $departamentos->getAll()->values()]);
     });
-    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
-        $lastSyncDate = $args['lastSyncDate'];
+
+    /**
+     * @api {GET} /Departamentos/:date updates
+     * @apiGroup Departamentos
+     * @apiDescription Retorna Los registros de Departamentos que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo DEPARTAMENTO
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     *  {"DEPARTAMENTO":[{"ID" : "2","NOMBRE" : "ANTIOQUIA","PAIS" : "57","CODIGO" : "05","ACTIVO" : "0"}]}
+     *
+     */
+    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $departamentos = new Departamento($this->db);
-        return $response->withJson($departamentos->getUpdates($lastSyncDate)->values());
+        return $response->withJson(['DEPARTAMENTOS' => $departamentos->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/** CIE10 */
-$app->get('/CIE10/get/all', function (Request $request, Response $response) {
+/**
+ * @api {GET} /CIE10 all
+ * @apiGroup CIE10
+ * @apiDescription Retorna La Lista de CIE10 Completa
+ * @apiPermission user
+ * @apiSampleRequest off
+ *
+ * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+ * @apiHeaderExample {Json} Ejemplo Header:
+ * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+ *
+ * @apiError {Json} 401 Usuario o Contraseña Invalidos
+ * @apiErrorExample {Json} Ejemplo Error 401:
+ * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+ *
+ * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"RUTA INVALIDA"}
+ *
+ * @apiSuccess {Json} 200 Arreglo de Objetos de tipo DEPARTAMENTO
+ * @apiSuccessExample {Json} Ejemplo Respuesta:
+ * TODO EJEMPLO PENDIENTE
+ *
+ */
+$app->get('/CIE10', function (Request $request, Response $response) {
     $cie10 = new CIE10($this->db);
-    return $response->withJson($cie10->getAll()->values());
+    return $response->withJson(['CIE10' => $cie10->getAll()->values()]);
 });
 
-/** Tipos de Usuario */
-$app->get('/TiposUsuario/get/all', function(Request $request, Response $response){
+/**
+ * @api {GET} /TiposUsuario all
+ * @apiGroup TiposUsuario
+ * @apiDescription Retorna La Lista de Tipos de Usuarios Completa
+ * @apiPermission user
+ * @apiSampleRequest off
+ *
+ * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+ * @apiHeaderExample {Json} Ejemplo Header:
+ * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+ *
+ * @apiError {Json} 401 Usuario o Contraseña Invalidos
+ * @apiErrorExample {Json} Ejemplo Error 401:
+ * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+ *
+ * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"RUTA INVALIDA"}
+ *
+ * @apiSuccess {Json} 200 Arreglo de Objetos de tipo TIPO_USUARIO
+ * @apiSuccessExample {Json} Ejemplo Respuesta:
+ * TODO EJEMPLO PENDIENTE
+ *
+ */
+$app->get('/TiposUsuario', function(Request $request, Response $response){
     $tiposUsuario = new UserType($this->db);
-    return $response->withJson($tiposUsuario->getAll()->values());
+    return $response->withJson(["TIPOS_USUARIO" => $tiposUsuario->getAll()->values()]);
 });
 
-/** Areas */
 //TODO Areas especificas para el municipio o departamento del requesting User
-$app->group('/Areas/get', function () {
-    $this->get('/all', function (Request $request, Response $response) {
+$app->group('/Areas', function () {
+    /**
+     * @api {GET} /Areas all
+     * @apiGroup Areas
+     * @apiDescription Retorna La Lista de Areas Completa
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo AREA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('', function (Request $request, Response $response) {
         $areas = new Area($this->db);
-        return $response->withJson($areas->getAll()->values());
+        return $response->withJson(['AREAS' => $areas->getAll()->values()]);
     });
-    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
-        $lastSyncDate = $args['lastSyncDate'];
+
+    /**
+     * @api {GET} /Areas/:date updates
+     * @apiGroup Areas
+     * @apiDescription Retorna Los registros de Areas que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo AREA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $areas = new Area($this->db);
-        return $response->withJson($areas->getUpdates($lastSyncDate)->values());
+        return $response->withJson(['AREAS' => $areas->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/** Ips */
 //TODO IPS especificas para el municipio o departamento del requesting User
-$app->group('/Ips/get', function () {
-    $this->get('/all', function (Request $request, Response $response) {
+$app->group('/Ips', function () {
+    /**
+     * @api {GET} /Ips all
+     * @apiGroup Ips
+     * @apiDescription Retorna la lista de Instituciones Prestadoras de Servicios Completa
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('', function (Request $request, Response $response) {
         $ips = new Ips($this->db);
-        return $response->withJson($ips->getAll()->values());
+        return $response->withJson(['IPS' => $ips->getAll()->values()]);
     });
-    $this->get('/updates/{lastSyncDate}', function (Request $request, Response $response, $args) {
-        $lastSyncDate = $args['lastSyncDate'];
+
+    /**
+     * @api {GET} /Ips/:date updates
+     * @apiGroup Ips
+     * @apiDescription Retorna Los registros de Instituciones Prestadoras de Servicios que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $ips = new Ips($this->db);
-        return $response->withJson($ips->getUpdates($lastSyncDate)->values());
+        return $response->withJson(['IPS' => $ips->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/** Novedades */
 $app->group('/Novedades/', function () {
-    /** Novedades Tipo */
-    $this->get('tipo/get/all', function (Request $request, Response $response) {
+    /**
+     * @api {GET} /Novedades/tipo all
+     * @apiGroup Novedades Tipo
+     * @apiDescription Retorna la lista de Tipos de Novedades Completa
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('tipos', function (Request $request, Response $response) {
         $tipos = new NewsType($this->db);
-        return $response->withJson($tipos->getAll()->values());
+        return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getAll()->values()]);
     });
 
-    $this->get('tipo/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+    /**
+     * @api {GET} /Novedades/tipo/:date updates
+     * @apiGroup Novedades Tipos
+     * @apiDescription Retorna Los registros de Tipos de Novedades que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('tipos/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $tipos = new NewsType($this->db);
-        return $response->withJson($tipos->getUpdates($args['lastSyncDate'])->values());
+        return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getUpdates($lastSyncDate)->values()]);
     });
 
-    /** Novedades get */
-    $this->get('lista/get/all', function (Request $request, Response $response) {
+    /**
+     * @api {GET} /Novedades/campo all
+     * @apiGroup Novedades Campos
+     * @apiDescription Retorna las Listas de Novedades
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('campos', function (Request $request, Response $response) {
         $listas = new NewsList($this->db);
-        return $response->withJson($listas->getAll()->values());
+        return $response->withJson(['LISTAS_NOVEDAD' => $listas->getAll()->values()]);
     });
 
-    $this->get('lista/get/updates/{lastSyncDate}',function (Request $request, Response $response, $args){
+    /**
+     * @api {GET} /Novedades/lista/:date updates
+     * @apiGroup Novedades Lista
+     * @apiDescription Retorna Las Listas de Novedades que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('campos/{lastSyncDate}',function (Request $request, Response $response, $args){
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $listas = new NewsList($this->db);
-        return $response->withJson($listas->getUpdates($args['lastSyncDate'])->values());
+        return $response->withJson(['LISTAS_NOVEDAD' => $listas->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/** PEC */
 $app->group('/PEC/', function() {
-    $this->get('GruposObjetivo/get/all', function (Request $request, Response $response){
+    /**
+     * @api {GET} /PEC/GruposObjetivo all
+     * @apiGroup PEC Grupos Objetivo
+     * @apiDescription Retorna la lista de Grupos Objetivo de PEC Completa
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_GRUPO_OBJETIVO
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('GruposObjetivo', function (Request $request, Response $response){
         $gruposObjetivo = new PECObjetive($this->db);
-        return $response->withJson($gruposObjetivo->getAll()->values());
+        return $response->withJson(['PEC_GRUPOS_OBJETIVO' => $gruposObjetivo->getAll()->values()]);
     });
-    $this->get('Guias/get/all', function (Request $request, Response $response){
+
+    /**
+     * @api {GET} /PEC/Guias all
+     * @apiGroup PEC Guias
+     * @apiDescription Retorna la lista de Guias PEC
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_GUIA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('Guias', function (Request $request, Response $response){
         $guias = new PECGuide($this->db);
-        return $response->withJson($guias->getAll()->values());
+        return $response->withJson(['PEC_GUIAS' => $guias->getAll()->values()]);
     });
-    $this->get('Guias/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+
+    /**
+     * @api {GET} /PEC/Guias/:date updates
+     * @apiGroup PEC Guias
+     * @apiDescription Retorna Las Guias PEC que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_GUIA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('Guias/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $guias = new PECGuide($this->db);
-        return $response->withJson($guias->getUpdates($args['lastSyncDate'])->values());
+        return $response->withJson(['PEC_GUIAS' => $guias->getUpdates($lastSyncDate)->values()]);
     });
-    $this->get('Procesos/get/all', function (Request $request, Response $response){
+
+    /**
+     * @api {GET} /PEC/Procesos all
+     * @apiGroup PEC Procesos
+     * @apiDescription Retorna los Procesos PEC
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_PROCESO
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('Procesos', function (Request $request, Response $response){
         $procesos = new PECProcess($this->db);
-        return $response->withJson($procesos->getAll()->values());
+        return $response->withJson(['PEC_PROCESOS' => $procesos->getAll()->values()]);
     });
-    $this->get('Programacion/get/all', function (Request $request, Response $response){
+
+    /**
+     * @api {GET} /PEC/Programacion all
+     * @apiGroup PEC Programacion
+     * @apiDescription Retorna la Programacion de Actividades PEC
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_PROGRAMACION
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('Programacion', function (Request $request, Response $response){
         $programaciones = new PECSchedule($this->db);
-        return $response->withJson($programaciones->getAll()->values());
+        return $response->withJson(['PEC_PROGRAMACIONES' => $programaciones->getAll()->values()]);
     });
-    $this->get('Temas/get/all', function (Request $request, Response $response){
+
+    /**
+     * @api {GET} /PEC/temas all
+     * @apiGroup PEC Temas
+     * @apiDescription Retorna la lista de Temas PEC
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('Temas', function (Request $request, Response $response){
         $temas = new PECTopic($this->db);
-        return $response->withJson($temas->getAll()->values());
+        return $response->withJson(['PEC_TEMAS' => $temas->getAll()->values()]);
     });
-    $this->get('Temas/get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+
+    /**
+     * @api {GET} /PEC/Temas/:date updates
+     * @apiGroup PEC Temas
+     * @apiDescription Retorna los Temas PEC que han sufrido modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('Temas/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $temas = new PECTopic($this->db);
-        return $response->withJson($temas->getUpdates($args['lastSyncDate'])->values());
+        return $response->withJson(['PEC_TEMAS' => $temas->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/** Medicamentos */
-$app->group('/Medicamentos/get/', function() {
-   $this->get('all', function (Request $request, Response $response) {
-       $medicines = new Medicine($this->db);
-       return $response->withJson($medicines->getAll()->values());
-   });
+/**
+ * @api {GET} /Medicamentos all
+ * @apiGroup Medicamentos
+ * @apiDescription Retorna el Listado de Medicamentos
+ * @apiPermission user
+ * @apiSampleRequest off
+ *
+ * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+ * @apiHeaderExample {Json} Ejemplo Header:
+ * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+ *
+ * @apiError {Json} 401 Usuario o Contraseña Invalidos
+ * @apiErrorExample {Json} Ejemplo Error 401:
+ * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+ *
+ * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"RUTA INVALIDA"}
+ *
+ * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+ * @apiSuccessExample {Json} Ejemplo Respuesta:
+ * TODO EJEMPLO PENDIENTE
+ *
+ */
+$app->group('/Medicamentos', function() {
+    $this->get('', function (Request $request, Response $response) {
+        $medicines = new Medicine($this->db);
+        return $response->withJson(['MEDICAMENTOS' => $medicines->getAll()->values()]);
+    });
 });
 
-/** Laboratorios */
-$app->group('/Laboratorios/get/', function() {
-    $this->get('all', function (Request $request, Response $response) {
+/**
+ * @api {GET} /Laboratorios all
+ * @apiGroup Laboratorios
+ * @apiDescription Retorna el Listado de Laboratorios
+ * @apiPermission user
+ * @apiSampleRequest off
+ *
+ * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+ * @apiHeaderExample {Json} Ejemplo Header:
+ * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+ *
+ * @apiError {Json} 401 Usuario o Contraseña Invalidos
+ * @apiErrorExample {Json} Ejemplo Error 401:
+ * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+ *
+ * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"RUTA INVALIDA"}
+ *
+ * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+ * @apiSuccessExample {Json} Ejemplo Respuesta:
+ * TODO EJEMPLO PENDIENTE
+ *
+ */
+$app->group('/Laboratorios', function() {
+    $this->get('', function (Request $request, Response $response) {
         $laboratories = new Laboratory($this->db);
-        return $response->withJson($laboratories->getAll()->values());
+        return $response->withJson(['LABORATORIOS' => $laboratories->getAll()->values()]);
     });
 });
 
-/** Modulos */
-$app->group('/Modulos/', function() {
-    $this->get('get/all', function (Request $request, Response $response){
+$app->group('/Modulos', function() {
+    /**
+     * @api {GET} /Modulos all
+     * @apiGroup Modulos
+     * @apiDescription Retorna el Listado de Modulos
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('', function (Request $request, Response $response){
         $modulos = new Module($this->db);
-        return $response->withJson($modulos->getAll()->values());
+        return $response->withJson(['MODULOS' => $modulos->getAll()->values()]);
     });
-    $this->get('get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+
+    /**
+     * @api {GET} /Modulos/:date updates
+     * @apiGroup Modulos
+     * @apiDescription Retorna el Listado de Modulos con modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $modulos = new Module($this->db);
-        return $response->withJson($modulos->getUpdates($args['lastSyncDate'])->values());
+        return $response->withJson(['MODULOS' => $modulos->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/** Preguntas */
-$app->group('/Preguntas/', function() {
-    $this->get('get/all', function (Request $request, Response $response){
+$app->group('/Preguntas', function() {
+    /**
+     * @api {GET} /Preguntas all
+     * @apiGroup Preguntas
+     * @apiDescription Retorna el Listado de Preguntas
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('', function (Request $request, Response $response){
         $preguntas = new Question($this->db);
-        return $response->withJson($preguntas->getAll()->values());
+        return $response->withJson(['PREGUNTAS' => $preguntas->getAll()->values()]);
     });
-    $this->get('get/updates/{lastSyncDate}', function (Request $request, Response $response, $args){
+
+    /**
+     * @api {GET} /Preguntas/:date updates
+     * @apiGroup Preguntas
+     * @apiDescription Retorna el Listado de Preguntas con modificaciones posteriores a :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args){
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $preguntas = new Question($this->db);
-        return $response->withJson($preguntas->getUpdates($args['lastSyncDate'])->values());
+        return $response->withJson(['PREGUNTAS' => $preguntas->getUpdates($lastSyncDate)->values()]);
     });
 });
 
-/*************************
+/**
+ *************************
  * SERVICIOS ESPECIFICOS *
- * ***********************
+ *************************
  **/
 
-/** Programacion */
-$app->group('/Programacion/',function(){
-    /** All */
-    $this->get('get/all', function(Request $request, Response $response){
+$app->group('/Programaciones',function(){
+    /**
+     * @api {GET} /Programaciones all
+     * @apiGroup Programaciones
+     * @apiDescription Retorna la Programacion asignada al usuario que realiza la peticion
+     * @apiPermission specific_user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('', function(Request $request, Response $response){
         $programaciones = new Schedule($this->db);
-        return $response->withJson($programaciones->getAll($this->userName)->values());
+        return $response->withJson(['PROGRAMACIONES' => $programaciones->getAll($this->userName)->values()]);
     });
 
-    /** Updates */
-    $this->get('get/updates/{lastSyncDate}', function(Request $request, Response $response, $args){
-        $lastSyncDate = $args['lastSyncDate'];
+    /**
+     * @api {GET} /Programaciones/:date updates
+     * @apiGroup Programaciones
+     * @apiDescription Retorna la Programacion asignada al usuario que realiza la peticion y que haya sido modificado posterior a :date
+     * @apiPermission specific_user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"RUTA INVALIDA"}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * TODO EJEMPLO PENDIENTE
+     *
+     */
+    $this->get('/{lastSyncDate}', function(Request $request, Response $response, $args){
+        $lastSyncDate = new \DateTime();
+        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         $programaciones = new Schedule($this->db);
-        return $response->withJson($programaciones->getUpdates($this->userName,$lastSyncDate)->values());
+        return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName,$lastSyncDate)->values()]);
     });
 });
+
+/**
+ **************************
+ * SERVICIOS PERSISTENCIA *
+ **************************
+ **/
 
 $app->run();

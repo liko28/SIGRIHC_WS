@@ -5,9 +5,7 @@
     },
     "autoload": {
       "psr-4": {
-        "Controllers\\":"controllers/",
-        "Models\\":"models/",
-        "Helpers\\":"helpers/"
+        "SIGRI_HC\\":"src"
       }
     },
     "require-dev": {
