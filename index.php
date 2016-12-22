@@ -117,7 +117,9 @@ $app->add(function (Request $request, Response $response, $next){
     }
 });
 
-/** Date -SyncDate- */
+/** Date -SyncDate-
+ * @notImplemented
+ */
 //TODO implementar este Mw cuando me respondan en Github
 $dateMw = function ($request, $response, $next) {
     $lastSyncDate = $request->getAttribute('routeInfo')[2]['lastSyncDate'];
@@ -125,6 +127,15 @@ $dateMw = function ($request, $response, $next) {
     $date->setTimeStamp(strtotime($lastSyncDate));
     return $next($request, $response,[],$date);
 };
+
+/** Content Type */
+$app->add(function(Request $request, Response $response, $next){
+    $contentType = 'application/json';
+    if(($request->isPost() || $request->isPut()) && $request->getContentType() !== $contentType) {
+        return $next($request->withHeader('Content-Type',$contentType),$response);
+    }
+    return $next($request,$response);
+});
 
 /**
  ***********************
