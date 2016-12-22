@@ -74,11 +74,11 @@ $container['notFoundHandler'] = function ($c) {
 
 /** Error 500 */
 $container['phpErrorHandler'] = function($c) {
-  return function ($request, $response, $exception) use ($c) {
-      $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
-      return $c['response']->withStatus(500)
-          ->write(ERROR_500);
-  };
+    return function ($request, $response, $exception) use ($c) {
+        $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
+        return $c['response']->withStatus(500)
+            ->write(ERROR_500);
+    };
 };
 
 /** Logger */
@@ -131,7 +131,6 @@ $dateMw = function ($request, $response, $next) {
  * SERVICIOS GENERICOS *
  ***********************
  **/
-
 
 $app->group('/ListasReferencia', function(){
     /**
@@ -401,7 +400,6 @@ $app->get('/TiposUsuario', function(Request $request, Response $response){
     $tiposUsuario = new UserType($this->db);
     return $response->withJson(["TIPOS_USUARIO" => $tiposUsuario->getAll()->values()]);
 });
-
 
 //TODO Areas especificas para el municipio o departamento del requesting User
 $app->group('/Areas', function () {
@@ -934,10 +932,10 @@ $app->group('/PEC/', function() {
  *
  */
 $app->group('/Medicamentos', function() {
-   $this->get('', function (Request $request, Response $response) {
-       $medicines = new Medicine($this->db);
-       return $response->withJson(['MEDICAMENTOS' => $medicines->getAll()->values()]);
-   });
+    $this->get('', function (Request $request, Response $response) {
+        $medicines = new Medicine($this->db);
+        return $response->withJson(['MEDICAMENTOS' => $medicines->getAll()->values()]);
+    });
 });
 
 /**
@@ -972,7 +970,6 @@ $app->group('/Laboratorios', function() {
         return $response->withJson(['LABORATORIOS' => $laboratories->getAll()->values()]);
     });
 });
-
 
 $app->group('/Modulos', function() {
     /**
@@ -1112,9 +1109,10 @@ $app->group('/Preguntas', function() {
     });
 });
 
-/*************************
+/**
+ *************************
  * SERVICIOS ESPECIFICOS *
- * ***********************
+ *************************
  **/
 
 $app->group('/Programaciones',function(){
@@ -1185,5 +1183,11 @@ $app->group('/Programaciones',function(){
         return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName,$lastSyncDate)->values()]);
     });
 });
+
+/**
+ **************************
+ * SERVICIOS PERSISTENCIA *
+ **************************
+ **/
 
 $app->run();
