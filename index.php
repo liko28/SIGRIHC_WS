@@ -1200,5 +1200,11 @@ $app->group('/Programaciones',function(){
  * SERVICIOS PERSISTENCIA *
  **************************
  **/
-
+/*$app->group('/HistoriaClinica', function () {
+    $this->post('/medico',function (Request $request, Response $response){
+        $historias = new HcMedica($this->db);
+        $input = $request->getParsedBody();
+        return $response->withJson($historias->insert($input));
+    });
+});*/
 $app->run();
