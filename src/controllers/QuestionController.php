@@ -17,4 +17,21 @@ class QuestionController extends BaseController {
     public function __construct(Connection $connection) {
         parent::__construct(new QuestionModel($connection));
     }
+
+    public function getQuestionEntity($id) {
+        foreach ($this->model->getResult() as $question) {
+            if($question->CODIGO == $id) {
+                return $question->ENTIDAD;
+            }
+        }
+
+    }
+
+    public function getQuestionField($id) {
+        foreach ($this->model->getResult() as $question) {
+            if($question->CODIGO == $id) {
+                return $question->ATRIBUTO;
+            }
+        }
+    }
 }

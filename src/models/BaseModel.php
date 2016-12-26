@@ -187,11 +187,9 @@ class BaseModel{
                     $operation = substr($SQLsentence,0,strpos($SQLsentence," "));
                     switch ($operation) {
                         case "INSERT":
-                            //Caso si Insert
-                            return db2_last_insert_id($preparedStmt);
+                            return db2_last_insert_id($this->connection->getConnectionResource());
                             break;
                         case "SELECT":
-                            //Caso si Select
                             if(LABELS) {
                                 while ($result = db2_fetch_assoc($preparedStmt)) {
                                     $this->result->append(new Row($result));
@@ -204,14 +202,14 @@ class BaseModel{
                             return $this->result;
                             break;
                         case "UPDATE":
-                            //Caso si Update
+                            //TODO Caso si Update
                             break;
                         default:
                             return true;
                         break;
                     }
                 }else {
-                    throw new \ErrorException("ERROR DE EJECUCION ".db2_stmt_error().":".db2_stmt_errormsg());
+                    throw new \ErrorException("ERROR DE EJECUCION ".db2_stmt_error().":".db2_stmt_errormsg()." en {$this->getSchema()}.{$this->getTableName()}");
                 }
             } else {
                 throw new \ErrorException("ERROR DE PREPARACION ".db2_stmt_error().":".db2_stmt_errormsg());
@@ -229,5 +227,22 @@ class BaseModel{
             return db2_execute($preparedStmt,$parameters);
         }
         return db2_execute($preparedStmt);
+    }
+
+    public function insert(Row $object) {
+        $columns = "";
+        $values = "";
+        foreach ($object as $field => $value) {
+            $columns .= "$field, ";
+            if (is_string($value)) {
+                $values .= "'$value', ";
+            } elseif(is_numeric($value)) {
+                $values .= "$value, ";
+            }
+        }
+        $columns = trim($columns,', ');
+        $values = trim($values,', ');
+        $query = "INSERT INTO {$this->getSchema()}.{$this->getTableName()} ($columns) VALUES($values)";
+        return $this->query($query);
     }
 }

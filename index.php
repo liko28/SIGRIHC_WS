@@ -26,6 +26,7 @@ use SIGRI_HC\Controllers\MedicineController as Medicine;
 use SIGRI_HC\Controllers\LaboratoryController as Laboratory;
 use SIGRI_HC\Controllers\ModuleController as Module;
 use SIGRI_HC\Controllers\QuestionController as Question;
+use SIGRI_HC\Controllers\HcMedicaController as HcMedica;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -1200,11 +1201,11 @@ $app->group('/Programaciones',function(){
  * SERVICIOS PERSISTENCIA *
  **************************
  **/
-/*$app->group('/HistoriaClinica', function () {
+$app->group('/HistoriaClinica', function () {
     $this->post('/medico',function (Request $request, Response $response){
         $historias = new HcMedica($this->db);
         $input = $request->getParsedBody();
-        return $response->withJson($historias->insert($input));
+        return $response->withJson(["HISTORIA_MEDICA" => $historias->create($input)]);
     });
-});*/
+});
 $app->run();

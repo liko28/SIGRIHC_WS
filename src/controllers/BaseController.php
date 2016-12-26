@@ -40,4 +40,8 @@ class BaseController {
     public function getUpdates(\DateTime $lastSyncDate){
         return $this->model->getUpdates($lastSyncDate->format('Y-m-d-H.i.s'));
     }
+
+    public function insert(Row $object) {
+        return $this->model->insert($object);
+    }
 }
