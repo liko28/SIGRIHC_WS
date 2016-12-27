@@ -6,7 +6,7 @@
  * Time: 11:05 AM
  */
 
-namespace SIGRI_HC\models;
+namespace SIGRI_HC\Models;
 
 
 class NewsListModel extends BaseModel {
