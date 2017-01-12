@@ -47,10 +47,10 @@ class HcMedicaController extends BaseController {
 
             foreach ($entities as $entity => $row) {
                 $baseModel->setTableName($entity);
-                //TODO el primero en insertar debe ser HC_MEDICA
-                //TODO Inject HC_MEDICA ID
-                //TODO Inject UserId
+                //TODO Verificar si ID_HC aplica para todas las tablas
+                $row->addField(["ID_HC" => $hcId]);
                 //TODO Inject Fecmodi, IpModi, Feccrea, Ipcrea, Usercrea, Usermodi
+                //TODO Inject UserId
                 try {
                     $baseModel->insert($row);
                 } catch (\Exception $e) {
