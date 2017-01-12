@@ -1,0 +1,15 @@
+{
+    "require": {
+        "slim/slim": "^3.5",
+        "monolog/monolog": "^1.21"
+    },
+    "autoload": {
+      "psr-4": {
+        "SIGRI_HC\\":"src/"
+      }
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.2",
+        "flow/jsonpath": "^0.3.4"
+    }
+}

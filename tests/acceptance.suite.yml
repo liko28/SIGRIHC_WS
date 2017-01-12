@@ -1,0 +1,7 @@
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - REST:
+            url: http://localhost/sigrihc/
+            depends: PhpBrowser
+            part: Json
