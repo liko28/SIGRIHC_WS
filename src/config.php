@@ -22,4 +22,4 @@ const ERROR_404 = "LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...";
 const CONFIG = array("settings" => array("displayErrorDetails" => true),"determineRouteBeforeAppMiddleware" => true);
 
 /** Version */
-const VERSION = '0.5.0';
+const VERSION = '0.5.1';
