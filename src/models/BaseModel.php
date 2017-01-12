@@ -222,7 +222,7 @@ class BaseModel{
     /** @param array $parameters
      * @return bool
      */
-    public function execute(&$preparedStmt,$parameters){
+    public function execute(&$preparedStmt,$parameters = null){
         if(is_array($parameters)) {
             return db2_execute($preparedStmt,$parameters);
         }
