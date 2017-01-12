@@ -20,3 +20,6 @@ const ERROR_404 = "LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...";
 /** Configuracion de Slim */
 /** Errores detallados */
 const CONFIG = array("settings" => array("displayErrorDetails" => true),"determineRouteBeforeAppMiddleware" => true);
+
+/** Version */
+const VERSION = '0.5.0';
