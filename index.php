@@ -151,40 +151,9 @@ $app->add(function(Request $request, Response $response, $next){
 
 $app->group('/ListasReferencia', function(){
     /**
-     * @api {GET} /ListasReferencia all
-     * @apiGroup ListasReferencia
-     * @apiDescription Retorna La Lista de Referencia Completa
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo LISTA_REFERENCIA
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * {"LISTA_REFERENCIA":[{"ID_LISTA":"1","PADRE":"","DESCRIPCION":"Motivo Visita","CODLISTA":"","VALOR":"","ESTADO":""}]}
-     *
-     */
-    $this->get('',function (Request $request, Response $response){
-        $referenceList = new ReferenceList($this->db);
-        return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getAll()->values()]);
-    });
-
-    /**
      * @api {GET} /ListasReferencia/:date updates
      * @apiGroup ListasReferencia
-     * @apiDescription Retorna Los registros de Lista de Referencia que han sufrido modificaciones posteriores a :date
+     * @apiDescription Retorna Todos los registros de Lista de Referencia, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -192,7 +161,7 @@ $app->group('/ListasReferencia', function(){
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
@@ -201,59 +170,29 @@ $app->group('/ListasReferencia', function(){
      *
      * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo LISTA_REFERENCIA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
      * {"LISTA_REFERENCIA":[{"ID_LISTA":"1","PADRE":"","DESCRIPCION":"Motivo Visita","CODLISTA":"","VALOR":"","ESTADO":""}]}
      *
      */
-    $this->get('/{lastSyncDate}', function(Request $request, Response $response, $args){
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('[/{lastSyncDate}]', function(Request $request, Response $response, $args){
         $referenceList = new ReferenceList($this->db);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getAll()->values()]);
+        }
         return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getUpdates($lastSyncDate)->values()]);
     });
 });
 
 $app->group('/Municipios', function () {
     /**
-     * @api {GET} /Municipios all
-     * @apiGroup Municipios
-     * @apiDescription Retorna La Lista de Municipios Completa
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo MUNICIPIO
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * {"MUNICIPIO":[{"ID":"25","NOMBRE":"AMAGÁ Antioquia","ID_DPTO":"05","NOMBRE_DPTO":"Antioquia","CODIGO":"030","ID_CIUDAD":"05030","ESTADO":"0"}]}
-     *
-     */
-    $this->get('', function (Request $request, Response $response) {
-        $municipios = new Municipio($this->db);
-        return $response->withJson(["MUNICIPIOS" => $municipios->getAll()->values()]);
-    });
-
-    /**
      * @api {GET} /Municipios/:date updates
      * @apiGroup Municipios
-     * @apiDescription Retorna Los registros de Municipios que han sufrido modificaciones posteriores a :date
+     * @apiDescription Retorna Todos los registros de Municipios, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -261,7 +200,7 @@ $app->group('/Municipios', function () {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
@@ -270,20 +209,21 @@ $app->group('/Municipios', function () {
      *
      * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo MUNICIPIO
      * @apiSuccessExample {Json} Ejemplo Respuesta:
      * {"MUNICIPIO":[{"ID":"25","NOMBRE":"AMAGÁ Antioquia","ID_DPTO":"05","NOMBRE_DPTO":"Antioquia","CODIGO":"030","ID_CIUDAD":"05030","ESTADO":"0"}]}
      *
      */
-    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $municipios = new Municipio($this->db);
-        return $response->withJson(["MUNICIPIOS" => $municipios->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(["MUNICIPIOS" => $municipios->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(["MUNICIPIOS" => $municipios->getAll()->values()]);
     });
 });
 
