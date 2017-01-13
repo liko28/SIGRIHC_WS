@@ -174,7 +174,7 @@ $app->group('/ListasReferencia', function(){
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo LISTA_REFERENCIA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * {"LISTA_REFERENCIA":[{"ID_LISTA":"1","PADRE":"","DESCRIPCION":"Motivo Visita","CODLISTA":"","VALOR":"","ESTADO":""}]}
+     * {"LISTAS_REFERENCIA":[{"ID_LISTA":"1","PADRE":"","DESCRIPCION":"Motivo Visita","CODLISTA":"","VALOR":"","ESTADO":""},{...}]}
      *
      */
     $this->get('[/{lastSyncDate}]', function(Request $request, Response $response, $args){
@@ -213,7 +213,7 @@ $app->group('/Municipios', function () {
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo MUNICIPIO
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * {"MUNICIPIO":[{"ID":"25","NOMBRE":"AMAGÁ Antioquia","ID_DPTO":"05","NOMBRE_DPTO":"Antioquia","CODIGO":"030","ID_CIUDAD":"05030","ESTADO":"0"}]}
+     * {"MUNICIPIOS":[{"ID":"25","NOMBRE":"AMAGÁ Antioquia","ID_DPTO":"05","NOMBRE_DPTO":"Antioquia","CODIGO":"030","ID_CIUDAD":"05030","ESTADO":"0"},{...}]}
      *
      */
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
@@ -229,40 +229,9 @@ $app->group('/Municipios', function () {
 
 $app->group('/Departamentos', function () {
     /**
-     * @api {GET} /Departamentos all
-     * @apiGroup Departamentos
-     * @apiDescription Retorna La Lista de Departamentos Completa
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo DEPARTAMENTO
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * {"DEPARTAMENTO":[{"ID" : "2","NOMBRE" : "ANTIOQUIA","PAIS" : "57","CODIGO" : "05","ACTIVO" : "0"}]}
-     *
-     */
-    $this->get('', function (Request $request, Response $response) {
-        $departamentos = new Departamento($this->db);
-        return $response->withJson(['DEPARTAMENTOS' => $departamentos->getAll()->values()]);
-    });
-
-    /**
      * @api {GET} /Departamentos/:date updates
      * @apiGroup Departamentos
-     * @apiDescription Retorna Los registros de Departamentos que han sufrido modificaciones posteriores a :date
+     * @apiDescription Retorna Todos los registros de Departamentos, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -270,7 +239,7 @@ $app->group('/Departamentos', function () {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
@@ -279,20 +248,22 @@ $app->group('/Departamentos', function () {
      *
      * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo DEPARTAMENTO
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     *  {"DEPARTAMENTO":[{"ID" : "2","NOMBRE" : "ANTIOQUIA","PAIS" : "57","CODIGO" : "05","ACTIVO" : "0"}]}
+     *  {"DEPARTAMENTOS":[{"ID" : "2","NOMBRE" : "ANTIOQUIA","PAIS" : "57","CODIGO" : "05","ACTIVO" : "0"},{...}]}
      *
      */
-    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $departamentos = new Departamento($this->db);
-        return $response->withJson(['DEPARTAMENTOS' => $departamentos->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['DEPARTAMENTOS' => $departamentos->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['DEPARTAMENTOS' => $departamentos->getAll()->values()]);
+
     });
 });
 
@@ -319,7 +290,7 @@ $app->group('/Departamentos', function () {
  *
  * @apiSuccess {Json} 200 Arreglo de Objetos de tipo DEPARTAMENTO
  * @apiSuccessExample {Json} Ejemplo Respuesta:
- * TODO EJEMPLO PENDIENTE
+ * {"CIE10":[{"ID":"1","CODIGO":"A000","DESCRIPCION":"COLERA DEBIDO A VIBRIO CHOLERAE O1, BIOTIPO CHOLERAE","CLASE":"","ACTIVO":"0"},{...}]}
  *
  */
 $app->get('/CIE10', function (Request $request, Response $response) {
