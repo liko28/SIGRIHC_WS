@@ -284,9 +284,7 @@ $app->group('/Departamentos', function () {
  *
  * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
  * @apiErrorExample {Json} Ejemplo Error 404:
- * {"ERROR":"ELEMENTO NO ENCONTRADO"}
- * @apiErrorExample {Json} Ejemplo Error 404:
- * {"ERROR":"RUTA INVALIDA"}
+ * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
  * @apiSuccess {Json} 200 Arreglo de Objetos de tipo DEPARTAMENTO
  * @apiSuccessExample {Json} Ejemplo Respuesta:
@@ -315,9 +313,7 @@ $app->get('/CIE10', function (Request $request, Response $response) {
  *
  * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
  * @apiErrorExample {Json} Ejemplo Error 404:
- * {"ERROR":"ELEMENTO NO ENCONTRADO"}
- * @apiErrorExample {Json} Ejemplo Error 404:
- * {"ERROR":"RUTA INVALIDA"}
+ * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
  * @apiSuccess {Json} 200 Arreglo de Objetos de tipo TIPO_USUARIO
  * @apiSuccessExample {Json} Ejemplo Respuesta:
@@ -351,9 +347,7 @@ $app->group('/Areas', function () {
      *
      * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo AREA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
@@ -374,40 +368,9 @@ $app->group('/Areas', function () {
 //TODO IPS especificas para el municipio o departamento del requesting User
 $app->group('/Ips', function () {
     /**
-     * @api {GET} /Ips all
-     * @apiGroup Ips
-     * @apiDescription Retorna la lista de Instituciones Prestadoras de Servicios Completa
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('', function (Request $request, Response $response) {
-        $ips = new Ips($this->db);
-        return $response->withJson(['IPS' => $ips->getAll()->values()]);
-    });
-
-    /**
      * @api {GET} /Ips/:date updates
      * @apiGroup Ips
-     * @apiDescription Retorna Los registros de Instituciones Prestadoras de Servicios que han sufrido modificaciones posteriores a :date
+     * @apiDescription Retorna Todos los registros de Instituciones Prestadoras de Servicios, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -415,7 +378,7 @@ $app->group('/Ips', function () {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
@@ -424,20 +387,21 @@ $app->group('/Ips', function () {
      *
      * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"IPS":[{"ID":"1","COD_INS":"1","NIT":"1","NOMBRE":"SALUDFAMILIAR IPS","DIRECCION":"CARRERA 57 # 74 - 71","PAIS":"57","DPTO":"08","CIUDAD":"001","TELEFONO":"3588128","MOVIL":"3162413498","EMAIL":"rennimunoz@saludfamiliar.com.co","REPRESENTANTE":"","ACTIVO":"0"},{...}]}
      *
      */
-    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $ips = new Ips($this->db);
-        return $response->withJson(['IPS' => $ips->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['IPS' => $ips->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['IPS' => $ips->getAll()->values()]);
     });
 });
 
