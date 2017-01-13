@@ -321,7 +321,7 @@ $app->get('/CIE10', function (Request $request, Response $response) {
  *
  * @apiSuccess {Json} 200 Arreglo de Objetos de tipo TIPO_USUARIO
  * @apiSuccessExample {Json} Ejemplo Respuesta:
- * TODO EJEMPLO PENDIENTE
+ * {"TIPOS_USUARIO":[{"ID":"1","NOMBRE":"Administrador","CODIGO":"1","ESTADO":"0","ABREVIATURA":"ADM"},{...}]}
  *
  */
 $app->get('/TiposUsuario', function(Request $request, Response $response){
