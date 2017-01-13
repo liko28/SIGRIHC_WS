@@ -56,10 +56,10 @@ $container['errorHandler'] = function ($c) {
         $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
         if($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
             return $c['response']->withStatus(500)
-                ->write($exception);
+                ->withJson($exception);
         } else {
             return $c['response']->withStatus(500)
-                ->write(ERROR_500);
+                ->withJson(ERROR_500);
         }
     };
 };
@@ -67,9 +67,9 @@ $container['errorHandler'] = function ($c) {
 /** Error 400 */
 $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
-        $c['logger']->addError($request->getUri(),array("ERROR"=>ERROR_404));
+        $c['logger']->addError($request->getUri(),ERROR_404);
         return $c['response']->withStatus(404)
-            ->write(ERROR_404);
+            ->withJson(ERROR_404);
     };
 };
 
@@ -77,8 +77,13 @@ $container['notFoundHandler'] = function ($c) {
 $container['phpErrorHandler'] = function($c) {
     return function ($request, $response, $exception) use ($c) {
         $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
-        return $c['response']->withStatus(500)
-            ->write(ERROR_500);
+        if($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+            return $c['response']->withStatus(500)
+                ->withJson($exception);
+        } else {
+            return $c['response']->withStatus(500)
+                ->withJson(ERROR_500);
+        }
     };
 };
 
