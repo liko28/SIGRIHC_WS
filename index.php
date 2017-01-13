@@ -168,7 +168,7 @@ $app->group('/ListasReferencia', function(){
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
@@ -207,7 +207,7 @@ $app->group('/Municipios', function () {
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
@@ -246,7 +246,7 @@ $app->group('/Departamentos', function () {
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
@@ -282,7 +282,7 @@ $app->group('/Departamentos', function () {
  * @apiErrorExample {Json} Ejemplo Error 401:
  * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
  *
- * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+ * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
  * @apiErrorExample {Json} Ejemplo Error 404:
  * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
@@ -311,7 +311,7 @@ $app->get('/CIE10', function (Request $request, Response $response) {
  * @apiErrorExample {Json} Ejemplo Error 401:
  * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
  *
- * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+ * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
  * @apiErrorExample {Json} Ejemplo Error 404:
  * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
@@ -345,7 +345,7 @@ $app->group('/Areas', function () {
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
@@ -385,7 +385,7 @@ $app->group('/Ips', function () {
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
@@ -407,107 +407,46 @@ $app->group('/Ips', function () {
 
 $app->group('/Novedades/', function () {
     /**
-     * @api {GET} /Novedades/tipo all
-     * @apiGroup Novedades Tipo
-     * @apiDescription Retorna la lista de Tipos de Novedades Completa
+     * @api {GET} /Novedades/tipos/:date updates
+     * @apiGroup Novedades Tipos
+     * @apiDescription Retorna Todos los registros de Tipos de Novedades, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
      * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
      * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"TIPOS_NOVEDAD":[{"TIPO_NOVEDAD":"NA-03","DESCRIPCION":"NO ATIENDE PORQUE YA FUE VISITADO EN OTRO NUCLEO FAMILIAR","ESTADO":"A"},{...}]}
      *
      */
-    $this->get('tipos', function (Request $request, Response $response) {
+    $this->get('tipos[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $tipos = new NewsType($this->db);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getUpdates($lastSyncDate)->values()]);
+        }
         return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getAll()->values()]);
     });
 
     /**
-     * @api {GET} /Novedades/tipo/:date updates
-     * @apiGroup Novedades Tipos
-     * @apiDescription Retorna Los registros de Tipos de Novedades que han sufrido modificaciones posteriores a :date
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
-     *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
-
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('tipos/{lastSyncDate}', function (Request $request, Response $response, $args){
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
-        $tipos = new NewsType($this->db);
-        return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getUpdates($lastSyncDate)->values()]);
-    });
-
-    /**
-     * @api {GET} /Novedades/campo all
-     * @apiGroup Novedades Campos
-     * @apiDescription Retorna las Listas de Novedades
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('campos', function (Request $request, Response $response) {
-        $listas = new NewsList($this->db);
-        return $response->withJson(['LISTAS_NOVEDAD' => $listas->getAll()->values()]);
-    });
-
-    /**
-     * @api {GET} /Novedades/lista/:date updates
+     * @api {GET} /Novedades/listas/:date updates
      * @apiGroup Novedades Lista
-     * @apiDescription Retorna Las Listas de Novedades que han sufrido modificaciones posteriores a :date
+     * @apiDescription Retorna Todas las Listas de Novedades, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -515,29 +454,30 @@ $app->group('/Novedades/', function () {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"LISTAS_NOVEDAD":[{"COD_NOVEDAD":"1","TIPO_NOVEDAD":"N01","DESCRIPCION":"NUEVO TIPO DE DOCUMENTO DE IDENTIDAD","ESTADO":"A","VALOR":"1"},{...}]}
      *
      */
-    $this->get('campos/{lastSyncDate}',function (Request $request, Response $response, $args){
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('listas/{lastSyncDate}',function (Request $request, Response $response, $args){
         $listas = new NewsList($this->db);
-        return $response->withJson(['LISTAS_NOVEDAD' => $listas->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['LISTAS_NOVEDAD' => $listas->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['LISTAS_NOVEDAD' => $listas->getAll()->values()]);
     });
 });
 
@@ -557,15 +497,13 @@ $app->group('/PEC/', function() {
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_GRUPO_OBJETIVO
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"PEC_GRUPOS_OBJETIVO":[{"ID_OBJETIVO":"0 ","NOMBRE_OBJETIVO":"COORDINADORES LIDERES"},{...}]}
      *
      */
     $this->get('GruposObjetivo', function (Request $request, Response $response){
@@ -574,40 +512,9 @@ $app->group('/PEC/', function() {
     });
 
     /**
-     * @api {GET} /PEC/Guias all
-     * @apiGroup PEC Guias
-     * @apiDescription Retorna la lista de Guias PEC
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_GUIA
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('Guias', function (Request $request, Response $response){
-        $guias = new PECGuide($this->db);
-        return $response->withJson(['PEC_GUIAS' => $guias->getAll()->values()]);
-    });
-
-    /**
      * @api {GET} /PEC/Guias/:date updates
      * @apiGroup PEC Guias
-     * @apiDescription Retorna Las Guias PEC que han sufrido modificaciones posteriores a :date
+     * @apiDescription Retorna Las Guias PEC, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -615,28 +522,29 @@ $app->group('/PEC/', function() {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_GUIA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"PEC_GUIAS":[{"ID_GUIA":"1","NOMBRE_GUIA":"GUIA 1 ","GRUPO_OBJETIVO":"1|3","PROCESOS":"6|"},{...}]}
      *
      */
-    $this->get('Guias/{lastSyncDate}', function (Request $request, Response $response, $args){
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('Guias[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $guias = new PECGuide($this->db);
-        return $response->withJson(['PEC_GUIAS' => $guias->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['PEC_GUIAS' => $guias->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['PEC_GUIAS' => $guias->getAll()->values()]);
     });
 
     /**
@@ -654,15 +562,13 @@ $app->group('/PEC/', function() {
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_PROCESO
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"PEC_PROCESOS":[{"ID_PROCESO":"1","NOMBRE_PROCESO":"ASEGURAMIENTO"},{...}]}
      *
      */
     $this->get('Procesos', function (Request $request, Response $response){
@@ -685,15 +591,13 @@ $app->group('/PEC/', function() {
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_PROGRAMACION
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"PEC_PROGRAMACIONES":[{"ID":"1","GUIA":"2","DEPARTAMENTO":"  ","CIUDAD":"     ","MIN_ASISTENTES":"20","FECHA_INICIAL":"2014-07-01","FECHA_FINAL":"2014-07-31","GRUPO_OBJETO":"","HORAS":"2"},{...}]}
      *
      */
     $this->get('Programacion', function (Request $request, Response $response){
@@ -702,40 +606,9 @@ $app->group('/PEC/', function() {
     });
 
     /**
-     * @api {GET} /PEC/temas all
-     * @apiGroup PEC Temas
-     * @apiDescription Retorna la lista de Temas PEC
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('Temas', function (Request $request, Response $response){
-        $temas = new PECTopic($this->db);
-        return $response->withJson(['PEC_TEMAS' => $temas->getAll()->values()]);
-    });
-
-    /**
      * @api {GET} /PEC/Temas/:date updates
      * @apiGroup PEC Temas
-     * @apiDescription Retorna los Temas PEC que han sufrido modificaciones posteriores a :date
+     * @apiDescription Retorna los Temas PEC, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -743,29 +616,30 @@ $app->group('/PEC/', function() {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"PEC_TEMAS":[{"ID_GUIA":"1","ID_TEMA":"1","NOMBRE_TEMA":"Habilidades Comunicativas","PROCESOS":"1|3","SERV_GRUPAL":"28","SERV_INDIVIDUAL":""},{...}]}
      *
      */
-    $this->get('Temas/{lastSyncDate}', function (Request $request, Response $response, $args){
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('Temas[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $temas = new PECTopic($this->db);
-        return $response->withJson(['PEC_TEMAS' => $temas->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['PEC_TEMAS' => $temas->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['PEC_TEMAS' => $temas->getAll()->values()]);
     });
 });
 
@@ -784,15 +658,13 @@ $app->group('/PEC/', function() {
  * @apiErrorExample {Json} Ejemplo Error 401:
  * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
  *
- * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+ * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
  * @apiErrorExample {Json} Ejemplo Error 404:
- * {"ERROR":"ELEMENTO NO ENCONTRADO"}
- * @apiErrorExample {Json} Ejemplo Error 404:
- * {"ERROR":"RUTA INVALIDA"}
+ * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
  * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
  * @apiSuccessExample {Json} Ejemplo Respuesta:
- * TODO EJEMPLO PENDIENTE
+ * {"MEDICAMENTOS":[{"ID_MEDICAMENTO":"1","CODIGO":"J05AF0601","DESCRIPCION":"ABACAVIR","PRINCIPIO":"ABACAVIR","CONCENTRACION":"Incluye todas las concentraciones","PRESENTACION":"TABLETA CON O SIN RECUBRIMIENTO QUE NO MODIFIQUE LA LIBERACI\u00d3N DEL F\u00c1RMACO, C\u00c1PSULA","ACLARACION":"","GRUPO":""},{...}]
  *
  */
 $app->group('/Medicamentos', function() {
@@ -817,15 +689,13 @@ $app->group('/Medicamentos', function() {
  * @apiErrorExample {Json} Ejemplo Error 401:
  * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
  *
- * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+ * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
  * @apiErrorExample {Json} Ejemplo Error 404:
- * {"ERROR":"ELEMENTO NO ENCONTRADO"}
- * @apiErrorExample {Json} Ejemplo Error 404:
- * {"ERROR":"RUTA INVALIDA"}
+ * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
  * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
  * @apiSuccessExample {Json} Ejemplo Respuesta:
- * TODO EJEMPLO PENDIENTE
+ * {"LABORATORIOS":[{"ID_LABORATORIO":"1","CODIGO":"1","DESCRIPCION":"LABORATORIO DE EJEMPLO","VALORREF1":"10","VALORREF2":"15","TIPO":"1","ORDEN":"1"},{...}]}
  *
  */
 $app->group('/Laboratorios', function() {
@@ -836,41 +706,11 @@ $app->group('/Laboratorios', function() {
 });
 
 $app->group('/Modulos', function() {
-    /**
-     * @api {GET} /Modulos all
-     * @apiGroup Modulos
-     * @apiDescription Retorna el Listado de Modulos
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('', function (Request $request, Response $response){
-        $modulos = new Module($this->db);
-        return $response->withJson(['MODULOS' => $modulos->getAll()->values()]);
-    });
 
     /**
      * @api {GET} /Modulos/:date updates
      * @apiGroup Modulos
-     * @apiDescription Retorna el Listado de Modulos con modificaciones posteriores a :date
+     * @apiDescription Retorna el Listado de Modulos, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -878,68 +718,39 @@ $app->group('/Modulos', function() {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"MODULOS":[{"ID_MODULO":"1","DESCRIPCION":"IDENTIFICACION Y UBICACI\u00d3N","CODIGO":"1","ENTIDAD":"","ESTADO":"A","ORDEN":"1","TIPO":"P","VALIDAR":"N","EDADINI":"","EDADFIN":"","GENERO":"A","MODULO_P":" ","REGISTROS":"N"},{"ID_MODULO":"2","DESCRIPCION":"PERSONAS DE LA FAMILIA","CODIGO":"2","ENTIDAD":"","ESTADO":"A","ORDEN":"2","TIPO":"F","VALIDAR":"N","EDADINI":"","EDADFIN":"","GENERO":"A","MODULO_P":"","REGISTROS":"S"},{...}]}
      *
      */
-    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args){
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $modulos = new Module($this->db);
-        return $response->withJson(['MODULOS' => $modulos->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['MODULOS' => $modulos->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['MODULOS' => $modulos->getAll()->values()]);
     });
 });
 
 $app->group('/Preguntas', function() {
-    /**
-     * @api {GET} /Preguntas all
-     * @apiGroup Preguntas
-     * @apiDescription Retorna el Listado de Preguntas
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('', function (Request $request, Response $response){
-        $preguntas = new Question($this->db);
-        return $response->withJson(['PREGUNTAS' => $preguntas->getAll()->values()]);
-    });
 
     /**
      * @api {GET} /Preguntas/:date updates
      * @apiGroup Preguntas
-     * @apiDescription Retorna el Listado de Preguntas con modificaciones posteriores a :date
+     * @apiDescription Retorna el Listado de Preguntas, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -947,29 +758,30 @@ $app->group('/Preguntas', function() {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"PREGUNTAS":[{"ID_PREGUNTA":"20788","DESCRIPCION":"COD. DPTO","ENTIDAD":"HC_MEDICA","ATRIBUTO":"DPTO","TIPOCAMPO":"","LONCAMPO":"","DEPENDE":"","OBLIGATORIO":"","ID_MODULO":"","ID_LISTA":"","NOMLISTA":"","VALORLISTA":"","CAMPOSIRFAM":"","TIPO":"","VALIDAR":"","EDADINI":"","EDADFIN":"","GENERO":"","ESTADO":"","VISIBILIDAD":"","NIVEL":"","CODIGO":"","ORDEN":"","FECCREA":"","FECMODI":""},{...}]}
      *
      */
-    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args){
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $preguntas = new Question($this->db);
-        return $response->withJson(['PREGUNTAS' => $preguntas->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['PREGUNTAS' => $preguntas->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['PREGUNTAS' => $preguntas->getAll()->values()]);
     });
 });
 
@@ -980,41 +792,11 @@ $app->group('/Preguntas', function() {
  **/
 
 $app->group('/Programaciones',function(){
-    /**
-     * @api {GET} /Programaciones all
-     * @apiGroup Programaciones
-     * @apiDescription Retorna la Programacion asignada al usuario que realiza la peticion
-     * @apiPermission specific_user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('', function(Request $request, Response $response){
-        $programaciones = new Schedule($this->db);
-        return $response->withJson(['PROGRAMACIONES' => $programaciones->getAll($this->userName)->values()]);
-    });
 
     /**
      * @api {GET} /Programaciones/:date updates
      * @apiGroup Programaciones
-     * @apiDescription Retorna la Programacion asignada al usuario que realiza la peticion y que haya sido modificado posterior a :date
+     * @apiDescription Retorna la Programacion asignada al usuario que realiza la peticion, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission specific_user
      * @apiSampleRequest off
      *
@@ -1022,29 +804,30 @@ $app->group('/Programaciones',function(){
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
      * @apiErrorExample {Json} Ejemplo Error 401:
      * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
      *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
+     * @apiError {Json} 404 Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
      * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * EJEMPLO PENDIENTE
      *
      */
-    $this->get('/{lastSyncDate}', function(Request $request, Response $response, $args){
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('[/{lastSyncDate}]', function(Request $request, Response $response, $args){
         $programaciones = new Schedule($this->db);
-        return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName,$lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName,$lastSyncDate)->values()]);
+        }
+        return $response->withJson(['PROGRAMACIONES' => $programaciones->getAll()->values()]);
     });
 });
 
