@@ -1,105 +1,10 @@
 [
   {
     "type": "GET",
-    "url": "/Areas",
-    "title": "all",
-    "group": "Areas",
-    "description": "<p>Retorna La Lista de Areas Completa</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo AREA</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Areas",
-    "name": "GetAreas"
-  },
-  {
-    "type": "GET",
     "url": "/Areas/:date",
     "title": "updates",
     "group": "Areas",
-    "description": "<p>Retorna Los registros de Areas que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna Todos los registros de Areas, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -133,7 +38,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -155,7 +60,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -167,12 +72,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -192,7 +92,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"AREAS\":[{\"ID_AREA\":\"516\",\"DESCRIPCION\":\"EL RESPALDO,(VR)  \",\"CODAREA\":\"05107R00209\",\"CODPOSTAL\":\"\",\"DPTO\":\"05\",\"MUNICIPIO\":\"107\",\"ZONA\":\"R\",\"NIVEL4\":\"00\",\"CODIGO\":\"209\",\"ESTADO\":\"A\",\"ORDEN\":\"516\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -250,7 +150,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -262,12 +162,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -287,7 +182,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"CIE10\":[{\"ID\":\"1\",\"CODIGO\":\"A000\",\"DESCRIPCION\":\"COLERA DEBIDO A VIBRIO CHOLERAE O1, BIOTIPO CHOLERAE\",\"CLASE\":\"\",\"ACTIVO\":\"0\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -299,105 +194,10 @@
   },
   {
     "type": "GET",
-    "url": "/Departamentos",
-    "title": "all",
-    "group": "Departamentos",
-    "description": "<p>Retorna La Lista de Departamentos Completa</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo DEPARTAMENTO</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "{\"DEPARTAMENTO\":[{\"ID\" : \"2\",\"NOMBRE\" : \"ANTIOQUIA\",\"PAIS\" : \"57\",\"CODIGO\" : \"05\",\"ACTIVO\" : \"0\"}]}",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Departamentos",
-    "name": "GetDepartamentos"
-  },
-  {
-    "type": "GET",
     "url": "/Departamentos/:date",
     "title": "updates",
     "group": "Departamentos",
-    "description": "<p>Retorna Los registros de Departamentos que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna Todos los registros de Departamentos, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -431,7 +231,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -453,7 +253,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -465,12 +265,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -490,7 +285,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "{\"DEPARTAMENTO\":[{\"ID\" : \"2\",\"NOMBRE\" : \"ANTIOQUIA\",\"PAIS\" : \"57\",\"CODIGO\" : \"05\",\"ACTIVO\" : \"0\"}]}",
+          "content": "{\"DEPARTAMENTOS\":[{\"ID\" : \"2\",\"NOMBRE\" : \"ANTIOQUIA\",\"PAIS\" : \"57\",\"CODIGO\" : \"05\",\"ACTIVO\" : \"0\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -502,105 +297,10 @@
   },
   {
     "type": "GET",
-    "url": "/Ips",
-    "title": "all",
-    "group": "Ips",
-    "description": "<p>Retorna la lista de Instituciones Prestadoras de Servicios Completa</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo IPS</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Ips",
-    "name": "GetIps"
-  },
-  {
-    "type": "GET",
     "url": "/Ips/:date",
     "title": "updates",
     "group": "Ips",
-    "description": "<p>Retorna Los registros de Instituciones Prestadoras de Servicios que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna Todos los registros de Instituciones Prestadoras de Servicios, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -634,7 +334,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -656,7 +356,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -668,12 +368,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -693,7 +388,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"IPS\":[{\"ID\":\"1\",\"COD_INS\":\"1\",\"NIT\":\"1\",\"NOMBRE\":\"SALUDFAMILIAR IPS\",\"DIRECCION\":\"CARRERA 57 # 74 - 71\",\"PAIS\":\"57\",\"DPTO\":\"08\",\"CIUDAD\":\"001\",\"TELEFONO\":\"3588128\",\"MOVIL\":\"3162413498\",\"EMAIL\":\"rennimunoz@saludfamiliar.com.co\",\"REPRESENTANTE\":\"\",\"ACTIVO\":\"0\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -751,7 +446,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -763,12 +458,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -788,7 +478,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"LABORATORIOS\":[{\"ID_LABORATORIO\":\"1\",\"CODIGO\":\"1\",\"DESCRIPCION\":\"LABORATORIO DE EJEMPLO\",\"VALORREF1\":\"10\",\"VALORREF2\":\"15\",\"TIPO\":\"1\",\"ORDEN\":\"1\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -800,105 +490,10 @@
   },
   {
     "type": "GET",
-    "url": "/ListasReferencia",
-    "title": "all",
-    "group": "ListasReferencia",
-    "description": "<p>Retorna La Lista de Referencia Completa</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo LISTA_REFERENCIA</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "{\"LISTA_REFERENCIA\":[{\"ID_LISTA\":\"1\",\"PADRE\":\"\",\"DESCRIPCION\":\"Motivo Visita\",\"CODLISTA\":\"\",\"VALOR\":\"\",\"ESTADO\":\"\"}]}",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "ListasReferencia",
-    "name": "GetListasreferencia"
-  },
-  {
-    "type": "GET",
     "url": "/ListasReferencia/:date",
     "title": "updates",
     "group": "ListasReferencia",
-    "description": "<p>Retorna Los registros de Lista de Referencia que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna Todos los registros de Lista de Referencia, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -932,7 +527,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -954,7 +549,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -966,12 +561,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -991,7 +581,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "{\"LISTA_REFERENCIA\":[{\"ID_LISTA\":\"1\",\"PADRE\":\"\",\"DESCRIPCION\":\"Motivo Visita\",\"CODLISTA\":\"\",\"VALOR\":\"\",\"ESTADO\":\"\"}]}",
+          "content": "{\"LISTAS_REFERENCIA\":[{\"ID_LISTA\":\"1\",\"PADRE\":\"\",\"DESCRIPCION\":\"Motivo Visita\",\"CODLISTA\":\"\",\"VALOR\":\"\",\"ESTADO\":\"\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -1049,7 +639,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -1061,12 +651,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -1086,7 +671,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"MEDICAMENTOS\":[{\"ID_MEDICAMENTO\":\"1\",\"CODIGO\":\"J05AF0601\",\"DESCRIPCION\":\"ABACAVIR\",\"PRINCIPIO\":\"ABACAVIR\",\"CONCENTRACION\":\"Incluye todas las concentraciones\",\"PRESENTACION\":\"TABLETA CON O SIN RECUBRIMIENTO QUE NO MODIFIQUE LA LIBERACI\\u00d3N DEL F\\u00c1RMACO, C\\u00c1PSULA\",\"ACLARACION\":\"\",\"GRUPO\":\"\"},{...}]",
           "type": "Json"
         }
       ]
@@ -1098,105 +683,10 @@
   },
   {
     "type": "GET",
-    "url": "/Modulos",
-    "title": "all",
-    "group": "Modulos",
-    "description": "<p>Retorna el Listado de Modulos</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Modulos",
-    "name": "GetModulos"
-  },
-  {
-    "type": "GET",
     "url": "/Modulos/:date",
     "title": "updates",
     "group": "Modulos",
-    "description": "<p>Retorna el Listado de Modulos con modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna el Listado de Modulos, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -1230,7 +720,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -1252,7 +742,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -1264,12 +754,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -1289,7 +774,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"MODULOS\":[{\"ID_MODULO\":\"1\",\"DESCRIPCION\":\"IDENTIFICACION Y UBICACI\\u00d3N\",\"CODIGO\":\"1\",\"ENTIDAD\":\"\",\"ESTADO\":\"A\",\"ORDEN\":\"1\",\"TIPO\":\"P\",\"VALIDAR\":\"N\",\"EDADINI\":\"\",\"EDADFIN\":\"\",\"GENERO\":\"A\",\"MODULO_P\":\" \",\"REGISTROS\":\"N\"},{\"ID_MODULO\":\"2\",\"DESCRIPCION\":\"PERSONAS DE LA FAMILIA\",\"CODIGO\":\"2\",\"ENTIDAD\":\"\",\"ESTADO\":\"A\",\"ORDEN\":\"2\",\"TIPO\":\"F\",\"VALIDAR\":\"N\",\"EDADINI\":\"\",\"EDADFIN\":\"\",\"GENERO\":\"A\",\"MODULO_P\":\"\",\"REGISTROS\":\"S\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -1301,105 +786,10 @@
   },
   {
     "type": "GET",
-    "url": "/Municipios",
-    "title": "all",
-    "group": "Municipios",
-    "description": "<p>Retorna La Lista de Municipios Completa</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo MUNICIPIO</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "{\"MUNICIPIO\":[{\"ID\":\"25\",\"NOMBRE\":\"AMAGÁ Antioquia\",\"ID_DPTO\":\"05\",\"NOMBRE_DPTO\":\"Antioquia\",\"CODIGO\":\"030\",\"ID_CIUDAD\":\"05030\",\"ESTADO\":\"0\"}]}",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Municipios",
-    "name": "GetMunicipios"
-  },
-  {
-    "type": "GET",
     "url": "/Municipios/:date",
     "title": "updates",
     "group": "Municipios",
-    "description": "<p>Retorna Los registros de Municipios que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna Todos los registros de Municipios, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -1433,7 +823,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -1455,7 +845,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -1467,12 +857,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -1492,7 +877,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "{\"MUNICIPIO\":[{\"ID\":\"25\",\"NOMBRE\":\"AMAGÁ Antioquia\",\"ID_DPTO\":\"05\",\"NOMBRE_DPTO\":\"Antioquia\",\"CODIGO\":\"030\",\"ID_CIUDAD\":\"05030\",\"ESTADO\":\"0\"}]}",
+          "content": "{\"MUNICIPIOS\":[{\"ID\":\"25\",\"NOMBRE\":\"AMAGÁ Antioquia\",\"ID_DPTO\":\"05\",\"NOMBRE_DPTO\":\"Antioquia\",\"CODIGO\":\"030\",\"ID_CIUDAD\":\"05030\",\"ESTADO\":\"0\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -1504,105 +889,10 @@
   },
   {
     "type": "GET",
-    "url": "/Novedades/campo",
-    "title": "all",
-    "group": "Novedades_Campos",
-    "description": "<p>Retorna las Listas de Novedades</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo IPS</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Novedades_Campos",
-    "name": "GetNovedadesCampo"
-  },
-  {
-    "type": "GET",
-    "url": "/Novedades/lista/:date",
+    "url": "/Novedades/listas/:date",
     "title": "updates",
     "group": "Novedades_Lista",
-    "description": "<p>Retorna Las Listas de Novedades que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna Todas las Listas de Novedades, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -1636,7 +926,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -1658,7 +948,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -1670,12 +960,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -1695,7 +980,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"LISTAS_NOVEDAD\":[{\"COD_NOVEDAD\":\"1\",\"TIPO_NOVEDAD\":\"N01\",\"DESCRIPCION\":\"NUEVO TIPO DE DOCUMENTO DE IDENTIDAD\",\"ESTADO\":\"A\",\"VALOR\":\"1\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -1703,109 +988,14 @@
     "version": "0.0.0",
     "filename": "./index.php",
     "groupTitle": "Novedades_Lista",
-    "name": "GetNovedadesListaDate"
+    "name": "GetNovedadesListasDate"
   },
   {
     "type": "GET",
-    "url": "/Novedades/tipo",
-    "title": "all",
-    "group": "Novedades_Tipo",
-    "description": "<p>Retorna la lista de Tipos de Novedades Completa</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo IPS</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Novedades_Tipo",
-    "name": "GetNovedadesTipo"
-  },
-  {
-    "type": "GET",
-    "url": "/Novedades/tipo/:date",
+    "url": "/Novedades/tipos/:date",
     "title": "updates",
     "group": "Novedades_Tipos",
-    "description": "<p>Retorna Los registros de Tipos de Novedades que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna Todos los registros de Tipos de Novedades, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -1839,7 +1029,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -1861,7 +1051,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -1873,12 +1063,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -1898,7 +1083,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"TIPOS_NOVEDAD\":[{\"TIPO_NOVEDAD\":\"NA-03\",\"DESCRIPCION\":\"NO ATIENDE PORQUE YA FUE VISITADO EN OTRO NUCLEO FAMILIAR\",\"ESTADO\":\"A\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -1906,7 +1091,7 @@
     "version": "0.0.0",
     "filename": "./index.php",
     "groupTitle": "Novedades_Tipos",
-    "name": "GetNovedadesTipoDate"
+    "name": "GetNovedadesTiposDate"
   },
   {
     "type": "GET",
@@ -1956,7 +1141,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -1968,12 +1153,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -1993,7 +1173,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"PEC_GRUPOS_OBJETIVO\":[{\"ID_OBJETIVO\":\"0 \",\"NOMBRE_OBJETIVO\":\"COORDINADORES LIDERES\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -2005,105 +1185,10 @@
   },
   {
     "type": "GET",
-    "url": "/PEC/Guias",
-    "title": "all",
-    "group": "PEC_Guias",
-    "description": "<p>Retorna la lista de Guias PEC</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_GUIA</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "PEC_Guias",
-    "name": "GetPecGuias"
-  },
-  {
-    "type": "GET",
     "url": "/PEC/Guias/:date",
     "title": "updates",
     "group": "PEC_Guias",
-    "description": "<p>Retorna Las Guias PEC que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna Las Guias PEC, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -2137,7 +1222,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -2159,7 +1244,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -2171,12 +1256,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -2196,7 +1276,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"PEC_GUIAS\":[{\"ID_GUIA\":\"1\",\"NOMBRE_GUIA\":\"GUIA 1 \",\"GRUPO_OBJETIVO\":\"1|3\",\"PROCESOS\":\"6|\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -2254,7 +1334,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -2266,12 +1346,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -2291,7 +1366,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"PEC_PROCESOS\":[{\"ID_PROCESO\":\"1\",\"NOMBRE_PROCESO\":\"ASEGURAMIENTO\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -2349,7 +1424,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -2361,12 +1436,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -2386,7 +1456,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"PEC_PROGRAMACIONES\":[{\"ID\":\"1\",\"GUIA\":\"2\",\"DEPARTAMENTO\":\"  \",\"CIUDAD\":\"     \",\"MIN_ASISTENTES\":\"20\",\"FECHA_INICIAL\":\"2014-07-01\",\"FECHA_FINAL\":\"2014-07-31\",\"GRUPO_OBJETO\":\"\",\"HORAS\":\"2\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -2398,105 +1468,10 @@
   },
   {
     "type": "GET",
-    "url": "/PEC/temas",
-    "title": "all",
-    "group": "PEC_Temas",
-    "description": "<p>Retorna la lista de Temas PEC</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "PEC_Temas",
-    "name": "GetPecTemas"
-  },
-  {
-    "type": "GET",
     "url": "/PEC/Temas/:date",
     "title": "updates",
     "group": "PEC_Temas",
-    "description": "<p>Retorna los Temas PEC que han sufrido modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna los Temas PEC, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -2530,7 +1505,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -2552,7 +1527,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -2564,12 +1539,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -2589,7 +1559,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"PEC_TEMAS\":[{\"ID_GUIA\":\"1\",\"ID_TEMA\":\"1\",\"NOMBRE_TEMA\":\"Habilidades Comunicativas\",\"PROCESOS\":\"1|3\",\"SERV_GRUPAL\":\"28\",\"SERV_INDIVIDUAL\":\"\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -2601,105 +1571,10 @@
   },
   {
     "type": "GET",
-    "url": "/Preguntas",
-    "title": "all",
-    "group": "Preguntas",
-    "description": "<p>Retorna el Listado de Preguntas</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Preguntas",
-    "name": "GetPreguntas"
-  },
-  {
-    "type": "GET",
     "url": "/Preguntas/:date",
     "title": "updates",
     "group": "Preguntas",
-    "description": "<p>Retorna el Listado de Preguntas con modificaciones posteriores a :date</p>",
+    "description": "<p>Retorna el Listado de Preguntas, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -2733,7 +1608,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -2755,7 +1630,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -2767,12 +1642,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -2792,7 +1662,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"PREGUNTAS\":[{\"ID_PREGUNTA\":\"20788\",\"DESCRIPCION\":\"COD. DPTO\",\"ENTIDAD\":\"HC_MEDICA\",\"ATRIBUTO\":\"DPTO\",\"TIPOCAMPO\":\"\",\"LONCAMPO\":\"\",\"DEPENDE\":\"\",\"OBLIGATORIO\":\"\",\"ID_MODULO\":\"\",\"ID_LISTA\":\"\",\"NOMLISTA\":\"\",\"VALORLISTA\":\"\",\"CAMPOSIRFAM\":\"\",\"TIPO\":\"\",\"VALIDAR\":\"\",\"EDADINI\":\"\",\"EDADFIN\":\"\",\"GENERO\":\"\",\"ESTADO\":\"\",\"VISIBILIDAD\":\"\",\"NIVEL\":\"\",\"CODIGO\":\"\",\"ORDEN\":\"\",\"FECCREA\":\"\",\"FECMODI\":\"\"},{...}]}",
           "type": "Json"
         }
       ]
@@ -2804,105 +1674,10 @@
   },
   {
     "type": "GET",
-    "url": "/Programaciones",
-    "title": "all",
-    "group": "Programaciones",
-    "description": "<p>Retorna la Programacion asignada al usuario que realiza la peticion</p>",
-    "permission": [
-      {
-        "name": "specific_user",
-        "title": "Usuario Especifico",
-        "description": "<p>Requiere User y Password validos definidos en Header. Tenga en cuenta que se entregaran unicamente los registros relacionados con el usuario que realiza la peticion</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ==\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Programaciones",
-    "name": "GetProgramaciones"
-  },
-  {
-    "type": "GET",
     "url": "/Programaciones/:date",
     "title": "updates",
     "group": "Programaciones",
-    "description": "<p>Retorna la Programacion asignada al usuario que realiza la peticion y que haya sido modificado posterior a :date</p>",
+    "description": "<p>Retorna la Programacion asignada al usuario que realiza la peticion, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "specific_user",
@@ -2936,7 +1711,7 @@
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "date",
             "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
           }
@@ -2958,7 +1733,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -2970,12 +1745,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -2995,7 +1765,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "EJEMPLO PENDIENTE",
           "type": "Json"
         }
       ]
@@ -3053,7 +1823,7 @@
             "type": "Json",
             "optional": false,
             "field": "404",
-            "description": "<p>Ruta Invalida o Elemento No Encontrado</p>"
+            "description": "<p>Ruta Invalida o LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
           }
         ]
       },
@@ -3065,12 +1835,7 @@
         },
         {
           "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"ELEMENTO NO ENCONTRADO\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"RUTA INVALIDA\"}",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
           "type": "Json"
         }
       ]
@@ -3090,7 +1855,7 @@
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "TODO EJEMPLO PENDIENTE",
+          "content": "{\"TIPOS_USUARIO\":[{\"ID\":\"1\",\"NOMBRE\":\"Administrador\",\"CODIGO\":\"1\",\"ESTADO\":\"0\",\"ABREVIATURA\":\"ADM\"},{...}]}",
           "type": "Json"
         }
       ]
