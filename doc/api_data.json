@@ -2,7 +2,7 @@
   {
     "type": "GET",
     "url": "/Areas/:date",
-    "title": "updates",
+    "title": "",
     "group": "Areas",
     "description": "<p>Retorna Todos los registros de Areas, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
@@ -105,7 +105,7 @@
   {
     "type": "GET",
     "url": "/CIE10",
-    "title": "all",
+    "title": "",
     "group": "CIE10",
     "description": "<p>Retorna La Lista de CIE10 Completa</p>",
     "permission": [
@@ -195,7 +195,7 @@
   {
     "type": "GET",
     "url": "/Departamentos/:date",
-    "title": "updates",
+    "title": "",
     "group": "Departamentos",
     "description": "<p>Retorna Todos los registros de Departamentos, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
@@ -298,7 +298,7 @@
   {
     "type": "GET",
     "url": "/Ips/:date",
-    "title": "updates",
+    "title": "",
     "group": "Ips",
     "description": "<p>Retorna Todos los registros de Instituciones Prestadoras de Servicios, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
@@ -401,7 +401,7 @@
   {
     "type": "GET",
     "url": "/Laboratorios",
-    "title": "all",
+    "title": "",
     "group": "Laboratorios",
     "description": "<p>Retorna el Listado de Laboratorios</p>",
     "permission": [
@@ -491,8 +491,8 @@
   {
     "type": "GET",
     "url": "/ListasReferencia/:date",
-    "title": "updates",
-    "group": "ListasReferencia",
+    "title": "",
+    "group": "Listas_Referencia",
     "description": "<p>Retorna Todos los registros de Lista de Referencia, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
@@ -588,13 +588,13 @@
     },
     "version": "0.0.0",
     "filename": "./index.php",
-    "groupTitle": "ListasReferencia",
+    "groupTitle": "Listas_Referencia",
     "name": "GetListasreferenciaDate"
   },
   {
     "type": "GET",
     "url": "/Medicamentos",
-    "title": "all",
+    "title": "",
     "group": "Medicamentos",
     "description": "<p>Retorna el Listado de Medicamentos</p>",
     "permission": [
@@ -684,7 +684,7 @@
   {
     "type": "GET",
     "url": "/Modulos/:date",
-    "title": "updates",
+    "title": "",
     "group": "Modulos",
     "description": "<p>Retorna el Listado de Modulos, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
@@ -787,7 +787,7 @@
   {
     "type": "GET",
     "url": "/Municipios/:date",
-    "title": "updates",
+    "title": "",
     "group": "Municipios",
     "description": "<p>Retorna Todos los registros de Municipios, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
@@ -890,8 +890,8 @@
   {
     "type": "GET",
     "url": "/Novedades/listas/:date",
-    "title": "updates",
-    "group": "Novedades_Lista",
+    "title": "Listas",
+    "group": "Novedades",
     "description": "<p>Retorna Todas las Listas de Novedades, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
@@ -987,14 +987,14 @@
     },
     "version": "0.0.0",
     "filename": "./index.php",
-    "groupTitle": "Novedades_Lista",
+    "groupTitle": "Novedades",
     "name": "GetNovedadesListasDate"
   },
   {
     "type": "GET",
     "url": "/Novedades/tipos/:date",
-    "title": "updates",
-    "group": "Novedades_Tipos",
+    "title": "Tipos",
+    "group": "Novedades",
     "description": "<p>Retorna Todos los registros de Tipos de Novedades, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
@@ -1090,14 +1090,14 @@
     },
     "version": "0.0.0",
     "filename": "./index.php",
-    "groupTitle": "Novedades_Tipos",
+    "groupTitle": "Novedades",
     "name": "GetNovedadesTiposDate"
   },
   {
     "type": "GET",
     "url": "/PEC/GruposObjetivo",
-    "title": "all",
-    "group": "PEC_Grupos_Objetivo",
+    "title": "Grupos",
+    "group": "PEC",
     "description": "<p>Retorna la lista de Grupos Objetivo de PEC Completa</p>",
     "permission": [
       {
@@ -1180,14 +1180,14 @@
     },
     "version": "0.0.0",
     "filename": "./index.php",
-    "groupTitle": "PEC_Grupos_Objetivo",
+    "groupTitle": "PEC",
     "name": "GetPecGruposobjetivo"
   },
   {
     "type": "GET",
     "url": "/PEC/Guias/:date",
-    "title": "updates",
-    "group": "PEC_Guias",
+    "title": "Guias",
+    "group": "PEC",
     "description": "<p>Retorna Las Guias PEC, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
@@ -1283,14 +1283,14 @@
     },
     "version": "0.0.0",
     "filename": "./index.php",
-    "groupTitle": "PEC_Guias",
+    "groupTitle": "PEC",
     "name": "GetPecGuiasDate"
   },
   {
     "type": "GET",
     "url": "/PEC/Procesos",
-    "title": "all",
-    "group": "PEC_Procesos",
+    "title": "Procesos",
+    "group": "PEC",
     "description": "<p>Retorna los Procesos PEC</p>",
     "permission": [
       {
@@ -1373,14 +1373,14 @@
     },
     "version": "0.0.0",
     "filename": "./index.php",
-    "groupTitle": "PEC_Procesos",
+    "groupTitle": "PEC",
     "name": "GetPecProcesos"
   },
   {
     "type": "GET",
     "url": "/PEC/Programacion",
-    "title": "all",
-    "group": "PEC_Programacion",
+    "title": "Programacion",
+    "group": "PEC",
     "description": "<p>Retorna la Programacion de Actividades PEC</p>",
     "permission": [
       {
@@ -1463,14 +1463,14 @@
     },
     "version": "0.0.0",
     "filename": "./index.php",
-    "groupTitle": "PEC_Programacion",
+    "groupTitle": "PEC",
     "name": "GetPecProgramacion"
   },
   {
     "type": "GET",
     "url": "/PEC/Temas/:date",
-    "title": "updates",
-    "group": "PEC_Temas",
+    "title": "Temas",
+    "group": "PEC",
     "description": "<p>Retorna los Temas PEC, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
@@ -1566,13 +1566,13 @@
     },
     "version": "0.0.0",
     "filename": "./index.php",
-    "groupTitle": "PEC_Temas",
+    "groupTitle": "PEC",
     "name": "GetPecTemasDate"
   },
   {
     "type": "GET",
     "url": "/Preguntas/:date",
-    "title": "updates",
+    "title": "",
     "group": "Preguntas",
     "description": "<p>Retorna el Listado de Preguntas, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
@@ -1675,7 +1675,7 @@
   {
     "type": "GET",
     "url": "/Programaciones/:date",
-    "title": "updates",
+    "title": "",
     "group": "Programaciones",
     "description": "<p>Retorna la Programacion asignada al usuario que realiza la peticion, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
@@ -1778,7 +1778,7 @@
   {
     "type": "GET",
     "url": "/TiposUsuario",
-    "title": "all",
+    "title": "",
     "group": "TiposUsuario",
     "description": "<p>Retorna La Lista de Tipos de Usuarios Completa</p>",
     "permission": [

@@ -151,8 +151,8 @@ $app->add(function(Request $request, Response $response, $next){
 
 $app->group('/ListasReferencia', function(){
     /**
-     * @api {GET} /ListasReferencia/:date updates
-     * @apiGroup ListasReferencia
+     * @api {GET} /ListasReferencia/:date
+     * @apiGroup Listas Referencia
      * @apiDescription Retorna Todos los registros de Lista de Referencia, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
@@ -190,7 +190,7 @@ $app->group('/ListasReferencia', function(){
 
 $app->group('/Municipios', function () {
     /**
-     * @api {GET} /Municipios/:date updates
+     * @api {GET} /Municipios/:date
      * @apiGroup Municipios
      * @apiDescription Retorna Todos los registros de Municipios, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
@@ -229,7 +229,7 @@ $app->group('/Municipios', function () {
 
 $app->group('/Departamentos', function () {
     /**
-     * @api {GET} /Departamentos/:date updates
+     * @api {GET} /Departamentos/:date
      * @apiGroup Departamentos
      * @apiDescription Retorna Todos los registros de Departamentos, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
@@ -268,7 +268,7 @@ $app->group('/Departamentos', function () {
 });
 
 /**
- * @api {GET} /CIE10 all
+ * @api {GET} /CIE10
  * @apiGroup CIE10
  * @apiDescription Retorna La Lista de CIE10 Completa
  * @apiPermission user
@@ -297,7 +297,7 @@ $app->get('/CIE10', function (Request $request, Response $response) {
 });
 
 /**
- * @api {GET} /TiposUsuario all
+ * @api {GET} /TiposUsuario
  * @apiGroup TiposUsuario
  * @apiDescription Retorna La Lista de Tipos de Usuarios Completa
  * @apiPermission user
@@ -328,7 +328,7 @@ $app->get('/TiposUsuario', function(Request $request, Response $response){
 //TODO Areas especificas para el municipio o departamento del requesting User
 $app->group('/Areas', function () {
     /**
-     * @api {GET} /Areas/:date updates
+     * @api {GET} /Areas/:date
      * @apiGroup Areas
      * @apiDescription Retorna Todos los registros de Areas, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
@@ -368,7 +368,7 @@ $app->group('/Areas', function () {
 //TODO IPS especificas para el municipio o departamento del requesting User
 $app->group('/Ips', function () {
     /**
-     * @api {GET} /Ips/:date updates
+     * @api {GET} /Ips/:date
      * @apiGroup Ips
      * @apiDescription Retorna Todos los registros de Instituciones Prestadoras de Servicios, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
@@ -407,8 +407,8 @@ $app->group('/Ips', function () {
 
 $app->group('/Novedades/', function () {
     /**
-     * @api {GET} /Novedades/tipos/:date updates
-     * @apiGroup Novedades Tipos
+     * @api {GET} /Novedades/tipos/:date Tipos
+     * @apiGroup Novedades
      * @apiDescription Retorna Todos los registros de Tipos de Novedades, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
@@ -444,8 +444,8 @@ $app->group('/Novedades/', function () {
     });
 
     /**
-     * @api {GET} /Novedades/listas/:date updates
-     * @apiGroup Novedades Lista
+     * @api {GET} /Novedades/listas/:date Listas
+     * @apiGroup Novedades
      * @apiDescription Retorna Todas las Listas de Novedades, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
@@ -483,8 +483,8 @@ $app->group('/Novedades/', function () {
 
 $app->group('/PEC/', function() {
     /**
-     * @api {GET} /PEC/GruposObjetivo all
-     * @apiGroup PEC Grupos Objetivo
+     * @api {GET} /PEC/GruposObjetivo Grupos
+     * @apiGroup PEC
      * @apiDescription Retorna la lista de Grupos Objetivo de PEC Completa
      * @apiPermission user
      * @apiSampleRequest off
@@ -512,8 +512,8 @@ $app->group('/PEC/', function() {
     });
 
     /**
-     * @api {GET} /PEC/Guias/:date updates
-     * @apiGroup PEC Guias
+     * @api {GET} /PEC/Guias/:date Guias
+     * @apiGroup PEC
      * @apiDescription Retorna Las Guias PEC, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
@@ -548,8 +548,8 @@ $app->group('/PEC/', function() {
     });
 
     /**
-     * @api {GET} /PEC/Procesos all
-     * @apiGroup PEC Procesos
+     * @api {GET} /PEC/Procesos Procesos
+     * @apiGroup PEC
      * @apiDescription Retorna los Procesos PEC
      * @apiPermission user
      * @apiSampleRequest off
@@ -577,8 +577,8 @@ $app->group('/PEC/', function() {
     });
 
     /**
-     * @api {GET} /PEC/Programacion all
-     * @apiGroup PEC Programacion
+     * @api {GET} /PEC/Programacion Programacion
+     * @apiGroup PEC
      * @apiDescription Retorna la Programacion de Actividades PEC
      * @apiPermission user
      * @apiSampleRequest off
@@ -606,8 +606,8 @@ $app->group('/PEC/', function() {
     });
 
     /**
-     * @api {GET} /PEC/Temas/:date updates
-     * @apiGroup PEC Temas
+     * @api {GET} /PEC/Temas/:date Temas
+     * @apiGroup PEC
      * @apiDescription Retorna los Temas PEC, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
@@ -644,7 +644,7 @@ $app->group('/PEC/', function() {
 });
 
 /**
- * @api {GET} /Medicamentos all
+ * @api {GET} /Medicamentos
  * @apiGroup Medicamentos
  * @apiDescription Retorna el Listado de Medicamentos
  * @apiPermission user
@@ -675,7 +675,7 @@ $app->group('/Medicamentos', function() {
 });
 
 /**
- * @api {GET} /Laboratorios all
+ * @api {GET} /Laboratorios
  * @apiGroup Laboratorios
  * @apiDescription Retorna el Listado de Laboratorios
  * @apiPermission user
@@ -708,7 +708,7 @@ $app->group('/Laboratorios', function() {
 $app->group('/Modulos', function() {
 
     /**
-     * @api {GET} /Modulos/:date updates
+     * @api {GET} /Modulos/:date
      * @apiGroup Modulos
      * @apiDescription Retorna el Listado de Modulos, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
@@ -748,7 +748,7 @@ $app->group('/Modulos', function() {
 $app->group('/Preguntas', function() {
 
     /**
-     * @api {GET} /Preguntas/:date updates
+     * @api {GET} /Preguntas/:date
      * @apiGroup Preguntas
      * @apiDescription Retorna el Listado de Preguntas, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
@@ -794,7 +794,7 @@ $app->group('/Preguntas', function() {
 $app->group('/Programaciones',function(){
 
     /**
-     * @api {GET} /Programaciones/:date updates
+     * @api {GET} /Programaciones/:date
      * @apiGroup Programaciones
      * @apiDescription Retorna la Programacion asignada al usuario que realiza la peticion, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission specific_user
