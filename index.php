@@ -332,40 +332,9 @@ $app->get('/TiposUsuario', function(Request $request, Response $response){
 //TODO Areas especificas para el municipio o departamento del requesting User
 $app->group('/Areas', function () {
     /**
-     * @api {GET} /Areas all
-     * @apiGroup Areas
-     * @apiDescription Retorna La Lista de Areas Completa
-     * @apiPermission user
-     * @apiSampleRequest off
-     *
-     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
-     * @apiHeaderExample {Json} Ejemplo Header:
-     * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
-     *
-     * @apiError {Json} 401 Usuario o Contraseña Invalidos
-     * @apiErrorExample {Json} Ejemplo Error 401:
-     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
-     *
-     * @apiError {Json} 404 Ruta Invalida o Elemento No Encontrado
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"ELEMENTO NO ENCONTRADO"}
-     * @apiErrorExample {Json} Ejemplo Error 404:
-     * {"ERROR":"RUTA INVALIDA"}
-     *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo AREA
-     * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
-     *
-     */
-    $this->get('', function (Request $request, Response $response) {
-        $areas = new Area($this->db);
-        return $response->withJson(['AREAS' => $areas->getAll()->values()]);
-    });
-
-    /**
      * @api {GET} /Areas/:date updates
      * @apiGroup Areas
-     * @apiDescription Retorna Los registros de Areas que han sufrido modificaciones posteriores a :date
+     * @apiDescription Retorna Todos los registros de Areas, si se provee :date se filtraran los resultados modificados a partir de :date
      * @apiPermission user
      * @apiSampleRequest off
      *
@@ -373,7 +342,7 @@ $app->group('/Areas', function () {
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
-     * @apiParam {Date} date Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
 
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
@@ -388,14 +357,17 @@ $app->group('/Areas', function () {
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo AREA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * TODO EJEMPLO PENDIENTE
+     * {"AREAS":[{"ID_AREA":"516","DESCRIPCION":"EL RESPALDO,(VR)  ","CODAREA":"05107R00209","CODPOSTAL":"","DPTO":"05","MUNICIPIO":"107","ZONA":"R","NIVEL4":"00","CODIGO":"209","ESTADO":"A","ORDEN":"516"},{...}]}
      *
      */
-    $this->get('/{lastSyncDate}', function (Request $request, Response $response, $args) {
-        $lastSyncDate = new \DateTime();
-        $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $areas = new Area($this->db);
-        return $response->withJson(['AREAS' => $areas->getUpdates($lastSyncDate)->values()]);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['AREAS' => $areas->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['AREAS' => $areas->getAll()->values()]);
     });
 });
 
