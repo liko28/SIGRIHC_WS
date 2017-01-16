@@ -2,11 +2,11 @@
 
 /** Cadenas de Conexion */
 //TEST
-//const CONNECTION_CREDENTIALS = array('SALUD', '192.168.1.247', 50000, 'db2inst1','db2inst1', 'SALFAM2');
+const CONNECTION_CREDENTIALS = array('SALUD', '192.168.1.247', 50000, 'db2inst1','db2inst1', 'SALFAM2');
 //PRODUCCION
 //const CONNECTION_CREDENTIALS = array('SIGRI', '192.168.1.249', 50000, 'salfam','salfam2015', 'SALUD');
 //Local
-const CONNECTION_CREDENTIALS = array('SIGRI', '127.0.0.1', 50000, 'db2inst1','db2inst1', 'SALUD');
+//const CONNECTION_CREDENTIALS = array('SIGRI', '127.0.0.1', 50000, 'db2inst1','db2inst1', 'SALUD');
 
 /** Labels Columnas DAO */
 const LABELS = true;
