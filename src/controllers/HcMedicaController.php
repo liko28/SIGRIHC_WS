@@ -35,7 +35,7 @@ class HcMedicaController extends BaseController {
             try{
                 $hcId = $this->model->insert($entities['HC_MEDICA']);
             } catch (\Exception $e) {
-                $hcId = $e->getMessage();
+                $hcId['ERROR'] = $e->getMessage();
             } finally {
                 if(!$e) {
                     db2_commit($this->model->getConnection()->getConnectionResource());
@@ -46,21 +46,52 @@ class HcMedicaController extends BaseController {
             unset($entities['HC_MEDICA']);
 
             foreach ($entities as $entity => $row) {
-                $baseModel->setTableName($entity);
-                //TODO Verificar si ID_HC aplica para todas las tablas
-                $row->addField(["ID_HC" => $hcId]);
-                //TODO Inject Fecmodi, IpModi, Feccrea, Ipcrea, Usercrea, Usermodi
-                //TODO Inject UserId
-                try {
-                    $baseModel->insert($row);
-                } catch (\Exception $e) {
-                    $hcId['ERROR'] = $e->getMessage();
-                } finally {
-                    if(!$e) {
-                        db2_commit($this->model->getConnection()->getConnectionResource());
-                    } else {
-                        db2_rollback($this->model->getConnection()->getConnectionResource());
-                    }
+                switch ($entity){
+                    case "HC_ANTFALLECIDO":
+                    case "HC_ANTFAMILIAR":
+                    case "HC_ANTFAMILIARTC":
+                    case "HC_ANTGINECO":
+                    case "HC_ANTHABITOS":
+                    case "HC_ANTMEDICAMENTOS":
+                    case "HC_ANTPERSONAL":
+                    case "HC_ANTPERSONAL1":
+                    case "HC_ANTPERSONAL2":
+                    case "HC_COMPLEMENTO":
+                    case "HC_DIAGNOSTICO":
+                    case "HC_DXNANDA":
+                    case "HC_DXNIC":
+                    case "HC_DXNOC":
+                    case "HC_EVALUACION":
+                    case "HC_EXAMENFIS":
+                    case "HC_EXAMENLAB":
+                    case "HC_EXAMENLABO":
+                    case "HC_GESCITAS":
+                    case "HC_INTERCONSULTA":
+                    case "HC_MEDICA":
+                    case "HC_PARACLINICOS":
+                    case "HC_PECTEMAS":
+                    case "HC_PLANTERAPEUTICO":
+                    case "HC_REGISTROEXA":
+                    case "HC_RESPONSABLE":
+                    case "HC_REVISION":
+                    case "HC_TESTBAR":
+                    case "HC_TESTBAR":
+                        //TODO Inject Fecmodi, IpModi, Feccrea, Ipcrea, Usercrea, Usermodi
+                        //TODO Inject UserId
+                        $baseModel->setTableName($entity);
+                        $row->addField(["ID_HC" => $hcId]);
+                        try {
+                            $baseModel->insert($row);
+                        } catch (\Exception $e) {
+                            $hcId['ERROR'] = $e->getMessage();
+                        } finally {
+                            if(!$e) {
+                                db2_commit($this->model->getConnection()->getConnectionResource());
+                            } else {
+                                db2_rollback($this->model->getConnection()->getConnectionResource());
+                            }
+                        }
+                        break;
                 }
             }
             $result[] = $hcId;
