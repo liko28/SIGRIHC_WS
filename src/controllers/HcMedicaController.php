@@ -27,7 +27,7 @@ class HcMedicaController extends BaseController {
                 if(!isset($entities[$entity])) {
                     $entities[$entity] = new Row();
                 }
-                $entities[$entity]->addField([$questions->getQuestionField($answer[0]) => $answer[2]]);
+                $entities[$entity]->addField([$questions->getQuestionField($answer[0]) => $answer[1]]);
             }
 
             //TODO ESTE ES UN ERROR EN LA TABLA PREGUNTAS
@@ -54,7 +54,7 @@ class HcMedicaController extends BaseController {
                 try {
                     $baseModel->insert($row);
                 } catch (\Exception $e) {
-                    $hcId = $e->getMessage();
+                    $hcId['ERROR'] = $e->getMessage();
                 } finally {
                     if(!$e) {
                         db2_commit($this->model->getConnection()->getConnectionResource());
