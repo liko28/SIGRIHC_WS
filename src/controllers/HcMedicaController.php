@@ -97,6 +97,5 @@ class HcMedicaController extends BaseController {
             $result[] = $hcId;
         }
         return $result;
-
     }
 }
