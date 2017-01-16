@@ -36,6 +36,8 @@ class HcMedicaController extends BaseController {
                 $hcId = $this->model->insert($entities['HC_MEDICA']);
             } catch (\Exception $e) {
                 $hcId['ERROR'] = $e->getMessage();
+                $result[] = $hcId;
+                continue;
             } finally {
                 if(!$e) {
                     db2_commit($this->model->getConnection()->getConnectionResource());
