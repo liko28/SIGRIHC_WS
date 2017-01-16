@@ -30,4 +30,16 @@ class Logger {
     public function getInstance() {
         return $this->loggerInstance;
     }
+
+    public static function log($level,$message){
+        $logger = new Logger();
+        switch ($level) {
+            case 300:
+                $logger->getInstance()->addWarning($message);
+                break;
+            case 200:
+                $logger->getInstance()->addInfo($message);
+                break;
+        }
+    }
 }

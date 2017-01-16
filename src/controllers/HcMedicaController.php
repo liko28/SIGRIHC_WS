@@ -2,6 +2,7 @@
 
 namespace SIGRI_HC\Controllers;
 
+use SIGRI_HC\Helpers\Logger;
 use SIGRI_HC\Helpers\Row;
 use SIGRI_HC\Models\BaseModel;
 use SIGRI_HC\Models\Connection;
@@ -84,6 +85,7 @@ class HcMedicaController extends BaseController {
                         $row->addField(["ID_HC" => $hcId]);
                         try {
                             $baseModel->insert($row);
+                            Logger::log(200,$baseModel->getQuery());
                         } catch (\Exception $e) {
                             $hcId['ERROR'] = $e->getMessage();
                         } finally {
