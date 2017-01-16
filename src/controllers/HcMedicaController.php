@@ -24,7 +24,7 @@ class HcMedicaController extends BaseController {
         foreach ($stories as $person => $answers) {
             foreach ($answers as $answer) {
                 $entity = $questions->getQuestionEntity($answer[0]);
-                if(!isset($entities[$entity])) {
+                if(!isset($entities[$entity]) && ($entity !== "SF_PERSONAS" || $entity !== "SF_NPERSONAS")) {
                     $entities[$entity] = new Row();
                 }
                 $entities[$entity]->addField([$questions->getQuestionField($answer[0]) => $answer[1]]);
