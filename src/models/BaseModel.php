@@ -177,6 +177,7 @@ class BaseModel{
     public function query($SQLsentence,...$arguments) {
         $this->setQuery($SQLsentence);
         if($this->connection->getConnectionResource()) {
+            $parameters = null;
             $preparedStmt = db2_prepare($this->connection->getConnectionResource(),$SQLsentence);
             foreach ($arguments as $argument) {
                 $parameters[] = $argument;
