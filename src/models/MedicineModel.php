@@ -15,7 +15,7 @@ class MedicineModel extends BaseModel {
         parent::__construct($connection);
         $this->setTableName('HC_MEDICAMENTOS');
         $this->setPrimaryKey('ID_MEDICAMENTO');
-        $this->addColumns('ID_MEDICAMENTO', 'CODIGO', 'DESCRIPCION', 'PRINCIPIO', 'CONCENTRACION', 'PRESENTACION', 'ACLARACION', 'GRUPO');
+        $this->addColumns('ID_MEDICAMENTO', 'ATC', 'DESCRIPCION', 'PRINCIPIO', 'CONCENTRACION', 'PRESENTACION', 'TIPO');
     }
 
     /** @return CustomArray */
