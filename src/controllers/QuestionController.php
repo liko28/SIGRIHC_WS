@@ -34,4 +34,13 @@ class QuestionController extends BaseController {
             }
         }
     }
+
+    public function getQuestionType($id) {
+        foreach ($this->model->getResult() as $question) {
+            if($question->CODIGO == $id) {
+                return $question->TIPOCAMPO;
+            }
+        }
+
+    }
 }
