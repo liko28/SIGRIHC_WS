@@ -840,7 +840,7 @@ $app->group('/HistoriaClinica', function () {
     $this->post('/medico',function (Request $request, Response $response){
         $historias = new HcMedica($this->db);
         $input = $request->getParsedBody();
-        return $response->withJson(["HISTORIA_MEDICA" => $historias->create($input)]);
+        return $response->withJson(["HISTORIA_MEDICA" => $historias->create($input, $this->userName)]);
     });
 });
 $app->run();
