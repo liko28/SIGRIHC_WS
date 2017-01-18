@@ -177,6 +177,7 @@ class BaseModel{
     public function query($SQLsentence,...$arguments) {
         $this->setQuery($SQLsentence);
         if($this->connection->getConnectionResource()) {
+            $parameters = null;
             $preparedStmt = db2_prepare($this->connection->getConnectionResource(),$SQLsentence);
             foreach ($arguments as $argument) {
                 $parameters[] = $argument;
@@ -222,7 +223,7 @@ class BaseModel{
     /** @param array $parameters
      * @return bool
      */
-    public function execute(&$preparedStmt,$parameters){
+    public function execute(&$preparedStmt,$parameters = null){
         if(is_array($parameters)) {
             return db2_execute($preparedStmt,$parameters);
         }

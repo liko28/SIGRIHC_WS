@@ -15,7 +15,7 @@ class Row {
 
     public function addField(array $field){
         foreach ($field as $_field => $value) {
-            $this->$_field = utf8_encode($value);
+                $this->$_field = $value;
         }
     }
 }

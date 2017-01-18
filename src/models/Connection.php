@@ -52,7 +52,7 @@ class Connection {
      * @return void
      */
     public function connect() {
-        $this->connectionResource = db2_connect($this->connectionString,'','');
+        $this->connectionResource = db2_connect($this->connectionString,'','',$this->options);
         if(!$this->connectionResource) {
             throw new \ErrorException("ERROR DE CONEXION: ".db2_conn_error().":".db2_conn_errormsg());
         }
