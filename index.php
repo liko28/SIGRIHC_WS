@@ -286,7 +286,7 @@ $app->group('/Departamentos', function () {
  * @apiErrorExample {Json} Ejemplo Error 404:
  * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
- * @apiSuccess {Json} 200 Arreglo de Objetos de tipo DEPARTAMENTO
+ * @apiSuccess {Json} 200 Arreglo de Objetos de tipo CIE10
  * @apiSuccessExample {Json} Ejemplo Respuesta:
  * {"CIE10":[{"ID":"1","CODIGO":"A000","DESCRIPCION":"COLERA DEBIDO A VIBRIO CHOLERAE O1, BIOTIPO CHOLERAE","CLASE":"","ACTIVO":"0"},{...}]}
  *
@@ -428,7 +428,7 @@ $app->group('/Novedades/', function () {
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo TIPO_NOVEDAD
      * @apiSuccessExample {Json} Ejemplo Respuesta:
      * {"TIPOS_NOVEDAD":[{"TIPO_NOVEDAD":"NA-03","DESCRIPCION":"NO ATIENDE PORQUE YA FUE VISITADO EN OTRO NUCLEO FAMILIAR","ESTADO":"A"},{...}]}
      *
@@ -465,7 +465,7 @@ $app->group('/Novedades/', function () {
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo IPS
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo LISTA_NOVEDAD
      * @apiSuccessExample {Json} Ejemplo Respuesta:
      * {"LISTAS_NOVEDAD":[{"COD_NOVEDAD":"1","TIPO_NOVEDAD":"N01","DESCRIPCION":"NUEVO TIPO DE DOCUMENTO DE IDENTIDAD","ESTADO":"A","VALOR":"1"},{...}]}
      *
@@ -662,7 +662,7 @@ $app->group('/PEC/', function() {
  * @apiErrorExample {Json} Ejemplo Error 404:
  * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
- * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+ * @apiSuccess {Json} 200 Arreglo de Objetos de tipo MEDICAMENTO
  * @apiSuccessExample {Json} Ejemplo Respuesta:
  * {"MEDICAMENTOS":[{"ID_MEDICAMENTO":"1","CODIGO":"J05AF0601","DESCRIPCION":"ABACAVIR","PRINCIPIO":"ABACAVIR","CONCENTRACION":"Incluye todas las concentraciones","PRESENTACION":"TABLETA CON O SIN RECUBRIMIENTO QUE NO MODIFIQUE LA LIBERACI\u00d3N DEL F\u00c1RMACO, C\u00c1PSULA","ACLARACION":"","GRUPO":""},{...}]
  *
@@ -693,7 +693,7 @@ $app->group('/Medicamentos', function() {
  * @apiErrorExample {Json} Ejemplo Error 404:
  * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
  *
- * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+ * @apiSuccess {Json} 200 Arreglo de Objetos de tipo LABORATORIO
  * @apiSuccessExample {Json} Ejemplo Respuesta:
  * {"LABORATORIOS":[{"ID_LABORATORIO":"1","CODIGO":"1","DESCRIPCION":"LABORATORIO DE EJEMPLO","VALORREF1":"10","VALORREF2":"15","TIPO":"1","ORDEN":"1"},{...}]}
  *
@@ -729,7 +729,7 @@ $app->group('/Modulos', function() {
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo MODULO
      * @apiSuccessExample {Json} Ejemplo Respuesta:
      * {"MODULOS":[{"ID_MODULO":"1","DESCRIPCION":"IDENTIFICACION Y UBICACI\u00d3N","CODIGO":"1","ENTIDAD":"","ESTADO":"A","ORDEN":"1","TIPO":"P","VALIDAR":"N","EDADINI":"","EDADFIN":"","GENERO":"A","MODULO_P":" ","REGISTROS":"N"},{"ID_MODULO":"2","DESCRIPCION":"PERSONAS DE LA FAMILIA","CODIGO":"2","ENTIDAD":"","ESTADO":"A","ORDEN":"2","TIPO":"F","VALIDAR":"N","EDADINI":"","EDADFIN":"","GENERO":"A","MODULO_P":"","REGISTROS":"S"},{...}]}
      *
@@ -769,7 +769,7 @@ $app->group('/Preguntas', function() {
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PREGUNTA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
      * {"PREGUNTAS":[{"ID_PREGUNTA":"20788","DESCRIPCION":"COD. DPTO","ENTIDAD":"HC_MEDICA","ATRIBUTO":"DPTO","TIPOCAMPO":"","LONCAMPO":"","DEPENDE":"","OBLIGATORIO":"","ID_MODULO":"","ID_LISTA":"","NOMLISTA":"","VALORLISTA":"","CAMPOSIRFAM":"","TIPO":"","VALIDAR":"","EDADINI":"","EDADFIN":"","GENERO":"","ESTADO":"","VISIBILIDAD":"","NIVEL":"","CODIGO":"","ORDEN":"","FECCREA":"","FECMODI":""},{...}]}
      *
@@ -815,9 +815,9 @@ $app->group('/Programaciones',function(){
      * @apiErrorExample {Json} Ejemplo Error 404:
      * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
      *
-     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PEC_TEMA
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PROGRAMACION
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * EJEMPLO PENDIENTE
+     * {"PROGRAMACIONES":[{"ID_PROGRAMACION":"11063","DPTO":"08","MUNICIPIO":"001","PROMOTOR":"8389","CEB":"1061","ESTADO":"A","ID_VISITA":"","DIRECCION":"","OTRADIR":"","TELEFONO1":"","TELEFONO2":"","EMAIL":"","LATITUD":"","LONGITUD":"","ID_BARRIO":"","BARRIO":"","FECPROG":"2017-01-31","PERSONAS":[{"ID_USUARIO":"3","MOTVISITA":"","TIPOVISITA":"","PARENTESCO":""}]},{...}]}
      *
      */
     $this->get('[/{lastSyncDate}]', function(Request $request, Response $response, $args){
@@ -827,7 +827,7 @@ $app->group('/Programaciones',function(){
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
             return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName,$lastSyncDate)->values()]);
         }
-        return $response->withJson(['PROGRAMACIONES' => $programaciones->getAll()->values()]);
+        return $response->withJson(['PROGRAMACIONES' => $programaciones->getAll($this->userName)->values()]);
     });
 });
 

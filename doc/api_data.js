@@ -175,7 +175,7 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo DEPARTAMENTO</p>"
+            "description": "<p>Arreglo de Objetos de tipo CIE10</p>"
           }
         ]
       },
@@ -581,7 +581,7 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
+            "description": "<p>Arreglo de Objetos de tipo LABORATORIO</p>"
           }
         ]
       },
@@ -774,7 +774,7 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
+            "description": "<p>Arreglo de Objetos de tipo MEDICAMENTO</p>"
           }
         ]
       },
@@ -877,7 +877,7 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
+            "description": "<p>Arreglo de Objetos de tipo MODULO</p>"
           }
         ]
       },
@@ -1083,7 +1083,7 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo IPS</p>"
+            "description": "<p>Arreglo de Objetos de tipo LISTA_NOVEDAD</p>"
           }
         ]
       },
@@ -1186,7 +1186,7 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo IPS</p>"
+            "description": "<p>Arreglo de Objetos de tipo TIPO_NOVEDAD</p>"
           }
         ]
       },
@@ -1765,7 +1765,7 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
+            "description": "<p>Arreglo de Objetos de tipo PREGUNTA</p>"
           }
         ]
       },
@@ -1868,14 +1868,14 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo PEC_TEMA</p>"
+            "description": "<p>Arreglo de Objetos de tipo PROGRAMACION</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "EJEMPLO PENDIENTE",
+          "content": "{\"PROGRAMACIONES\":[{\"ID_PROGRAMACION\":\"11063\",\"DPTO\":\"08\",\"MUNICIPIO\":\"001\",\"PROMOTOR\":\"8389\",\"CEB\":\"1061\",\"ESTADO\":\"A\",\"ID_VISITA\":\"\",\"DIRECCION\":\"\",\"OTRADIR\":\"\",\"TELEFONO1\":\"\",\"TELEFONO2\":\"\",\"EMAIL\":\"\",\"LATITUD\":\"\",\"LONGITUD\":\"\",\"ID_BARRIO\":\"\",\"BARRIO\":\"\",\"FECPROG\":\"2017-01-31\",\"PERSONAS\":[{\"ID_USUARIO\":\"3\",\"MOTVISITA\":\"\",\"TIPOVISITA\":\"\",\"PARENTESCO\":\"\"}]},{...}]}",
           "type": "Json"
         }
       ]
