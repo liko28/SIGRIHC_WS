@@ -10,7 +10,7 @@ class ReferenceListModel extends BaseModel {
         parent::__construct($connection);
         $this->setTableName("SF_LISTA_REF");
         $this->setPrimaryKey("ID_LISTA");
-        $this->addColumns("ID_LISTA","PADRE","DESCRIPCION","CODLISTA","VALOR","ESTADO","FECCREA","FECMODI");
+        $this->addColumns("ID_LISTA","PADRE","DESCRIPCION","CODLISTA","VALOR","ESTADO","ORDEN","FECCREA","FECMODI");
     }
 
     /** @return CustomArray */
