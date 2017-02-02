@@ -182,9 +182,9 @@ $app->group('/ListasReferencia', function(){
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
-            return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getAll()->values()]);
+            return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getUpdates($lastSyncDate)->values()]);
         }
-        return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getUpdates($lastSyncDate)->values()]);
+        return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getAll()->values()]);
     });
 });
 
