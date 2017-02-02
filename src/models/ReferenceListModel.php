@@ -15,11 +15,11 @@ class ReferenceListModel extends BaseModel {
 
     /** @return CustomArray */
     public function getAll() {
-        return $this->query("SELECT {$this->getColumns('ID_LISTA','PADRE','DESCRIPCION','CODLISTA','VALOR','ESTADO')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+        return $this->query("SELECT {$this->getColumns('ID_LISTA','PADRE','DESCRIPCION','CODLISTA','VALOR','ESTADO','ORDEN')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
     }
 
     /** @return CustomArray */
     public function getUpdates($lastSyncDate) {
-        return $this->query("SELECT {$this->getColumns('ID_LISTA','PADRE','DESCRIPCION','CODLISTA','VALOR','ESTADO')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
+        return $this->query("SELECT {$this->getColumns('ID_LISTA','PADRE','DESCRIPCION','CODLISTA','VALOR','ESTADO','ORDEN')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
     }
 }
