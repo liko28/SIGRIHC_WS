@@ -1681,6 +1681,109 @@
   },
   {
     "type": "GET",
+    "url": "/Personas/:date",
+    "title": "",
+    "group": "Personas",
+    "description": "<p>Retorna las Personas Afiliadas en la zona del usuario que realiza la peticion, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
+    "permission": [
+      {
+        "name": "specific_user",
+        "title": "Usuario Especifico",
+        "description": "<p>Requiere User y Password validos definidos en Header. Tenga en cuenta que se entregaran unicamente los registros relacionados con el usuario que realiza la peticion</p>"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Header:",
+          "content": "{\"Authorization\":\"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date",
+            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "401",
+            "description": "<p>Usuario o Contraseña Invalidos</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "404",
+            "description": "<p>LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Error 401:",
+          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
+          "type": "Json"
+        },
+        {
+          "title": "Ejemplo Error 404:",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "200",
+            "description": "<p>Arreglo de Objetos de tipo PERSONA</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Respuesta:",
+          "content": "{\"PERSONAS\":[{\"ID_USUARIO\":\"3\", \"APELLIDO1\":\"CONTRERAS\", \"APELLIDO2\":\"DE CONTRERAS\", \"NOMBRE1\":\"BARBARA\", \"NOMBRE2\":\"\", \"TIPODOC\":\"CC\", \"DOCUMENTO\":\"28133884\", \"CARNET\":\"68296297329\", \"FECHANAC\":\"1947-05-10\", \"SEXO\":\"F\", \"ESTADO\":\"AC\", \"DPTO\":\"68\", \"MUNICIPIO\":\"296\", \"SITUACION\":\"\", \"CODINST\":\"ESS024\", \"CELULAR\":\"\", \"EMAIL\":\"\", \"PESONACER\":\"\", \"TALLANACER\":\"\", \"DOCMAMA\":\"\", \"DOCPAPA\":\"\", \"PROMOTOR\":\"\", \"IDULTVISITA\":\"1459974\", \"FECULTVISITA\":\"2017-01-30\", \"PROGRAMADO\":\"\", \"PROGRAMACION\":\"\", \"USERCREA\":\"ADMIN\", \"FECCREA\":\"2015-10-20-05.27.40.865969\", \"IPCREA\":\"\", \"USERMODI\":\"amparo.cordero\", \"IPMODI\":\"190.242.76.52\", \"FECMODI\":\"2017-01-30-13.46.07.521480\"},{...}]}",
+          "type": "Json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./index.php",
+    "groupTitle": "Personas",
+    "name": "GetPersonasDate"
+  },
+  {
+    "type": "GET",
     "url": "/Preguntas/:date",
     "title": "",
     "group": "Preguntas",

@@ -27,6 +27,7 @@ use SIGRI_HC\Controllers\LaboratoryController as Laboratory;
 use SIGRI_HC\Controllers\ModuleController as Module;
 use SIGRI_HC\Controllers\QuestionController as Question;
 use SIGRI_HC\Controllers\HcMedicaController as HcMedica;
+use SIGRI_HC\Controllers\PersonController as Person;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -828,6 +829,46 @@ $app->group('/Programaciones',function(){
             return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName,$lastSyncDate)->values()]);
         }
         return $response->withJson(['PROGRAMACIONES' => $programaciones->getAll($this->userName)->values()]);
+    });
+});
+
+$app->group('/Personas',function(){
+
+    /**
+     * @api {GET} /Personas/:date
+     * @apiGroup Personas
+     * @apiDescription Retorna las Personas Afiliadas en la zona del usuario que realiza la peticion, si se provee :date se filtraran los resultados modificados a partir de :date
+     * @apiPermission specific_user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PERSONA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"PERSONAS":[{"ID_USUARIO":"3", "APELLIDO1":"CONTRERAS", "APELLIDO2":"DE CONTRERAS", "NOMBRE1":"BARBARA", "NOMBRE2":"", "TIPODOC":"CC", "DOCUMENTO":"28133884", "CARNET":"68296297329", "FECHANAC":"1947-05-10", "SEXO":"F", "ESTADO":"AC", "DPTO":"68", "MUNICIPIO":"296", "SITUACION":"", "CODINST":"ESS024", "CELULAR":"", "EMAIL":"", "PESONACER":"", "TALLANACER":"", "DOCMAMA":"", "DOCPAPA":"", "PROMOTOR":"", "IDULTVISITA":"1459974", "FECULTVISITA":"2017-01-30", "PROGRAMADO":"", "PROGRAMACION":"", "USERCREA":"ADMIN", "FECCREA":"2015-10-20-05.27.40.865969", "IPCREA":"", "USERMODI":"amparo.cordero", "IPMODI":"190.242.76.52", "FECMODI":"2017-01-30-13.46.07.521480"},{...}]}
+     *
+     */
+    $this->get('[/{lastSyncDate}]', function(Request $request, Response $response, $args){
+        $personas = new Person($this->db);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['PERSONAS' => $personas->getUpdates($this->userName,$lastSyncDate)->values()]);
+        }
+        return $response->withJson(['PERSONAS' => $personas->getAll($this->userName)->values()]);
     });
 });
 
