@@ -28,6 +28,7 @@ use SIGRI_HC\Controllers\ModuleController as Module;
 use SIGRI_HC\Controllers\QuestionController as Question;
 use SIGRI_HC\Controllers\HcMedicaController as HcMedica;
 use SIGRI_HC\Controllers\PersonController as Person;
+use SIGRI_HC\Controllers\UserController as User;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -783,6 +784,46 @@ $app->group('/Preguntas', function() {
             return $response->withJson(['PREGUNTAS' => $preguntas->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['PREGUNTAS' => $preguntas->getAll()->values()]);
+    });
+});
+
+$app->group('/Usuarios', function() {
+
+    /**
+     * @api {GET} /Usuarios/:date
+     * @apiGroup Usuarios
+     * @apiDescription Retorna el Listado de Usuarios del Sistema, si se provee :date se filtraran los resultados modificados a partir de :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PREGUNTA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"USUARIOS":[{"ID":"1","NOMBRE":"admin","PASSWORD":"21232f297a57a5a743894a0e4a801fc3","TIPO_USUARIO":"1","ACTIVO":"0","EMAIL":"rennimunoz@saludfamiliar.com.co","DPTO":"08","PAIS":"57","CIUDAD":"758","MOVIL":"3162413498","TELEFONO":"3930527","DIRECCION":"Calle 73a # 22 - 45 PISO 2","DOC_IDENT":"73238372","NOMBRES":"RENNI DE JESUS","APELLIDOS":"MU\u00d1OZ OROZCO","CARGO":"ADMINISTRADOR","TIPO_DOC":"1","INFORMA_A":"1","FECHA_CREA":"2012-10-30 11:54:09.000000","USER_CREA":"admin","IP_CREA":"127.0.0.1","FECHA_MODI":"2015-10-17 09:47:06.000000","USER_MODI":"admin","IP_MODI":"181.192.158.23","START_LATITUD":"","START_LONGITUD":""},{...}]}
+     *
+     */
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
+        $usuarios = new User($this->db);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['USUARIOS' => $usuarios->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['USUARIOS' => $usuarios->getAll()->values()]);
     });
 });
 

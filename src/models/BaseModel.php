@@ -246,4 +246,8 @@ class BaseModel{
         $query = "INSERT INTO {$this->getSchema()}.{$this->getTableName()} ($columns) VALUES($values)";
         return $this->query($query);
     }
+
+    public function getAll(){
+        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()}");
+    }
 }
