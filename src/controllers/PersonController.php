@@ -10,4 +10,14 @@ class PersonController extends BaseController {
     public function __construct(Connection $connection) {
         parent::__construct(new PersonModel($connection));
     }
+
+    public function getAll($userName) {
+        $user = new UserController($this->model->getConnection());
+        return $this->model->getAll($user->getByUserName($userName)[0]->DPTO, $user->getByUserName($userName)[0]->CIUDAD);
+    }
+
+    public function getUpdates($userName, \DateTime $lastSyncDate) {
+        $user = new UserController($this->model->getConnection());
+        return $this->model->getUpdates($user->getByUserName($userName)[0]->DPTO, $user->getByUserName($userName)[0]->CIUDAD, $lastSyncDate->format('Y-m-d-H.i.s'));
+    }
 }
