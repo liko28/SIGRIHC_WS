@@ -2077,5 +2077,108 @@
     "filename": "./index.php",
     "groupTitle": "TiposUsuario",
     "name": "GetTiposusuario"
+  },
+  {
+    "type": "GET",
+    "url": "/Usuarios/:date",
+    "title": "",
+    "group": "Usuarios",
+    "description": "<p>Retorna el Listado de Usuarios del Sistema, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
+    "permission": [
+      {
+        "name": "user",
+        "title": "Cualquier Usuario",
+        "description": "<p>Requiere User y Password validos definidos en Header</p>"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Header:",
+          "content": "{\"Authorization\":\"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date",
+            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "401",
+            "description": "<p>Usuario o Contraseña Invalidos</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "404",
+            "description": "<p>LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Error 401:",
+          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
+          "type": "Json"
+        },
+        {
+          "title": "Ejemplo Error 404:",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "200",
+            "description": "<p>Arreglo de Objetos de tipo PREGUNTA</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Respuesta:",
+          "content": "{\"USUARIOS\":[{\"ID\":\"1\",\"NOMBRE\":\"admin\",\"PASSWORD\":\"21232f297a57a5a743894a0e4a801fc3\",\"TIPO_USUARIO\":\"1\",\"ACTIVO\":\"0\",\"EMAIL\":\"rennimunoz@saludfamiliar.com.co\",\"DPTO\":\"08\",\"PAIS\":\"57\",\"CIUDAD\":\"758\",\"MOVIL\":\"3162413498\",\"TELEFONO\":\"3930527\",\"DIRECCION\":\"Calle 73a # 22 - 45 PISO 2\",\"DOC_IDENT\":\"73238372\",\"NOMBRES\":\"RENNI DE JESUS\",\"APELLIDOS\":\"MU\\u00d1OZ OROZCO\",\"CARGO\":\"ADMINISTRADOR\",\"TIPO_DOC\":\"1\",\"INFORMA_A\":\"1\",\"FECHA_CREA\":\"2012-10-30 11:54:09.000000\",\"USER_CREA\":\"admin\",\"IP_CREA\":\"127.0.0.1\",\"FECHA_MODI\":\"2015-10-17 09:47:06.000000\",\"USER_MODI\":\"admin\",\"IP_MODI\":\"181.192.158.23\",\"START_LATITUD\":\"\",\"START_LONGITUD\":\"\"},{...}]}",
+          "type": "Json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./index.php",
+    "groupTitle": "Usuarios",
+    "name": "GetUsuariosDate"
   }
 ]
