@@ -29,6 +29,7 @@ use SIGRI_HC\Controllers\QuestionController as Question;
 use SIGRI_HC\Controllers\HcMedicaController as HcMedica;
 use SIGRI_HC\Controllers\PersonController as Person;
 use SIGRI_HC\Controllers\UserController as User;
+use SIGRI_HC\Controllers\ProcedureController as Procedure;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -673,6 +674,37 @@ $app->group('/Medicamentos', function() {
     $this->get('', function (Request $request, Response $response) {
         $medicines = new Medicine($this->db);
         return $response->withJson(['MEDICAMENTOS' => $medicines->getAll()->values()]);
+    });
+});
+
+/**
+ * @api {GET} /Procedimientos
+ * @apiGroup Procedimientos
+ * @apiDescription Retorna el Listado de Procedimientos
+ * @apiPermission user
+ * @apiSampleRequest off
+ *
+ * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+ * @apiHeaderExample {Json} Ejemplo Header:
+ * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+ *
+ * @apiError {Json} 401 Usuario o Contraseña Invalidos
+ * @apiErrorExample {Json} Ejemplo Error 401:
+ * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+ *
+ * @apiError {Json} 404 LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
+ * @apiErrorExample {Json} Ejemplo Error 404:
+ * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
+ *
+ * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PROCEDIMIENTO
+ * @apiSuccessExample {Json} Ejemplo Respuesta:
+ * {"PROCEDIMIENTOS":[{"ID_PROCEDIMIENTO":"3186","CODIGO":"395307","DESCRIPCION":"CIERRE DE FISTULA VENOVENOSA VIA ABIERTA","ESTADO":"1"},{...}]
+ *
+ */
+$app->group('/Procedimientos', function() {
+    $this->get('', function (Request $request, Response $response) {
+        $procedures = new Procedure($this->db);
+        return $response->withJson(['PROCEDIMIENTOS' => $procedures->getAll()->values()]);
     });
 });
 
