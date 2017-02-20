@@ -142,7 +142,7 @@ class BaseModel{
         $filteredColumns = new CustomArray();
         foreach ($columns as $column) {
             if(array_key_exists($column,$this->getColumns())) {
-                $filteredColumns[$column] = $this->getSchema().$this->tableName.$column;
+                $filteredColumns[$column] = $this->getSchema().'.'.$this->tableName.'.'.$column;
             } else {
                 throw new \ErrorException("El Campo $column NO EXISTE EN LA TABLA $this->schema.$this->tableName");
             }
