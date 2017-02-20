@@ -939,9 +939,9 @@ $app->group('/Personas',function(){
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
-            return $response->withJson(['PERSONAS' => $personas->getUpdates($this->userName,$lastSyncDate)->values()]);
+            return $response->withJson(['PERSONAS' => $personas->getUpdatedSchedules($this->userName,$lastSyncDate)->values()]);
         }
-        return $response->withJson(['PERSONAS' => $personas->getAll($this->userName)->values()]);
+        return $response->withJson(['PERSONAS' => $personas->getScheduled($this->userName)->values()]);
     });
 });
 
