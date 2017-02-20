@@ -36,6 +36,8 @@ class HcMedicaController extends BaseController {
             $this->processAnswersMulti($answers['OTROS_LABORATORIOS'],$entities);
             /** PROCESAMIENTO DEL BLOQUE DIAGNOSTICOS */
             $this->processAnswersMulti($answers['DIAGNOSTICOS'],$entities);
+            /** PROCESAMIENTO DEL BLOQUE EXAMENES (HC_REGISTROEXA) */
+            $this->processAnswersMulti($answers['EXAMENES'],$entities);
             /** PROCESAMIENTO DEL BLOQUE PARACLINICOS */
             $this->processAnswersMulti($answers['PARACLINICOS'],$entities);
             /** PROCESAMIENTO DEL BLOQUE REGISTRO EXAMENES */
