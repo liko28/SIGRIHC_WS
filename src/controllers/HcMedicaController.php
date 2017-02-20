@@ -28,6 +28,8 @@ class HcMedicaController extends BaseController {
             $this->processAnswersMulti($answers['ANTECEDENTES_MEDICAMENTOS'],$entities);
             /** PROCESAMIENTO DEL BLOQUE ANTECEDENTES PERSONALES */
             $this->processAnswersMulti($answers['ANTECEDENTES_PERSONALES'],$entities);
+            /** PROCESAMIENTO DEL BLOQUE ANTECEDENTES FAMILIARES */
+            $this->processAnswersMulti($answers['ANTECEDENTES_FAMILIARES'],$entities);
             /** PROCESAMIENTO DEL BLOQUE LABORATORIOS */
             $this->processAnswersMulti($answers['LABORATORIOS'],$entities);
             /** PROCESAMIENTO DEL BLOQUE OTROS LABORATORIOS */
@@ -46,6 +48,8 @@ class HcMedicaController extends BaseController {
             $this->processAnswersMulti($answers['TEMAS'],$entities);
             /** PROCESAMIENTO DEL BLOQUE CITAS */
             $this->processAnswersMulti($answers['CITAS'],$entities);
+            /** PROCESAMIENTO DEL BLOQUE GLUCOMETRIAS (HC_INSULINARES) */
+            $this->processAnswersMulti($answers['GLUCOMETRIAS'],$entities);
 
             /** INSERCION DE HC_MEDICA (PARENT) */
             //TODO ESTE ES UN ERROR EN LA TABLA PREGUNTAS, DEBERIA TENER TODOS LOS CAMPOS
@@ -66,6 +70,7 @@ class HcMedicaController extends BaseController {
                     case "HC_ANTPERSONAL":
                     case "HC_ANTPERSONAL1":
                     case "HC_ANTPERSONAL2":
+                    case "HC_ANTFAMILIAR":
                     case "HC_DIAGNOSTICO":
                     case "HC_DXNANDA":
                     case "HC_DXNIC":
@@ -77,6 +82,7 @@ class HcMedicaController extends BaseController {
                     case "HC_PARACLINICOS":
                     case "HC_PECTEMAS":
                     case "HC_PLANTERAPEUTICO":
+                    case "HC_INSULINARES":
                     case "HC_REGISTROEXA":
                     case "HC_RESPONSABLE":
                         foreach ($row as $item) {
@@ -95,7 +101,6 @@ class HcMedicaController extends BaseController {
                         }
                         break;
                     case "HC_ANTFALLECIDO":
-                    case "HC_ANTFAMILIAR":
                     case "HC_ANTFAMILIARTC":
                     case "HC_ANTGINECO":
                     case "HC_COMPLEMENTO":
@@ -103,6 +108,7 @@ class HcMedicaController extends BaseController {
                     case "HC_EXAMENFIS":
                     case "HC_HABITOS":
                     case "HC_REVISION":
+                    case "HC_INSULINA":
                     case "HC_TESTBAR":
                         //TODO Inject Fecmodi, IpModi, Feccrea, Ipcrea, Usercrea, Usermodi
                         //TODO Inject UserId
