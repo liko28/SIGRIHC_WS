@@ -20,6 +20,7 @@ class ScheduleController extends BaseController {
         parent::__construct(new ScheduleModel($connection));
     }
 
+    //TODO ACTUALIZAR ESTADO A D
     public function getAll($userName) {
         $user = new UserController($this->model->getConnection());
         $this->model->getAll($user->getByUserName($userName)[0]->ID);
