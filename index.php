@@ -865,7 +865,7 @@ $app->group('/Usuarios', function() {
  *************************
  **/
 
-$app->group('/Programaciones',function(){
+$app->group('/Programaciones',function() {
 
     /**
      * @api {GET} /Programaciones/:date
@@ -879,7 +879,6 @@ $app->group('/Programaciones',function(){
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
      *
      * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
-
      *
      * @apiError {Json} 401 Usuario o Contraseña Invalidos
      * @apiErrorExample {Json} Ejemplo Error 401:
@@ -894,14 +893,25 @@ $app->group('/Programaciones',function(){
      * {"PROGRAMACIONES":[{"ID_PROGRAMACION":"11063","DPTO":"08","MUNICIPIO":"001","PROMOTOR":"8389","CEB":"1061","ESTADO":"A","ID_VISITA":"","DIRECCION":"","OTRADIR":"","TELEFONO1":"","TELEFONO2":"","EMAIL":"","LATITUD":"","LONGITUD":"","ID_BARRIO":"","BARRIO":"","FECPROG":"2017-01-31","PERSONAS":[{"ID_USUARIO":"3","MOTVISITA":"","TIPOVISITA":"","PARENTESCO":""}]},{...}]}
      *
      */
-    $this->get('[/{lastSyncDate}]', function(Request $request, Response $response, $args){
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $programaciones = new Schedule($this->db);
-        if($args['lastSyncDate']) {
+        if ($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
-            return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName,$lastSyncDate)->values()]);
+            return $response->withJson(['PROGRAMACIONES' => $programaciones->getUpdates($this->userName, $lastSyncDate)->values()]);
         }
         return $response->withJson(['PROGRAMACIONES' => $programaciones->getAll($this->userName)->values()]);
+    });
+
+    $this->post('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
+        $programaciones = new Schedule($this->db);
+        $input = $request->getParsedBody();
+        if ($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['PROGRAMACIONES' => $programaciones->getComparedUpdates($this->userName, $lastSyncDate, $input)->values()]);
+        }
+        return $response->withJson(['PROGRAMACIONES' => $programaciones->getAllCompared($this->userName, $input)->values()]);
     });
 });
 
