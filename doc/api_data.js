@@ -1978,7 +1978,7 @@ define({ "api": [
   {
     "type": "GET",
     "url": "/Programaciones/:date",
-    "title": "",
+    "title": "GET",
     "group": "Programaciones",
     "description": "<p>Retorna la Programacion asignada al usuario que realiza la peticion, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
@@ -2077,6 +2077,123 @@ define({ "api": [
     "filename": "./index.php",
     "groupTitle": "Programaciones",
     "name": "GetProgramacionesDate"
+  },
+  {
+    "type": "post",
+    "url": "/Programaciones/:date",
+    "title": "POST",
+    "name": "Programaciones",
+    "group": "Programaciones",
+    "description": "<p>Retorna la Programacion asignada al usuario que realiza la peticion, si se provee :date se filtraran los resultados modificados a partir de :date A diferencia del metodo GET, este recurso recibe un arreglo de ID_PROGRAMACION desde el cliente, realiza operaciones comparativas en el Servidor y devuelve los registros faltantes para mentener simetría entre Cliente y Servidor</p>",
+    "permission": [
+      {
+        "name": "specific_user",
+        "title": "Usuario Especifico",
+        "description": "<p>Requiere User y Password validos definidos en Header. Tenga en cuenta que se entregaran unicamente los registros relacionados con el usuario que realiza la peticion</p>"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Header:",
+          "content": "{\"Authorization\":\"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date",
+            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Json",
+            "optional": false,
+            "field": "File",
+            "description": "<p>Archivo json que contiene los ID_PROGRAMACION positivos que posee el Cliente</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "[\"10004\", \"10009\", \"10011\", \"11067\", \"11071\",\"1111\",\"10998\"]",
+          "type": "Json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "401",
+            "description": "<p>Usuario o Contraseña Invalidos</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "404",
+            "description": "<p>LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Error 401:",
+          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
+          "type": "Json"
+        },
+        {
+          "title": "Ejemplo Error 404:",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "200",
+            "description": "<p>Arreglo de Objetos de tipo PROGRAMACION</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Respuesta:",
+          "content": "{\"PROGRAMACIONES\":[{\"ID_PROGRAMACION\":\"11063\",\"DPTO\":\"08\",\"MUNICIPIO\":\"001\",\"PROMOTOR\":\"8389\",\"CEB\":\"1061\",\"ESTADO\":\"A\",\"ID_VISITA\":\"\",\"DIRECCION\":\"\",\"OTRADIR\":\"\",\"TELEFONO1\":\"\",\"TELEFONO2\":\"\",\"EMAIL\":\"\",\"LATITUD\":\"\",\"LONGITUD\":\"\",\"ID_BARRIO\":\"\",\"BARRIO\":\"\",\"FECPROG\":\"2017-01-31\",\"PERSONAS\":[{\"ID_USUARIO\":\"3\",\"MOTVISITA\":\"\",\"TIPOVISITA\":\"\",\"PARENTESCO\":\"\"}]},{...}]}",
+          "type": "Json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./index.php",
+    "groupTitle": "Programaciones"
   },
   {
     "type": "GET",
