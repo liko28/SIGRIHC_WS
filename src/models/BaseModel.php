@@ -203,7 +203,7 @@ class BaseModel{
                             return $this->result;
                             break;
                         case "UPDATE":
-                            //TODO Caso si Update
+                            return db2_num_rows($preparedStmt);
                             break;
                         default:
                             return true;
@@ -224,7 +224,7 @@ class BaseModel{
      * @return bool
      */
     public function execute(&$preparedStmt,$parameters = null){
-        if(is_array($parameters)) {
+        if($parameters) {
             return db2_execute($preparedStmt,$parameters);
         }
         return db2_execute($preparedStmt);
@@ -239,6 +239,8 @@ class BaseModel{
                 $values .= "'$value', ";
             } elseif(is_numeric($value)) {
                 $values .= "$value, ";
+            } else {
+                $values .= "$value, ";
             }
         }
         $columns = trim($columns,', ');
@@ -247,7 +249,27 @@ class BaseModel{
         return $this->query($query);
     }
 
+    public function update($id, Row $object) {
+        $columns = "";
+        foreach ($object as $field => $value) {
+            if (is_string($value)) {
+                $columns .= "$field = '$value', ";
+            } elseif(is_numeric($value)) {
+                $columns .= "$field = $value, ";
+            } else {
+                $columns .= "$field = $value, ";
+            }
+        }
+        $columns = trim($columns,', ');
+        $query = "UPDATE {$this->getSchema()}.{$this->getTableName()} SET $columns WHERE {$this->getSchema()}.{$this->getTableName()}.{$this->getPrimaryKey()} = ?";
+        return $this->query($query,$id);
+    }
+
     public function getAll(){
         return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()}");
+    }
+
+    public function commit(){
+        db2_commit($this->connection->getConnectionResource());
     }
 }
