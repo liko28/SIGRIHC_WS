@@ -291,7 +291,7 @@ $app->group('/Departamentos', function () {
  *
  * @apiSuccess {Json} 200 Arreglo de Objetos de tipo CIE10
  * @apiSuccessExample {Json} Ejemplo Respuesta:
- * {"CIE10":[{"ID":"1","CODIGO":"A000","DESCRIPCION":"COLERA DEBIDO A VIBRIO CHOLERAE O1, BIOTIPO CHOLERAE","CLASE":"","ACTIVO":"0"},{...}]}
+ * {"CIE10":[{"ID":"1","CODIGO":"A000","DESCRIPCION":"COLERA DEBIDO A VIBRIO CHOLERAE O1, BIOTIPO CHOLERAE","CLASE":"","ACTIVO":"0","TIPO":"F"},{...}]}
  *
  */
 $app->get('/CIE10', function (Request $request, Response $response) {

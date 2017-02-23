@@ -182,7 +182,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Ejemplo Respuesta:",
-          "content": "{\"CIE10\":[{\"ID\":\"1\",\"CODIGO\":\"A000\",\"DESCRIPCION\":\"COLERA DEBIDO A VIBRIO CHOLERAE O1, BIOTIPO CHOLERAE\",\"CLASE\":\"\",\"ACTIVO\":\"0\"},{...}]}",
+          "content": "{\"CIE10\":[{\"ID\":\"1\",\"CODIGO\":\"A000\",\"DESCRIPCION\":\"COLERA DEBIDO A VIBRIO CHOLERAE O1, BIOTIPO CHOLERAE\",\"CLASE\":\"\",\"ACTIVO\":\"0\",\"TIPO\":\"F\"},{...}]}",
           "type": "Json"
         }
       ]
