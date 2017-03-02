@@ -16,10 +16,10 @@ class HcMedicaController extends BaseController {
 
     /** @inject  Connection $connection */
     public function create($stories, $user){
+        $result = array();
         foreach ($stories as $person => $answers) {
             $baseModel = new BaseModel($this->model->getConnection());
             $entities = array();
-            $result = array();
             /** PROCESAMIENTO DEL BLOQUE RESPUESTAS */
             $this->processAnswers($answers['RESPUESTAS'],$entities);
             /** PROCESAMIENTO DEL BLOQUE ACOMPAÑANTES */
