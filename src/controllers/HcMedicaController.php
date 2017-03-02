@@ -62,7 +62,7 @@ class HcMedicaController extends BaseController {
                 $hcId = $this->model->insert($entities['HC_MEDICA']);
             } catch (\Exception $e) {
                 //TODO Log error
-                $result[] = ['ERROR' => $e->getMessage()];
+                $result[$person] = ['ERROR' => $e->getMessage()];
                 db2_rollback($this->model->getConnection()->getConnectionResource());
                 continue;
             }
@@ -99,7 +99,7 @@ class HcMedicaController extends BaseController {
                                 $baseModel->insert($item);
                             } catch (\Exception $e) {
                                 //TODO Log error
-                                $result[] = ['ERROR' => $e->getMessage()];
+                                $result[$person] = ['ERROR' => $e->getMessage()];
                                 db2_rollback($this->model->getConnection()->getConnectionResource());
                                 continue 4;
                             }
@@ -122,7 +122,7 @@ class HcMedicaController extends BaseController {
                             $baseModel->insert($row);
                         } catch (\Exception $e) {
                             //TODO Log error
-                            $result[] = ["ERROR" => $e->getMessage()];
+                            $result[$person] = ["ERROR" => $e->getMessage()];
                             db2_rollback($this->model->getConnection()->getConnectionResource());
                             continue 3;
                         }
@@ -131,7 +131,7 @@ class HcMedicaController extends BaseController {
                         break;
                 }
             }
-            $result[] = $hcId;
+            $result[$person] = $hcId;
             db2_commit($this->model->getConnection()->getConnectionResource());
         }
         return $result;
