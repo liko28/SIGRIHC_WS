@@ -43,4 +43,8 @@ class QuestionController extends BaseController {
         }
 
     }
+
+    public function getResult() {
+        return $this->model->getResult();
+    }
 }
