@@ -698,7 +698,7 @@ $app->group('/Medicamentos', function() {
  *
  * @apiSuccess {Json} 200 Arreglo de Objetos de tipo PROCEDIMIENTO
  * @apiSuccessExample {Json} Ejemplo Respuesta:
- * {"PROCEDIMIENTOS":[{"ID_PROCEDIMIENTO":"3186","CODIGO":"395307","DESCRIPCION":"CIERRE DE FISTULA VENOVENOSA VIA ABIERTA","ESTADO":"1"},{...}]
+ * {"PROCEDIMIENTOS":[{"ID_PROCEDIMIENTO":"3186","CODIGO":"395307","DESCRIPCION":"CIERRE DE FISTULA VENOVENOSA VIA ABIERTA","ESTADO":"1","TIPO":"F"},{...}]
  *
  */
 $app->group('/Procedimientos', function() {
@@ -993,6 +993,8 @@ $app->group('/HistoriaClinica', function () {
     });
 
     $this->get('', function (Request $request, Response $response){
+        $historias = new HcMedica($this->db);
+        return $response->withJson(["HISTORIA_MEDICA" => [$historias->get(163)]]);
 
     });
 });

@@ -15,7 +15,7 @@ class ProcedureModel extends BaseModel {
         parent::__construct($connection);
         $this->setTableName('HC_PROCEDIMIENTOS');
         $this->setPrimaryKey('ID_PROCEDIMIENTO');
-        $this->addColumns('ID_PROCEDIMIENTO', 'CODIGO', 'DESCRIPCION', 'ESTADO');
+        $this->addColumns('ID_PROCEDIMIENTO', 'CODIGO', 'DESCRIPCION', 'ESTADO', 'TIPO');
     }
 
     /** @return CustomArray */
