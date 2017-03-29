@@ -992,9 +992,46 @@ $app->group('/HistoriaClinica', function () {
         return $response->withJson(["HISTORIA_MEDICA" => $historias->create($input, $this->userName)]);
     });
 
-    $this->get('', function (Request $request, Response $response){
+    /**
+     * @api {GET} /HistoriaClinica/:id
+     * @apiGroup Historia Clinica
+     * @apiDescription Retorna una o más Historias clinicas registradas en el sistemas
+     * @apiPermission specific_user
+     * @apiSampleRequest off
+     *
+     * @apiParam {Boolean} person Si se pasa person=true como parametro se tomará el ID como ID_USUARIO
+     * @apiParamExample {Json} Request-Example:
+     * /HistoriaClinia/:id?person=true
+     *
+     * @apiParam {Boolean} last Si se pasa last=true como parametro se responderá unicamente con la ultima Historia Clinica registrada al usuario (más reciente), si el valor es "true" el valor implicito de "person" será true
+     * @apiParamExample {Json} Request-Example:
+     * /HistoriaClinia/:id?person=true&last=true
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo HISTORIA_MEDICA que puede contener una o varias Historias Clinicas
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"HISTORIA_MEDICA":{"50":{"RESPUESTAS":[...]}}}
+     */
+    $this->get('/{id}', function (Request $request, Response $response,$args){
         $historias = new HcMedica($this->db);
-        return $response->withJson(["HISTORIA_MEDICA" => [$historias->get(163)]]);
+        $id = $args['id'];
+        $byUser = $request->getQueryParam('person');
+        $onlyLast = $request->getQueryParam('last');
+        if(filter_var($byUser,FILTER_VALIDATE_BOOLEAN) || filter_var($onlyLast, FILTER_VALIDATE_BOOLEAN)) {
+            return $response->withJson(["HISTORIA_MEDICA" => $historias->getByPerson($id,$onlyLast)]);
+        }
+        return $response->withJson(["HISTORIA_MEDICA" => $historias->get($id)]);
 
     });
 });

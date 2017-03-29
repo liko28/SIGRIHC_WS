@@ -296,6 +296,128 @@ define({ "api": [
     "name": "GetDepartamentosDate"
   },
   {
+    "type": "GET",
+    "url": "/HistoriaClinica/:id",
+    "title": "",
+    "group": "Historia_Clinica",
+    "description": "<p>Retorna una o más Historias clinicas registradas en el sistemas</p>",
+    "permission": [
+      {
+        "name": "specific_user",
+        "title": "Usuario Especifico",
+        "description": "<p>Requiere User y Password validos definidos en Header. Tenga en cuenta que se entregaran unicamente los registros relacionados con el usuario que realiza la peticion</p>"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "person",
+            "description": "<p>Si se pasa person=true como parametro se tomará el ID como ID_USUARIO</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "last",
+            "description": "<p>Si se pasa last=true como parametro se responderá unicamente con la ultima Historia Clinica registrada al usuario (más reciente), si el valor es &quot;true&quot; el valor implicito de &quot;person&quot; será true</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "/HistoriaClinia/:id?person=true",
+          "type": "Json"
+        },
+        {
+          "title": "Request-Example:",
+          "content": "/HistoriaClinia/:id?person=true&last=true",
+          "type": "Json"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Header:",
+          "content": "{\"Authorization\":\"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "401",
+            "description": "<p>Usuario o Contraseña Invalidos</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "404",
+            "description": "<p>LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Error 401:",
+          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
+          "type": "Json"
+        },
+        {
+          "title": "Ejemplo Error 404:",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "200",
+            "description": "<p>Arreglo de Objetos de tipo HISTORIA_MEDICA que puede contener una o varias Historias Clinicas</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Respuesta:",
+          "content": "{\"HISTORIA_MEDICA\":{\"50\":{\"RESPUESTAS\":[...]}}}",
+          "type": "Json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./index.php",
+    "groupTitle": "Historia_Clinica",
+    "name": "GetHistoriaclinicaId"
+  },
+  {
     "type": "POST",
     "url": "/HistoriaClinica/medico",
     "title": "",

@@ -44,6 +44,14 @@ class QuestionController extends BaseController {
 
     }
 
+    public function getQuestionId($entity,$attr) {
+        foreach ($this->model->getResult() as $question) {
+            if($question->ENTIDAD == $entity && $question->ATRIBUTO == $attr ) {
+                return $question->CODIGO;
+            }
+        }
+    }
+
     public function getResult() {
         return $this->model->getResult();
     }

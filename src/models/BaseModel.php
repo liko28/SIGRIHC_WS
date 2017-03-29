@@ -175,6 +175,7 @@ class BaseModel{
      * @throws \ErrorException
      */
     public function query($SQLsentence,...$arguments) {
+        $this->result = new CustomArray();
         $this->setQuery($SQLsentence);
         if($this->connection->getConnectionResource()) {
             $parameters = null;
