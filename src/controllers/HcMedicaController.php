@@ -301,7 +301,7 @@ class HcMedicaController extends BaseController {
                             $block = "ANTECEDENTES_PERSONALES";
                             break;
                         case "HC_ANTFAMILIAR":
-                        case "HC_ANTFAMILIARTC":
+
                             $block = "ANTECEDENTES_FAMILIARES";
                             break;
                         case "HC_ANTFALLECIDO":
@@ -352,6 +352,7 @@ class HcMedicaController extends BaseController {
                         case "HC_INSULINA":
                         case "HC_TESTBAR":
                         case "HC_MEDICA":
+                        case "HC_ANTFAMILIARTC":
                         default:
                             $block = "RESPUESTAS";
                             break;
