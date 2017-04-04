@@ -357,10 +357,12 @@ class HcMedicaController extends BaseController {
                             $block = "RESPUESTAS";
                             break;
                     }
-                    if ($block == "RESPUESTAS") {
-                        $result[$block][] = array($questions->getQuestionId($entity,$attr),$value);
-                    } else {
-                        $result[$block][$i][] = array($questions->getQuestionId($entity,$attr),$value);
+                    if($questions->getQuestionId($entity,$attr)) {
+                        if ($block == "RESPUESTAS") {
+                            $result[$block][] = array($questions->getQuestionId($entity,$attr),$value);
+                        } else {
+                            $result[$block][$i][] = array($questions->getQuestionId($entity,$attr),$value);
+                        }
                     }
 
                 }
