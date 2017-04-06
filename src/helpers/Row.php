@@ -9,13 +9,13 @@ class Row {
      */
     public function __construct(array $fields = null) {
         foreach ($fields as $field => $value) {
-            $this->$field = utf8_encode($value);
+            $this->$field = utf8_decode($value);
         }
     }
 
     public function addField(array $field){
         foreach ($field as $_field => $value) {
-                $this->$_field = $value;
+                $this->$_field = utf8_decode($value);
         }
     }
 }
