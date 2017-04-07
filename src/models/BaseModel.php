@@ -270,6 +270,10 @@ class BaseModel{
         return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()}");
     }
 
+    public function get($id){
+        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE {$this->getSchema()}.{$this->getTableName()}.{$this->getPrimaryKey()} = ?",$id);
+    }
+
     public function commit(){
         db2_commit($this->connection->getConnectionResource());
     }

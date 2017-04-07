@@ -19,6 +19,61 @@ class HcMedicaController extends BaseController {
         foreach ($stories as $person => $answers) {
             $baseModel = new BaseModel($this->model->getConnection());
             $entities = array();
+
+            /** Procesar Historias-Consultas con Novedad (No realizadas) */
+            if($answers['ESTADO'] == 'NO' || $answers['MOTIVO']) {
+                /** ACTUALIZACION DEL ESTADO DE LA PROGRAMACION */
+                try {
+                    $baseModel->setTableName("SF_PROGRAMACION");
+                    $baseModel->setPrimaryKey("ID_PROGRAMACION");
+                    $baseModel->update($answers['PROGRAMACION'],new Row(['ESTADO' => "NO"]));
+                } catch (\Exception $e) {
+                    $result[$person] = ["ERROR" => $e->getMessage()];
+                    db2_rollback($this->model->getConnection()->getConnectionResource());
+                    continue;
+                }
+                /** DETALLE DE LA PROGRAMACION */
+                $progData = $baseModel->get($answers['PROGRAMACION']);
+
+                /** INSERCION EN NOVEDADES */
+                try {
+                    $baseModel->setTableName('SF_NOVEDADES');
+                    $idNovedad = $baseModel->insert(new Row(array(
+                        'ID_VISITA' => -2,
+                        'FECNOVEDAD' => $answers['FECHA_NOVEDAD'],
+                        'ID_USUARIO' => $person,
+                        'DEPARTAMENTO' => $progData[0]->DPTO,
+                        'MUNICIPIO' => $progData[0]->MUNICIPIO,
+                        'ESTADO' => 'A',
+                        'PROMOTOR' => $progData[0]->PROMOTOR,
+                        'USERCREA' => $user,
+                        'IPCREA' => $_SERVER['REMOTE_ADDR']
+                    )));
+                } catch (\Exception $e) {
+                    $result[$person] = ["ERROR" => $e->getMessage()];
+                    db2_rollback($this->model->getConnection()->getConnectionResource());
+                    continue;
+                }
+
+                try{
+                    $baseModel->setTableName('SF_NOVEDADES_DET');
+                    /** DETALLE DE LA NOVEDAD */
+                    $baseModel->insert(new Row(array(
+                        'ID_NOVEDAD' => $idNovedad,
+                        'COD_NOVEDAD' => $answers['MOTIVO'],
+                        'VALOR' => 1
+                    )));
+                } catch (\Exception $e) {
+                    $result[$person] = ["ERROR" => $e->getMessage()];
+                    db2_rollback($this->model->getConnection()->getConnectionResource());
+                    continue;
+                }
+                $result[$person] = $idNovedad;
+                db2_commit($this->model->getConnection()->getConnectionResource());
+                continue;
+            }
+
+
             /** PROCESAMIENTO DEL BLOQUE RESPUESTAS */
             $this->processAnswers($answers['RESPUESTAS'],$entities);
             /** PROCESAMIENTO DEL BLOQUE ACOMPAÑANTES */
