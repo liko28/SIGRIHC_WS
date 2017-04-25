@@ -271,15 +271,17 @@ $app->group('/Departamentos', function () {
 });
 
 /**
- * @api {GET} /CIE10
+ * @api {GET} /CIE10/:date
  * @apiGroup CIE10
- * @apiDescription Retorna La Lista de CIE10 Completa
+ * @apiDescription Retorna La Lista de CIE10 Completa, si se provee :date se filtraran los resultados modificados a partir de :date
  * @apiPermission user
  * @apiSampleRequest off
  *
  * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
  * @apiHeaderExample {Json} Ejemplo Header:
  * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
+ *
+ * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
  *
  * @apiError {Json} 401 Usuario o Contraseña Invalidos
  * @apiErrorExample {Json} Ejemplo Error 401:
@@ -655,9 +657,9 @@ $app->group('/PEC/', function() {
 });
 
 /**
- * @api {GET} /Medicamentos
+ * @api {GET} /Medicamentos/:date
  * @apiGroup Medicamentos
- * @apiDescription Retorna el Listado de Medicamentos
+ * @apiDescription Retorna el Listado de Medicamentos, si se provee :date se filtraran los resultados modificados a partir de :date
  * @apiPermission user
  * @apiSampleRequest off
  *
@@ -665,6 +667,7 @@ $app->group('/PEC/', function() {
  * @apiHeaderExample {Json} Ejemplo Header:
  * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
  *
+ * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
  * @apiError {Json} 401 Usuario o Contraseña Invalidos
  * @apiErrorExample {Json} Ejemplo Error 401:
  * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
@@ -691,9 +694,9 @@ $app->group('/Medicamentos', function() {
 });
 
 /**
- * @api {GET} /Procedimientos
+ * @api {GET} /Procedimientos/:date
  * @apiGroup Procedimientos
- * @apiDescription Retorna el Listado de Procedimientos
+ * @apiDescription Retorna el Listado de Procedimientos, si se provee :date se filtraran los resultados modificados a partir de :date
  * @apiPermission user
  * @apiSampleRequest off
  *
@@ -701,6 +704,7 @@ $app->group('/Medicamentos', function() {
  * @apiHeaderExample {Json} Ejemplo Header:
  * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
  *
+ * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
  * @apiError {Json} 401 Usuario o Contraseña Invalidos
  * @apiErrorExample {Json} Ejemplo Error 401:
  * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
@@ -715,16 +719,21 @@ $app->group('/Medicamentos', function() {
  *
  */
 $app->group('/Procedimientos', function() {
-    $this->get('', function (Request $request, Response $response) {
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response,$args) {
         $procedures = new Procedure($this->db);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['PROCEDIMIENTOS' => $procedures->getUpdates($lastSyncDate)->values()]);
+        }
         return $response->withJson(['PROCEDIMIENTOS' => $procedures->getAll()->values()]);
     });
 });
 
 /**
- * @api {GET} /Laboratorios
+ * @api {GET} /Laboratorios/:date
  * @apiGroup Laboratorios
- * @apiDescription Retorna el Listado de Laboratorios
+ * @apiDescription Retorna el Listado de Laboratorios, si se provee :date se filtraran los resultados modificados a partir de :date
  * @apiPermission user
  * @apiSampleRequest off
  *
@@ -732,6 +741,7 @@ $app->group('/Procedimientos', function() {
  * @apiHeaderExample {Json} Ejemplo Header:
  * {"Authorization":"Basic eWVubnkubmF2YXJybzowZTljMzA1YmUyMDg2ZGRkZGU3NDM3MzUxMDVhY2ViNQ=="}
  *
+ * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
  * @apiError {Json} 401 Usuario o Contraseña Invalidos
  * @apiErrorExample {Json} Ejemplo Error 401:
  * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
@@ -746,8 +756,13 @@ $app->group('/Procedimientos', function() {
  *
  */
 $app->group('/Laboratorios', function() {
-    $this->get('', function (Request $request, Response $response) {
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $laboratories = new Laboratory($this->db);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['LABORATORIOS' => $laboratories->getUpdates($lastSyncDate)->values()]);
+        }
         return $response->withJson(['LABORATORIOS' => $laboratories->getAll()->values()]);
     });
 });

@@ -266,15 +266,20 @@ class BaseModel{
         return $this->query($query,$id);
     }
 
-    public function getAll(){
-        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()}");
-    }
-
     public function get($id){
         return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE {$this->getSchema()}.{$this->getTableName()}.{$this->getPrimaryKey()} = ?",$id);
     }
 
     public function commit(){
         db2_commit($this->connection->getConnectionResource());
+    }
+
+    public function getAll(){
+        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+    }
+
+    /** @return CustomArray */
+    public function getUpdates($lastSyncDate){
+        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
     }
 }

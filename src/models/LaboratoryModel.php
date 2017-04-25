@@ -15,12 +15,6 @@ class LaboratoryModel extends BaseModel {
         parent::__construct($connection);
         $this->setTableName('HC_LABORATORIOS');
         $this->setPrimaryKey('ID_LABORATORIO');
-        $this->addColumns('ID_LABORATORIO', 'CODIGO', 'DESCRIPCION', 'VALORREF1', 'VALORREF2', 'TIPO', 'ORDEN');
+        $this->addColumns('ID_LABORATORIO', 'CODIGO', 'DESCRIPCION', 'VALORREF1', 'VALORREF2', 'TIPO', 'ORDEN', 'FECCREA', 'FECMODI');
     }
-
-    /** @return CustomArray */
-    public function getAll(){
-        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
-    }
-
 }

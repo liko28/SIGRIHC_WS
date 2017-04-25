@@ -104,10 +104,10 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/CIE10",
+    "url": "/CIE10/:date",
     "title": "",
     "group": "CIE10",
-    "description": "<p>Retorna La Lista de CIE10 Completa</p>",
+    "description": "<p>Retorna La Lista de CIE10 Completa, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -134,6 +134,19 @@ define({ "api": [
           "type": "Json"
         }
       ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date",
+            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
+          }
+        ]
+      }
     },
     "error": {
       "fields": {
@@ -190,7 +203,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "./index.php",
     "groupTitle": "CIE10",
-    "name": "GetCie10"
+    "name": "GetCie10Date"
   },
   {
     "type": "GET",
@@ -632,10 +645,10 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/Laboratorios",
+    "url": "/Laboratorios/:date",
     "title": "",
     "group": "Laboratorios",
-    "description": "<p>Retorna el Listado de Laboratorios</p>",
+    "description": "<p>Retorna el Listado de Laboratorios, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -662,6 +675,19 @@ define({ "api": [
           "type": "Json"
         }
       ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date",
+            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
+          }
+        ]
+      }
     },
     "error": {
       "fields": {
@@ -718,7 +744,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "./index.php",
     "groupTitle": "Laboratorios",
-    "name": "GetLaboratorios"
+    "name": "GetLaboratoriosDate"
   },
   {
     "type": "GET",
@@ -825,10 +851,10 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/Medicamentos",
+    "url": "/Medicamentos/:date",
     "title": "",
     "group": "Medicamentos",
-    "description": "<p>Retorna el Listado de Medicamentos</p>",
+    "description": "<p>Retorna el Listado de Medicamentos, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -855,6 +881,19 @@ define({ "api": [
           "type": "Json"
         }
       ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date",
+            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
+          }
+        ]
+      }
     },
     "error": {
       "fields": {
@@ -911,7 +950,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "./index.php",
     "groupTitle": "Medicamentos",
-    "name": "GetMedicamentos"
+    "name": "GetMedicamentosDate"
   },
   {
     "type": "GET",
@@ -2009,10 +2048,10 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/Procedimientos",
+    "url": "/Procedimientos/:date",
     "title": "",
     "group": "Procedimientos",
-    "description": "<p>Retorna el Listado de Procedimientos</p>",
+    "description": "<p>Retorna el Listado de Procedimientos, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
     "permission": [
       {
         "name": "user",
@@ -2039,6 +2078,19 @@ define({ "api": [
           "type": "Json"
         }
       ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date",
+            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
+          }
+        ]
+      }
     },
     "error": {
       "fields": {
@@ -2095,7 +2147,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "./index.php",
     "groupTitle": "Procedimientos",
-    "name": "GetProcedimientos"
+    "name": "GetProcedimientosDate"
   },
   {
     "type": "post",
