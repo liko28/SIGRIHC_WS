@@ -67,7 +67,7 @@ $container['errorHandler'] = function ($c) {
     };
 };
 
-/** Error 400 */
+/** Error 404 */
 $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
         $c['logger']->addError($request->getUri(),ERROR_404);
@@ -945,9 +945,9 @@ $app->group('/Personas',function(){
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
-            return $response->withJson(['PERSONAS' => $personas->getUpdatedSchedules($this->userName,$lastSyncDate)->values()]);
+            return $response->withJson(['PERSONAS' => $personas->getUpdatedSchedules($this->userName,$lastSyncDate)]);
         }
-        return $response->withJson(['PERSONAS' => $personas->getScheduled($this->userName)->values()]);
+        return $response->withJson(['PERSONAS' => $personas->getScheduled($this->userName)]);
     });
 });
 
