@@ -17,15 +17,4 @@ class MedicineController extends BaseController {
     public function __construct(Connection $connection) {
         parent::__construct(new MedicineModel($connection));
     }
-
-    /**
-     * @deprecated
-     * @param string $lastSyncDate
-     * @return CustomArray
-     *
-     */
-    public function getUpdates($lastSyncDate)
-    {
-        return parent::getUpdates($lastSyncDate);
-    }
 }

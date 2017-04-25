@@ -15,12 +15,17 @@ class MedicineModel extends BaseModel {
         parent::__construct($connection);
         $this->setTableName('HC_MEDICAMENTOS');
         $this->setPrimaryKey('ID_MEDICAMENTO');
-        $this->addColumns('ID_MEDICAMENTO', 'ATC', 'DESCRIPCION', 'PRINCIPIO', 'CONCENTRACION', 'PRESENTACION', 'TIPO');
+        $this->addColumns('ID_MEDICAMENTO', 'ATC', 'DESCRIPCION', 'PRINCIPIO', 'CONCENTRACION', 'PRESENTACION', 'TIPO', 'FECCREA', 'FECMODI');
     }
 
     /** @return CustomArray */
     public function getAll(){
         return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+    }
+
+    /** @return CustomArray */
+    public function getUpdates($lastSyncDate){
+        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
     }
 
 }
