@@ -15,11 +15,16 @@ class CIE10Model extends BaseModel {
         parent::__construct($connection);
         $this->setTableName('CIE10');
         $this->setPrimaryKey('ID');
-        $this->addColumns('ID', 'CODIGO','DESCRIPCION','CLASE','ACTIVO','TIPO');
+        $this->addColumns('ID', 'CODIGO','DESCRIPCION','CLASE','ACTIVO','TIPO', 'FECCREA', 'FECMODI');
     }
 
     /** @return CustomArray */
     public function getAll(){
-        return $this->query("SELECT {$this->getColumns('ID', 'CODIGO','DESCRIPCION','CLASE','ACTIVO','TIPO')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+        return $this->query("SELECT {$this->getColumns('ID', 'CODIGO','DESCRIPCION','CLASE','ACTIVO','TIPO', 'FECCREA', 'FECMODI')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+    }
+
+    /** @return CustomArray */
+    public function getUpdates($lastSyncDate) {
+        return $this->query("SELECT {$this->getColumns('ID', 'CODIGO','DESCRIPCION','CLASE','ACTIVO','TIPO', 'FECCREA', 'FECMODI')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
     }
 }

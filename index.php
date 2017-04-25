@@ -294,9 +294,17 @@ $app->group('/Departamentos', function () {
  * {"CIE10":[{"ID":"1","CODIGO":"A000","DESCRIPCION":"COLERA DEBIDO A VIBRIO CHOLERAE O1, BIOTIPO CHOLERAE","CLASE":"","ACTIVO":"0","TIPO":"F"},{...}]}
  *
  */
-$app->get('/CIE10', function (Request $request, Response $response) {
-    $cie10 = new CIE10($this->db);
-    return $response->withJson(['CIE10' => $cie10->getAll()->values()]);
+$app->group('/CIE10', function () {
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
+        $cie10 = new CIE10($this->db);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['CIE10' => $cie10->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['CIE10' => $cie10->getAll()->values()]);
+    });
+
 });
 
 /**
