@@ -271,6 +271,10 @@ class HcMedicaController extends BaseController {
         //TODO refactor
         //obtener las visitas de esa persona
         $historias = $this->model->getByPerson($personId);
+
+        if(empty($historias->getArrayCopy())) {
+            return array();
+        }
         //Si es solo la ultima tons pedir solo esa y retornar
         if(filter_var($onlyLast,FILTER_VALIDATE_BOOLEAN)) {
             $idHc = $historias[0]->ID_HC;
