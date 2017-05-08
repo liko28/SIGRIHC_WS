@@ -22,7 +22,7 @@ class HcMedicaController extends BaseController {
             $entities = array();
 
             /** VALIDACION DE SINCRONIZACIONES PREVIAS -DUPLICIDADES-*/
-            $existentId = $this->verify($answers['PROGRAMACION'],$person, Generic::findAnswer("5",$answers['RESPUESTAS'])[1]);
+            $existentId = $this->verify($answers['PROGRAMACION'],$person, Generic::findAnswer("5",$answers['RESPUESTAS'])[1],$user);
             if($existentId) {
                 $result[$person] = $existentId;
                 continue;
@@ -442,13 +442,13 @@ class HcMedicaController extends BaseController {
         return array($hcId => $result);
     }
 
-    public function verify($idProgramacion,$person = null,$date = null) {
+    public function verify($idProgramacion,$person = null,$date = null,$user = null) {
         $baseModel = new BaseModel($this->model->getConnection());
         /** Verificar por PROGRAMACION, FECATENCION, ID_USUARIO,  */
         $baseModel->setTableName("HC_MEDICA");
         $baseModel->setPrimaryKey("PROGRAMACION");
         if($person) {
-            $baseModel->query("SELECT * FROM {$this->getModel()->getSchema()}.{$this->getModel()->getTableName()} WHERE PROGRAMACION = ? OR (FECATENCION = ? AND ID_USUARIO = ?)",$idProgramacion,$date,$person);
+            $baseModel->query("SELECT * FROM {$this->getModel()->getSchema()}.{$this->getModel()->getTableName()} WHERE PROGRAMACION = ? OR (FECATENCION = ? AND ID_USUARIO = ? AND USER_CREA = ?)",$idProgramacion,$date,$person,$user);
         } else {
             $baseModel->get($idProgramacion);
         }
