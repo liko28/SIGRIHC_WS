@@ -3,6 +3,7 @@
 namespace SIGRI_HC\Controllers;
 
 use SIGRI_HC\Helpers\Row;
+use SIGRI_HC\Helpers\Generic;
 use SIGRI_HC\Models\BaseModel;
 use SIGRI_HC\Models\Connection;
 use SIGRI_HC\Models\HcMedicaModel;
@@ -19,6 +20,13 @@ class HcMedicaController extends BaseController {
         foreach ($stories as $person => $answers) {
             $baseModel = new BaseModel($this->model->getConnection());
             $entities = array();
+
+            /** VALIDACION DE SINCRONIZACIONES PREVIAS -DUPLICIDADES-*/
+            $existentId = $this->verify($answers['PROGRAMACION'],$person, Generic::findAnswer("5",$answers['RESPUESTAS'])[1]);
+            if($existentId) {
+                $result[$person] = $existentId;
+                continue;
+            }
 
             /** Procesar Historias-Consultas con Novedad (No realizadas) */
             if($answers['ESTADO'] == 'NO' || $answers['MOTIVO']) {
@@ -432,5 +440,23 @@ class HcMedicaController extends BaseController {
             $result[$resultBlock] = array_values($items);
         }
         return array($hcId => $result);
+    }
+
+    public function verify($idProgramacion,$person = null,$date = null) {
+        $baseModel = new BaseModel($this->model->getConnection());
+        /** Verificar por PROGRAMACION, FECATENCION, ID_USUARIO,  */
+        $baseModel->setTableName("HC_MEDICA");
+        $baseModel->setPrimaryKey("PROGRAMACION");
+        if($person) {
+            $baseModel->query("SELECT * FROM {$this->getModel()->getSchema()}.{$this->getModel()->getTableName()} WHERE PROGRAMACION = ? OR (FECATENCION = ? AND ID_USUARIO = ?)",$idProgramacion,$date,$person);
+        } else {
+            $baseModel->get($idProgramacion);
+        }
+        foreach ($baseModel->getResult() as $historia) {
+            if(in_array($historia->ESTADO, ["A", "AC", "OK"])) {
+                return $historia->ID_HC;
+            }
+        }
+        return false;
     }
 }
