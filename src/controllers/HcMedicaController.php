@@ -448,7 +448,7 @@ class HcMedicaController extends BaseController {
         $baseModel->setTableName("HC_MEDICA");
         $baseModel->setPrimaryKey("PROGRAMACION");
         if($person) {
-            $baseModel->query("SELECT * FROM {$this->getModel()->getSchema()}.{$this->getModel()->getTableName()} WHERE PROGRAMACION = ? OR (FECATENCION = ? AND ID_USUARIO = ? AND USER_CREA = ?)",$idProgramacion,$date,$person,$user);
+            $baseModel->query("SELECT * FROM {$this->getModel()->getSchema()}.{$this->getModel()->getTableName()} WHERE PROGRAMACION = ? OR (FECATENCION = ? AND ID_USUARIO = ? AND USERCREA = ?)",$idProgramacion,$date,$person,$user);
         } else {
             $baseModel->get($idProgramacion);
         }
