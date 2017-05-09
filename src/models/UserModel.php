@@ -22,4 +22,9 @@ class UserModel extends BaseModel {
     public function getPassword($userName) {
         return $this->query("SELECT {$this->getColumns('PASSWORD')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE NOMBRE = ?",$userName);
     }
+
+    /** @return CustomArray */
+    public function getUpdates($lastSyncDate){
+        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECHA_MODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
+    }
 }
