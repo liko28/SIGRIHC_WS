@@ -1016,7 +1016,7 @@ $app->group('/HistoriaClinica', function () {
      */
     $this->post('/medico',function (Request $request, Response $response){
         $historias = new HcMedica($this->db);
-        $input = $request->getParsedBody();
+        $input = json_decode($request->getBody());
         $this->logger->addInfo(json_encode($input));
         $ids = ["HISTORIA_MEDICA" => $historias->create($input, $this->userName)];
         $this->logger->addInfo(json_encode($ids));
