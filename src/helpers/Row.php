@@ -10,7 +10,7 @@ class Row {
     public function __construct(array $fields = null) {
         foreach ($fields as $field => $value) {
             if(mb_check_encoding($value) == "UTF-8") {
-                $this->$field = $value;
+                $this->$field = (string)$value;
             } else {
                 $this->$field = utf8_encode($value);
             }
@@ -20,7 +20,7 @@ class Row {
     public function addField(array $field){
         foreach ($field as $_field => $value) {
             if(mb_check_encoding($value) == "UTF-8") {
-                $this->$_field = $value;
+                $this->$_field = (string)$value;
             } else {
                 $this->$_field = utf8_encode($value);
             }
