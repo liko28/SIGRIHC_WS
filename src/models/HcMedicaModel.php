@@ -19,6 +19,6 @@ class HcMedicaModel extends BaseModel {
     }
 
     public function getByPerson($idUser){
-        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE ID_USUARIO = ?",$idUser);
+        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE ID_USUARIO = ? AND ESTADO in(?)",$idUser,'A');
     }
 }
