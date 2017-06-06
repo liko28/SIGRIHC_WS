@@ -189,7 +189,8 @@ class BaseModel{
                     $operation = substr($SQLsentence,0,strpos($SQLsentence," "));
                     switch ($operation) {
                         case "INSERT":
-                            return db2_last_insert_id($this->connection->getConnectionResource());
+                            $this->result = db2_last_insert_id($this->connection->getConnectionResource());
+                            return $this->result;
                             break;
                         case "SELECT":
                             if(LABELS) {
@@ -247,7 +248,12 @@ class BaseModel{
         $columns = trim($columns,', ');
         $values = trim($values,', ');
         $query = "INSERT INTO {$this->getSchema()}.{$this->getTableName()} ($columns) VALUES($values)";
-        return $this->query($query);
+        try {
+            $this->query($query);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->result;
     }
 
     public function update($id, Row $object) {

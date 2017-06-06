@@ -62,6 +62,7 @@ class HcMedicaController extends BaseController {
                     'FECNOVEDAD' => $answers->FECHA_NOVEDAD,
                     'ID_USUARIO' => $person,
                     'DEPARTAMENTO' => $progData[0]->DPTO,
+                    'PROGRAMACION' => $answers->PROGRAMACION,
                     'MUNICIPIO' => $progData[0]->MUNICIPIO,
                     'ESTADO' => 'A',
                     'PROMOTOR' => $progData[0]->PROMOTOR,
@@ -214,6 +215,7 @@ class HcMedicaController extends BaseController {
 
         /** END */
         db2_commit($this->model->getConnection()->getConnectionResource());
+
         return $hcId;
     }
 
@@ -251,8 +253,8 @@ class HcMedicaController extends BaseController {
     public function processAnswersMulti($answers, &$entities) {
         $questions = new QuestionController($this->model->getConnection());
         $questions->getAll();
-        foreach ($answers as $item => $answers) {
-            foreach ($answers as $answer) {
+        foreach ($answers as $item => $_answers) {
+            foreach ($_answers as $answer) {
                 $entity = $questions->getQuestionEntity($answer[0]);
                 if(!isset($entities[$entity]->$item) && ($entity !== "SF_PERSONAS" || $entity !== "SF_NPERSONAS")) {
                     $entities[$entity]->$item = new Row();
@@ -458,8 +460,18 @@ class HcMedicaController extends BaseController {
             $baseModel->get($idProgramacion);
         }
         foreach ($baseModel->getResult() as $historia) {
-            if(in_array($historia->ESTADO, ["A", "AC", "OK"])) {
+            if(in_array($historia->ESTADO, ["A","AC","OK","NO"])) {
                 return $historia->ID_HC;
+            }
+        }
+        /** Verificar en Novedades */
+        $baseModel->setTableName("SF_NOVEDADES");
+        $baseModel->setPrimaryKey("PROGRAMACION");
+        $baseModel->get($idProgramacion);
+
+        foreach ($baseModel->getResult() as $novedad) {
+            if($novedad->PROGRAMACION == $idProgramacion) {
+                return $novedad->ID_NOVEDAD;
             }
         }
         return false;
