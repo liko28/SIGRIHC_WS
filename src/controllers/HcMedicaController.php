@@ -170,8 +170,8 @@ class HcMedicaController extends BaseController {
                             $baseModel->insert($item);
                         } catch (\Exception $e) {
                             //TODO Log error
-                            $result[$person] = ['ERROR' => $e->getMessage()];
                             db2_rollback($this->model->getConnection()->getConnectionResource());
+                            return ['ERROR' => $e->getMessage()];
                             continue 3;
                         }
                     }
@@ -193,8 +193,8 @@ class HcMedicaController extends BaseController {
                         $baseModel->insert($row);
                     } catch (\Exception $e) {
                         //TODO Log error
-                        $result[$person] = ["ERROR" => $e->getMessage()];
                         db2_rollback($this->model->getConnection()->getConnectionResource());
+                        return ["ERROR" => $e->getMessage()];
                         continue 2;
                     }
                     break;

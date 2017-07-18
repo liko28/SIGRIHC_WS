@@ -135,7 +135,7 @@ class BaseModel{
 
     /**
      * @return array
-     * @throws \ErrorException
+     * @throws \Exception
      * */
     public function getColumns(...$columns)
     {
@@ -144,7 +144,7 @@ class BaseModel{
             if(array_key_exists($column,$this->getColumns())) {
                 $filteredColumns[$column] = $this->getSchema().'.'.$this->tableName.'.'.$column;
             } else {
-                throw new \ErrorException("El Campo $column NO EXISTE EN LA TABLA $this->schema.$this->tableName");
+                throw new \Exception("El Campo $column NO EXISTE EN LA TABLA $this->schema.$this->tableName");
             }
         }
         if(!$columns) {
@@ -172,7 +172,7 @@ class BaseModel{
      * @param string $SQLsentence
      * @param mixed $arguments
      * @return string|CustomArray|bool
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function query($SQLsentence,...$arguments) {
         $this->result = new CustomArray();
@@ -209,27 +209,36 @@ class BaseModel{
                             break;
                         default:
                             return true;
-                        break;
+                            break;
                     }
                 }else {
-                    throw new \ErrorException("ERROR DE EJECUCION ".db2_stmt_error().":".db2_stmt_errormsg()." en {$this->getSchema()}.{$this->getTableName()}");
+                    throw new \Exception("ERROR DE EJECUCION ".db2_stmt_error().":".db2_stmt_errormsg()." en {$this->getSchema()}.{$this->getTableName()}");
                 }
             } else {
-                throw new \ErrorException("ERROR DE PREPARACION ".db2_stmt_error().":".db2_stmt_errormsg());
+                throw new \Exception("ERROR DE PREPARACION ".db2_stmt_error().":".db2_stmt_errormsg());
+
             }
         } else {
-            throw new \ErrorException("ERROR DE CONEXION ".db2_conn_error().": ".db2_conn_errormsg());
+            throw new \Exception("ERROR DE CONEXION ".db2_conn_error().": ".db2_conn_errormsg());
         }
     }
 
     /** @param array $parameters
      * @return bool
+     * @throws \Exception
      */
     public function execute(&$preparedStmt,$parameters = null){
         if($parameters) {
-            return db2_execute($preparedStmt,$parameters);
+            $res = db2_execute($preparedStmt,$parameters);
+        } else {
+            $res = db2_execute($preparedStmt);
         }
-        return db2_execute($preparedStmt);
+
+        if($res) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function insert(Row $object) {
@@ -238,7 +247,8 @@ class BaseModel{
         foreach ($object as $field => $value) {
             $columns .= "$field, ";
             if (is_string($value)) {
-                $values .= "'$value', ";
+                $val = db2_escape_string($value);
+                $values .= "'$val', ";
             } elseif(is_numeric($value)) {
                 $values .= "$value, ";
             } else {
@@ -251,7 +261,7 @@ class BaseModel{
         try {
             $this->query($query);
         } catch (\Exception $e) {
-            return $e->getMessage();
+            throw $e;
         }
         return $this->result;
     }
@@ -260,7 +270,8 @@ class BaseModel{
         $columns = "";
         foreach ($object as $field => $value) {
             if (is_string($value)) {
-                $columns .= "$field = '$value', ";
+                $val = db2_escape_string($value);
+                $columns .= "$field = '$val', ";
             } elseif(is_numeric($value)) {
                 $columns .= "$field = $value, ";
             } else {
