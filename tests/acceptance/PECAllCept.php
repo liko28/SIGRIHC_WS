@@ -1,7 +1,7 @@
 <?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('Verificar que Datos de PEC - All - Funciona');
-$I->amHttpAuthenticated("prueba","3405e2f586193b24404d89f36c47fbe7");
+$I->amHttpAuthenticated("liliana.madrid","3405e2f586193b24404d89f36c47fbe7");
 
 //Grupos Objetivo
 $I->sendGET('/PEC/GruposObjetivo');

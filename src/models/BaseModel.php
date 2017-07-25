@@ -46,6 +46,13 @@ class BaseModel{
     }
 
     /**
+     * @return null|string
+     */
+    public function getFullTableName(){
+        return $this->getSchema().".".$this->getTableName();
+    }
+
+    /**
      * @param null|string $tableName
      */
     public function setTableName($tableName)

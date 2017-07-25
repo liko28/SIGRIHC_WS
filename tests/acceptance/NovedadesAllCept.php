@@ -1,7 +1,7 @@
 <?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('Verificar que Lista de Referencia - All - Funciona');
-$I->amHttpAuthenticated("prueba","3405e2f586193b24404d89f36c47fbe7");
+$I->amHttpAuthenticated("liliana.madrid","3405e2f586193b24404d89f36c47fbe7");
 //Tipo
 $I->sendGET('/Novedades/tipos');
 $I->seeResponseCodeIs(200);

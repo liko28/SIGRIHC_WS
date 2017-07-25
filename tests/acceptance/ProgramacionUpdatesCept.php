@@ -1,7 +1,7 @@
 <?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('Verificar que Datos de PEC - Updates - Funciona');
-$I->amHttpAuthenticated("prueba","3405e2f586193b24404d89f36c47fbe7");
+$I->amHttpAuthenticated("liliana.madrid","3405e2f586193b24404d89f36c47fbe7");
 //Guias
 $I->sendGET('/Programaciones/1478001600');
 $I->seeResponseCodeIs(200);
