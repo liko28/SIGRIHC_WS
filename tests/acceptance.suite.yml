@@ -1,0 +1,7 @@
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - REST:
+            url: http://www.saludfamiliar.co:2323/sigrihc
+            depends: PhpBrowser
+            part: Json
