@@ -10,7 +10,7 @@ class UserModel extends BaseModel {
         parent::__construct($connection);
         $this->setTableName("USERS");
         $this->setPrimaryKey("ID");
-        $this->addColumns("ID", "NOMBRE", "PASSWORD", "TIPO_USUARIO", "ACTIVO", "EMAIL", "DPTO", "PAIS", "CIUDAD", "MOVIL", "TELEFONO", "DIRECCION", "DOC_IDENT", "NOMBRES", "APELLIDOS", "CARGO", "TIPO_DOC", "INFORMA_A", "FECHA_CREA", "USER_CREA", "IP_CREA", "FECHA_MODI", "USER_MODI", "IP_MODI");
+        $this->addColumns("ID", "NOMBRE", "PASSWORD", "TIPO_USUARIO", "ACTIVO", "EMAIL", "DPTO", "PAIS", "CIUDAD", "MOVIL", "TELEFONO", "DIRECCION", "DOC_IDENT", "NOMBRES", "APELLIDOS", "CARGO", "TIPO_DOC", "INFORMA_A", "FECHA_CREA", "USER_CREA", "IP_CREA", "FECHA_MODI", "USER_MODI", "IP_MODI","RMEDICO");
     }
 
     /** @return CustomArray */
