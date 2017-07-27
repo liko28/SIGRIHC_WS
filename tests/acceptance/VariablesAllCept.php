@@ -1,7 +1,7 @@
 <?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('Verificar que Lista de Variables - All - Funciona');
-$I->amHttpAuthenticated("liliana.madrid","3405e2f586193b24404d89f36c47fbe7");
+$I->amHttpAuthenticated("norys.palma","288f4d07498733bf2f6377b32f27e493");
 $I->sendGET('/Variables');
 $I->seeResponseCodeIs(200);
 $I->seeResponseIsJson();

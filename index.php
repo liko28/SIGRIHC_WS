@@ -484,7 +484,7 @@ $app->group('/Novedades/', function () {
      * {"LISTAS_NOVEDAD":[{"COD_NOVEDAD":"1","TIPO_NOVEDAD":"N01","DESCRIPCION":"NUEVO TIPO DE DOCUMENTO DE IDENTIDAD","ESTADO":"A","VALOR":"1"},{...}]}
      *
      */
-    $this->get('listas/{lastSyncDate}',function (Request $request, Response $response, $args){
+    $this->get('listas[/{lastSyncDate}]',function (Request $request, Response $response, $args){
         $listas = new NewsList($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
