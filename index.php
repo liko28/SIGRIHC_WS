@@ -31,6 +31,7 @@ use SIGRI_HC\Controllers\PersonController as Person;
 use SIGRI_HC\Controllers\UserController as User;
 use SIGRI_HC\Controllers\ProcedureController as Procedure;
 use SIGRI_HC\Controllers\VariableController as Variable;
+use SIGRI_HC\Controllers\OptionController as Option;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -1046,7 +1047,7 @@ $app->group('/Opciones', function () {
      * {"OPCIONES":[{"ID_VARIABLE":"14","NOMBRE_VARIABLE":"APELLIDO1","DESCRIPCION":"APELLIDO 1","ENTIDAD":"SIGRI_MAESTRO","ATRIBUTO":"APELLIDO1","TIPOCAMPO":"VARCHAR","LONCAMPO":"30","DEPENDE":"10","OBLIGATORIO":"S","ID_LISTA":"","NOMLISTA":"","VALORLISTA":"","ID_MODULO":"0","TIPO":"T","VALIDAR":"N","EDADINI":"","EDADFIN":"","GENERO":"A","ESTADO":"A","VISIBILIDAD":"V","NIVEL":"","CODIGO":"","ORDEN":"14","FECCREA":"2017-07-24 17:16:39.412234","FECMODI":"2017-07-24 17:16:39.412256","INTERVALO":"","FRECUENCIA":""},{...}]}
      */
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
-        $opciones = new Variable($this->db);
+        $opciones = new Option($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
