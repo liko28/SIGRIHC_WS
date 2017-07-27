@@ -8,7 +8,7 @@ class OptionModel extends BaseModel {
     public function __construct(Connection $connection) {
         parent::__construct($connection);
         $this->setTableName('SIGRI_OPCIONES');
-        $this->setPrimaryKey('ID_LISTA');
-        $this->addColumns('ID_LISTA', 'PADRE', 'NOMBRE_VARIABLE', 'VALOR', 'DESCRIPCION', 'CODLISTA', 'ESTADO', 'ORDEN', 'FECCREA', 'FECMODI');
+        $this->setPrimaryKey('ID_OPCION');
+        $this->addColumns('ID_OPCION', 'ID_LISTA', 'NOMBRE_LISTA', 'DESCRIPCION', 'VALOR', 'ESTADO', 'ORDEN', 'FECCREA', 'FECMODI');
     }
 }
