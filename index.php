@@ -484,7 +484,7 @@ $app->group('/Novedades/', function () {
      * {"LISTAS_NOVEDAD":[{"COD_NOVEDAD":"1","TIPO_NOVEDAD":"N01","DESCRIPCION":"NUEVO TIPO DE DOCUMENTO DE IDENTIDAD","ESTADO":"A","VALOR":"1"},{...}]}
      *
      */
-    $this->get('listas/{lastSyncDate}',function (Request $request, Response $response, $args){
+    $this->get('listas[/{lastSyncDate}]',function (Request $request, Response $response, $args){
         $listas = new NewsList($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
@@ -1005,7 +1005,6 @@ $app->group('/Variables', function () {
      *
      * @apiSuccess {Json} 200 Arreglo de Objetos de tipo AREA
      * @apiSuccessExample {Json} Ejemplo Respuesta:
-     * EJEMPLO PENDIENTE
      * {"VARIABLES":[{"ID_VARIABLE":"34","NOMBRE_VARIABLE":"ID_SPYP_1","DESCRIPCION":"REMISI\u00d3N A VACUNACION MENORES DE 1 A\u00d1O","ENTIDAD":"SIGRI_DETALLE","ATRIBUTO":"VALOR","TIPOCAMPO":"INTEGER","LONCAMPO":"","DEPENDE":"33","OBLIGATORIO":"N","ID_LISTA":"34","NOMLISTA":"id_spyp_1","VALORLISTA":"1","ID_MODULO":"1","TIPO":"L","VALIDAR":"E","EDADINI":"0","EDADFIN":"1","GENERO":"A","ESTADO":"A","VISIBILIDAD":"V","NIVEL":"","CODIGO":"","ORDEN":"34","FECCREA":"2017-07-24 17:16:39.647516","FECMODI":"2017-07-24 17:16:39.647536","INTERVALO":"","FRECUENCIA":"8"},{...}
      */
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
@@ -1016,6 +1015,44 @@ $app->group('/Variables', function () {
             return $response->withJson(['VARIABLES' => $variables->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['VARIABLES' => $variables->getAll()->values()]);
+    });
+});
+
+$app->group('/Opciones', function () {
+    /**
+     * @api {GET} /Opciones/:date
+     * @apiGroup Opciones
+     * @apiDescription Retorna Todos los registros de Opciones, si se provee :date se filtraran los resultados modificados a partir de :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo AREA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"OPCIONES":[{"ID_VARIABLE":"14","NOMBRE_VARIABLE":"APELLIDO1","DESCRIPCION":"APELLIDO 1","ENTIDAD":"SIGRI_MAESTRO","ATRIBUTO":"APELLIDO1","TIPOCAMPO":"VARCHAR","LONCAMPO":"30","DEPENDE":"10","OBLIGATORIO":"S","ID_LISTA":"","NOMLISTA":"","VALORLISTA":"","ID_MODULO":"0","TIPO":"T","VALIDAR":"N","EDADINI":"","EDADFIN":"","GENERO":"A","ESTADO":"A","VISIBILIDAD":"V","NIVEL":"","CODIGO":"","ORDEN":"14","FECCREA":"2017-07-24 17:16:39.412234","FECMODI":"2017-07-24 17:16:39.412256","INTERVALO":"","FRECUENCIA":""},{...}]}
+     */
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
+        $opciones = new Variable($this->db);
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            return $response->withJson(['OPCIONES' => $opciones->getUpdates($lastSyncDate)->values()]);
+        }
+        return $response->withJson(['OPCIONES' => $opciones->getAll()->values()]);
     });
 });
 

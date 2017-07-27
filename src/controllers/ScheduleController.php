@@ -100,7 +100,7 @@ class ScheduleController extends BaseController {
         return $details->getAll($userId);
     }
 
-    protected function getDetailUpdates($userId, \DateTime $lastSyncDate) {
+    protected function getDetailUpdates($userId, $lastSyncDate) {
         $details = new ScheduleDetailController($this->model->getConnection());
         return $details->getUpdates($userId,$lastSyncDate);
     }

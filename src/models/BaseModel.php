@@ -58,6 +58,7 @@ class BaseModel{
     public function setTableName($tableName)
     {
         $this->tableName = $tableName;
+        $this->result = new CustomArray();
     }
 
     /**
