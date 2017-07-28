@@ -55,4 +55,56 @@ class QuestionController extends BaseController {
     public function getResult() {
         return $this->model->getResult();
     }
+
+    public function getQuestionsDemanda(\DateTime $lastSyncDate = null){
+        try {
+            if($lastSyncDate) {
+                $res =$this->getModel()->updatesForDemandas($lastSyncDate);
+            } else {
+                $res = $this->getModel()->forDemandas();
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+        return $res->values();
+    }
+
+    public function getQuestionsAuditoria(\DateTime $lastSyncDate = null){
+        try {
+            if($lastSyncDate) {
+                $res =$this->getModel()->updatesForAuditorias($lastSyncDate);
+            } else {
+                $res = $this->getModel()->forAuditorias();
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+        return $res->values();
+    }
+
+    public function getQuestionsSigri(\DateTime $lastSyncDate = null){
+        try {
+            if($lastSyncDate) {
+                $res =$this->getModel()->updatesForSigri($lastSyncDate);
+            } else {
+                $res = $this->getModel()->forSigri();
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+        return $res->values();
+    }
+
+    public function getQuestionsSigriHc(\DateTime $lastSyncDate = null){
+        try {
+            if($lastSyncDate) {
+                $res =$this->getModel()->updatesForSigriHc($lastSyncDate);
+            } else {
+                $res = $this->getModel()->forSigriHc();
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+        return $res->values();
+    }
 }

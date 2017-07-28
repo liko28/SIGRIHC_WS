@@ -809,6 +809,7 @@ $app->group('/Modulos', function() {
 });
 
 $app->group('/Preguntas', function() {
+    //TODO Actualizar Documentacion
 
     /**
      * @api {GET} /Preguntas/:date
@@ -839,12 +840,65 @@ $app->group('/Preguntas', function() {
      */
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $preguntas = new Question($this->db);
+
+        //Fecha Ultima Sincronizacion
+        //TODO no puede ser superior a la actual
+        $lastSyncDate = null;
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
-            return $response->withJson(['PREGUNTAS' => $preguntas->getUpdates($lastSyncDate)->values()]);
         }
-        return $response->withJson(['PREGUNTAS' => $preguntas->getAll()->values()]);
+
+        //Origen Peticion y respuesta especifica para cada Cliente
+        $client = $request->getHeaderLine('Client');
+
+        switch ($client) {
+            case "demanda":
+                try {
+                    $data = ['PREGUNTAS' => $preguntas->getQuestionsDemanda($lastSyncDate)];
+                } catch (Exception $e) {
+                    //TODO LOG
+                    return $response->withStatus(500,$e->getMessage());
+                }
+                return $response->withJson($data);
+                break;
+            case "auditoria":
+                try {
+                    $data = ['PREGUNTAS' => $preguntas->getQuestionsAuditoria($lastSyncDate)];
+                } catch (Exception $e) {
+                    //TODO LOG
+                    return $response->withStatus(500,$e->getMessage());
+                }
+                return $response->withJson($data);
+                break;
+            case "sigri":
+                try {
+                    $data = ['PREGUNTAS' => $preguntas->getQuestionsSigri($lastSyncDate)];
+                } catch (Exception $e) {
+                    //TODO LOG
+                    return $response->withStatus(500,$e->getMessage());
+                }
+                return $response->withJson($data);
+                break;
+            case "sigri_hc":
+                try {
+                    $data = ['PREGUNTAS' => $preguntas->getQuestionsSigriHc($lastSyncDate)];
+                } catch (Exception $e) {
+                    //TODO LOG
+                    return $response->withStatus(500,$e->getMessage());
+                }
+                return $response->withJson($data);
+                break;
+            default:
+                try {
+                    $data = ['PREGUNTAS' => $preguntas->get($lastSyncDate)->values()];
+                } catch (Exception $e) {
+                    //TODO LOG
+                    return $response->withStatus(500,$e->getMessage());
+                }
+                return $response->withJson($data);
+                break;
+        }
     });
 });
 
@@ -982,6 +1036,8 @@ $app->group('/Personas',function(){
 
 
 $app->group('/Opciones', function () {
+    //TODO Actualizar Documentacion
+
     /**
      * @api {GET} /Opciones/:date
      * @apiGroup Opciones
@@ -1009,7 +1065,6 @@ $app->group('/Opciones', function () {
      * {"OPCIONES":[{"ID_VARIABLE":"14","NOMBRE_VARIABLE":"APELLIDO1","DESCRIPCION":"APELLIDO 1","ENTIDAD":"SIGRI_MAESTRO","ATRIBUTO":"APELLIDO1","TIPOCAMPO":"VARCHAR","LONCAMPO":"30","DEPENDE":"10","OBLIGATORIO":"S","ID_LISTA":"","NOMLISTA":"","VALORLISTA":"","ID_MODULO":"0","TIPO":"T","VALIDAR":"N","EDADINI":"","EDADFIN":"","GENERO":"A","ESTADO":"A","VISIBILIDAD":"V","NIVEL":"","CODIGO":"","ORDEN":"14","FECCREA":"2017-07-24 17:16:39.412234","FECMODI":"2017-07-24 17:16:39.412256","INTERVALO":"","FRECUENCIA":""},{...}]}
      */
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
-        //TODO Documentar
         $opciones = new Option($this->db);
 
         //Fecha Ultima Sincronizacion
@@ -1020,7 +1075,7 @@ $app->group('/Opciones', function () {
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
         }
 
-        //Origen Peticion
+        //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
 
         switch ($client) {
@@ -1028,6 +1083,7 @@ $app->group('/Opciones', function () {
                 try {
                     $data = ['OPCIONES' => $opciones->getOptionsDemanda($lastSyncDate)];
                 } catch (Exception $e) {
+                    //TODO LOG
                     return $response->withStatus(500,$e->getMessage());
                 }
                 return $response->withJson($data);
@@ -1036,6 +1092,7 @@ $app->group('/Opciones', function () {
                 try {
                     $data = ['OPCIONES' => $opciones->getOptionsAuditoria($lastSyncDate)];
                 } catch (Exception $e) {
+                    //TODO LOG
                     return $response->withStatus(500,$e->getMessage());
                 }
                 return $response->withJson($data);

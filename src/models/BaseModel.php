@@ -299,11 +299,11 @@ class BaseModel{
     }
 
     public function getAll(){
-        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()}");
     }
 
     /** @return CustomArray */
     public function getUpdates($lastSyncDate){
-        return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
+        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
     }
 }
