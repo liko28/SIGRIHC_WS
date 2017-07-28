@@ -31,6 +31,7 @@ use SIGRI_HC\Controllers\PersonController as Person;
 use SIGRI_HC\Controllers\UserController as User;
 use SIGRI_HC\Controllers\ProcedureController as Procedure;
 use SIGRI_HC\Controllers\OptionController as Option;
+use SIGRI_HC\Controllers\ProgramController as Program;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -1116,6 +1117,64 @@ $app->group('/Opciones', function () {
             default:
                 try {
                     $data = ['OPCIONES' => $opciones->get($lastSyncDate)];
+                } catch (Exception $e) {
+                    return $response->withStatus(500,$e->getMessage());
+                }
+                return $response->withJson($data);
+                break;
+        }
+    });
+});
+
+$app->group('/Programas', function () {
+    //TODO Actualizar Documentacion
+
+    /**
+     * @api {GET} /Opciones/:date
+     * @apiGroup Opciones
+     * @apiDescription Retorna Todos los registros de Opciones, si se provee :date se filtraran los resultados modificados a partir de :date
+     * @apiPermission user
+     * @apiSampleRequest off
+     *
+     * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
+     * @apiHeaderExample {Json} Ejemplo Header:
+     * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
+     *
+     * @apiParam {Date} [date] Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong>
+
+     *
+     * @apiError {Json} 401 Usuario o Contraseña Invalidos
+     * @apiErrorExample {Json} Ejemplo Error 401:
+     * {"ERROR":"USARIO/CONTRASEÑA INVALIDOS"}
+     *
+     * @apiError {Json} 404 LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...
+     * @apiErrorExample {Json} Ejemplo Error 404:
+     * {"ERROR":"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ..."}
+     *
+     * @apiSuccess {Json} 200 Arreglo de Objetos de tipo AREA
+     * @apiSuccessExample {Json} Ejemplo Respuesta:
+     * {"OPCIONES":[{"ID_VARIABLE":"14","NOMBRE_VARIABLE":"APELLIDO1","DESCRIPCION":"APELLIDO 1","ENTIDAD":"SIGRI_MAESTRO","ATRIBUTO":"APELLIDO1","TIPOCAMPO":"VARCHAR","LONCAMPO":"30","DEPENDE":"10","OBLIGATORIO":"S","ID_LISTA":"","NOMLISTA":"","VALORLISTA":"","ID_MODULO":"0","TIPO":"T","VALIDAR":"N","EDADINI":"","EDADFIN":"","GENERO":"A","ESTADO":"A","VISIBILIDAD":"V","NIVEL":"","CODIGO":"","ORDEN":"14","FECCREA":"2017-07-24 17:16:39.412234","FECMODI":"2017-07-24 17:16:39.412256","INTERVALO":"","FRECUENCIA":""},{...}]}
+     */
+    $this->get('', function (Request $request, Response $response, $args) {
+        $programas = new Program($this->db);
+
+        //Origen Peticion y respuesta especifica para cada Cliente
+        $client = $request->getHeaderLine('Client');
+
+        switch ($client) {
+            case "demanda":
+                break;
+            case "auditoria":
+                break;
+            case "sigri":
+                break;
+            case "sigri_hc":
+                break;
+            default:
+                //TODO LOG
+                //TODO TEST
+                try {
+                    $data = ['PROGRAMAS' => $programas->get()->values()];
                 } catch (Exception $e) {
                     return $response->withStatus(500,$e->getMessage());
                 }
