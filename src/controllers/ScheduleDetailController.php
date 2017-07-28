@@ -18,8 +18,8 @@ class ScheduleDetailController extends BaseController {
         parent::__construct(new ScheduleDetailModel($connection));
     }
 
-    public function getAll($userId) {
-        return $this->model->getAll($userId);
+    public function getAll($userId, $client, $lastSyncDate) {
+        return $this->model->getAll($userId,$client, $lastSyncDate);
     }
 
     public function getUpdates($userId, $lastSyncDate){

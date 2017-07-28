@@ -986,12 +986,29 @@ $app->group('/Programaciones',function() {
     $this->post('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $programaciones = new Schedule($this->db);
         $input = $request->getParsedBody();
-        if ($args['lastSyncDate']) {
+
+        //Fecha Ultima Sincronizacion
+        //TODO no puede ser superior a la actual
+        $lastSyncDate = null;
+        if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
-            return $response->withJson(['PROGRAMACIONES' => $programaciones->getComparedUpdates($this->userName, $lastSyncDate, $input)->values()]);
         }
-        return $response->withJson(['PROGRAMACIONES' => $programaciones->getAllCompared($this->userName, $input)->values()]);
+
+        //Origen Peticion y respuesta especifica para cada Cliente
+        $client = $request->getHeaderLine('Client');
+
+        switch ($client) {
+            case DEMANDA:
+            case AUDITORIA:
+            case VISITA:
+            case HISTORIA:
+                return $response->withJson(['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, $client, $lastSyncDate)]);
+                break;
+            default:
+                return $response->withJson(['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, HISTORIA, $lastSyncDate)]);
+                break;
+        }
     });
 });
 
@@ -1165,6 +1182,12 @@ $app->group('/Programas', function () {
             case "demanda":
                 break;
             case "auditoria":
+                try {
+                    $data = ['PROGRAMAS' => $programas->get()->values()];
+                } catch (Exception $e) {
+                    return $response->withStatus(500,$e->getMessage());
+                }
+                return $response->withJson($data);
                 break;
             case "sigri":
                 break;

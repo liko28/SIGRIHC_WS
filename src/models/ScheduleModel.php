@@ -21,13 +21,56 @@ class ScheduleModel extends BaseModel {
     }
 
     /** @return CustomArray */
-    public function getAll($userId){
-        return $this->query("SELECT {$this->getColumns('ID_PROGRAMACION', 'DPTO', 'MUNICIPIO', 'PROMOTOR', 'CEB', 'ESTADO', 'ID_VISITA', 'DIRECCION', 'OTRADIR', 'TELEFONO1', 'TELEFONO2', 'EMAIL', 'LATITUD', 'LONGITUD', 'ID_BARRIO', 'BARRIO', 'FECPROG')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE PROMOTOR = ? AND ESTADO IN (?,?)",$userId,'A','D');
-    }
+    public function getAll($userId, $client, \DateTime $lastSyncDate = null){
+        if($lastSyncDate) {
+            $date = $lastSyncDate->format('Y-m-d-H.i.s');
+        }
+        $motVisita = null;
+        $typeVisita = null;
+        switch ($client) {
+            case DEMANDA:
+                $motVisita = "'7','8'";
+                break;
+            case AUDITORIA:
+                $motVisita = "'9','10'";
+                break;
+            case VISITA:
+                $motVisita = "'1','2','3','4','5','6'";
+                break;
+            case HISTORIA:
+                $typeVisita = "'EN','ME'";
+                break;
+        }
 
-    /** @return CustomArray */
-    public function getUpdates($userId,$lastSyncDate) {
-        return $this->query("SELECT {$this->getColumns('ID_PROGRAMACION', 'DPTO', 'MUNICIPIO', 'PROMOTOR', 'CEB', 'ESTADO', 'ID_VISITA', 'DIRECCION', 'OTRADIR', 'TELEFONO1', 'TELEFONO2', 'EMAIL', 'LATITUD', 'LONGITUD', 'ID_BARRIO', 'BARRIO', 'FECPROG')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE PROMOTOR = ? AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP AND ESTADO IN (?,?,?)",$userId,$lastSyncDate,'I','A','D');
-    }
+        if($lastSyncDate && $motVisita) {
+            if($motVisita) {
+                return $this->query("SELECT PROG.ID_PROGRAMACION, PROG.DPTO, PROG.MUNICIPIO, PROG.PROMOTOR, PROG.CEB, PROG.ESTADO, PROG.ID_VISITA, PROG.DIRECCION, PROG.OTRADIR, PROG.TELEFONO1, PROG.TELEFONO2, PROG.EMAIL, PROG.LATITUD, PROG.LONGITUD, PROG.USERCREA, PROG.FECCREA, PROG.IPCREA, PROG.USERMODI, PROG.IPMODI, PROG.ID_BARRIO, PROG.BARRIO, PROG.FECPROG, PROG.FECMODI
+FROM SALFAM2.SF_PROGRAMACION PROG
+JOIN SALFAM2.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+WHERE PROMOTOR = ? AND DET.MOTVISITA IN($motVisita) AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$userId,$date);
+            }
 
+            if($typeVisita) {
+                return $this->query("SELECT PROG.ID_PROGRAMACION, PROG.DPTO, PROG.MUNICIPIO, PROG.PROMOTOR, PROG.CEB, PROG.ESTADO, PROG.ID_VISITA, PROG.DIRECCION, PROG.OTRADIR, PROG.TELEFONO1, PROG.TELEFONO2, PROG.EMAIL, PROG.LATITUD, PROG.LONGITUD, PROG.USERCREA, PROG.FECCREA, PROG.IPCREA, PROG.USERMODI, PROG.IPMODI, PROG.ID_BARRIO, PROG.BARRIO, PROG.FECPROG, PROG.FECMODI
+FROM SALFAM2.SF_PROGRAMACION PROG
+JOIN SALFAM2.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+WHERE PROMOTOR = ? AND TIPOVISITA IN($typeVisita) AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
+            }
+        }
+
+        if($motVisita) {
+            return $this->query("SELECT PROG.ID_PROGRAMACION, PROG.DPTO, PROG.MUNICIPIO, PROG.PROMOTOR, PROG.CEB, PROG.ESTADO, PROG.ID_VISITA, PROG.DIRECCION, PROG.OTRADIR, PROG.TELEFONO1, PROG.TELEFONO2, PROG.EMAIL, PROG.LATITUD, PROG.LONGITUD, PROG.USERCREA, PROG.FECCREA, PROG.IPCREA, PROG.USERMODI, PROG.IPMODI, PROG.ID_BARRIO, PROG.BARRIO, PROG.FECPROG, PROG.FECMODI
+FROM SALFAM2.SF_PROGRAMACION PROG
+JOIN SALFAM2.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+WHERE PROMOTOR = ? AND DET.MOTVISITA IN($motVisita) AND ESTADO IN('A','D')",$userId);
+        }
+
+        if($typeVisita) {
+            return $this->query("SELECT PROG.ID_PROGRAMACION, PROG.DPTO, PROG.MUNICIPIO, PROG.PROMOTOR, PROG.CEB, PROG.ESTADO, PROG.ID_VISITA, PROG.DIRECCION, PROG.OTRADIR, PROG.TELEFONO1, PROG.TELEFONO2, PROG.EMAIL, PROG.LATITUD, PROG.LONGITUD, PROG.USERCREA, PROG.FECCREA, PROG.IPCREA, PROG.USERMODI, PROG.IPMODI, PROG.ID_BARRIO, PROG.BARRIO, PROG.FECPROG, PROG.FECMODI
+FROM SALFAM2.SF_PROGRAMACION PROG
+JOIN SALFAM2.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+WHERE PROMOTOR = ? AND TIPOVISITA IN($typeVisita) AND ESTADO IN('A','D');",$userId);
+        }
+
+    }
 }

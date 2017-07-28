@@ -188,7 +188,8 @@ class BaseModel{
             $parameters = null;
             $preparedStmt = db2_prepare($this->connection->getConnectionResource(),$SQLsentence);
             foreach ($arguments as $argument) {
-                $parameters[] = $argument;
+                //$parameters[] = $argument;
+                $parameters[] = is_array($argument) ? implode(',',$argument): $argument;
                 $this->query = substr_replace($this->query,$argument,strpos($this->query,'?'),strlen('?'));
             }
             if($preparedStmt) {

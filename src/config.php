@@ -23,5 +23,12 @@ const ERROR_404 = array("ERROR" => "LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ
 /** Errores detallados */
 const CONFIG = array("settings" => array("displayErrorDetails" => true),"determineRouteBeforeAppMiddleware" => true);
 
+
+/** PROGRAMAS */
+const DEMANDA = "demanda";
+const AUDITORIA = "auditoria";
+const VISITA = "sigri";
+const HISTORIA = "sigri_hc";
+
 /** Version */
 const VERSION = '1.0.0';

@@ -20,91 +20,6 @@ class ScheduleController extends BaseController {
         parent::__construct(new ScheduleModel($connection));
     }
 
-    //TODO ACTUALIZAR ESTADO A D
-    public function getAll($userName) {
-        $user = new UserController($this->model->getConnection());
-        $this->model->getAll($user->getByUserName($userName)[0]->ID);
-        $details = $this->getDetail($user->getByUserName($userName)[0]->ID);
-        $newResult = new CustomArray();
-        foreach ($this->model->getResult() as $schedule => $props) {
-            $props->PERSONAS = array();
-            foreach ($details as $detail => $_props) {
-                if($props->ID_PROGRAMACION == $_props->ID_PROGRAMACION) {
-                    unset($_props->ID_PROGRAMACION);
-                    $props->PERSONAS[] = $_props;
-                }
-            }
-            $newResult->append($props);
-        }
-        return $newResult;
-    }
-
-    public function getAllCompared($userName, $input) {
-        $user = new UserController($this->model->getConnection());
-        $this->model->getAll($user->getByUserName($userName)[0]->ID);
-        $details = $this->getDetail($user->getByUserName($userName)[0]->ID);
-        $newResult = new CustomArray();
-        foreach ($this->model->getResult() as $schedule => $props) {
-            $props->PERSONAS = array();
-            foreach ($details as $detail => &$_props) {
-                if($props->ID_PROGRAMACION == $_props->ID_PROGRAMACION) {
-                    unset($_props->ID_PROGRAMACION);
-                    $props->PERSONAS[] = $_props;
-                    unset($_props);
-                }
-            }
-            $newResult->append($props);
-        }
-        return $this->compare($newResult, $input);
-    }
-
-    public function getUpdates($userName, \DateTime $lastSyncDate) {
-        $user = new UserController($this->model->getConnection());
-        $this->model->getUpdates($user->getByUserName($userName)[0]->ID,$lastSyncDate->format('Y-m-d-H.i.s'));
-        $details = $this->getDetailUpdates($user->getByUserName($userName)[0]->ID,$lastSyncDate->format('Y-m-d-H.i.s'));
-        $newResult = new CustomArray();
-        foreach ($this->model->getResult() as $schedule => $props) {
-            $props->PERSONAS = array();
-            foreach ($details as $detail => &$_props) {
-                if($props->ID_PROGRAMACION == $_props->ID_PROGRAMACION) {
-                    unset($_props->ID_PROGRAMACION);
-                    $props->PERSONAS[] = $_props;
-                    unset($_props);
-                }
-            }
-            $newResult->append($props);
-        }
-        return $newResult;
-    }
-
-    public function getComparedUpdates($userName, \DateTime $lastSyncDate, $input) {
-        $user = new UserController($this->model->getConnection());
-        $this->model->getUpdates($user->getByUserName($userName)[0]->ID,$lastSyncDate->format('Y-m-d-H.i.s'));
-        $details = $this->getDetailUpdates($user->getByUserName($userName)[0]->ID,$lastSyncDate->format('Y-m-d-H.i.s'));
-        $newResult = new CustomArray();
-        foreach ($this->model->getResult() as $schedule => $props) {
-            $props->PERSONAS = array();
-            foreach ($details as $detail => $_props) {
-                if($props->ID_PROGRAMACION == $_props->ID_PROGRAMACION) {
-                    unset($_props->ID_PROGRAMACION);
-                    $props->PERSONAS[] = $_props;
-                }
-            }
-            $newResult->append($props);
-        }
-        return $this->compare($newResult,$input);
-    }
-
-    protected function getDetail($userId) {
-        $details = new ScheduleDetailController($this->model->getConnection());
-        return $details->getAll($userId);
-    }
-
-    protected function getDetailUpdates($userId, $lastSyncDate) {
-        $details = new ScheduleDetailController($this->model->getConnection());
-        return $details->getUpdates($userId,$lastSyncDate);
-    }
-
     protected function compare($serverSchedules, $clientSchedules){
         $result = new CustomArray();
         foreach ($serverSchedules as $serverSchedule) {
@@ -153,5 +68,34 @@ class ScheduleController extends BaseController {
         }
         return $result;
 
+    }
+
+    //Nuevas funciones para Programacion
+    public function getSchedule($userName, $input, $client, \DateTime $lastSyncDate = null){
+        $user = new UserController($this->model->getConnection());
+        $userId = $user->getByUserName($userName)[0]->ID;
+
+        //obtener programacion por user, cliente y fecmodi
+        $this->model->getAll($userId, $client, $lastSyncDate);
+
+        //obtener detalle por user, cliente y fecmodi
+        $details = new ScheduleDetailController($this->model->getConnection());
+        $details->getAll($userId, $client, $lastSyncDate);
+
+        //Añadir el detalle
+        foreach ($this->model->getResult() as $schedules => $schedule){
+            $schedule->PERSONAS = array();
+            //verificar si es el mismo ID_PROGRAMACION
+            foreach ($details->model->getResult() as $_details => $detail){
+                if($detail->ID_PROGRAMACION == $schedule->ID_PROGRAMACION){
+                    unset($detail->ID_PROGRAMACION);
+                    $schedule->PERSONAS[] = $detail;
+                }
+            }
+        }
+
+        //comparar con el input
+        //retornar
+        return $this->compare($this->model->getResult(),$input)->values();
     }
 }
