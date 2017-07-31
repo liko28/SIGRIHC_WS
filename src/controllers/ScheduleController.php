@@ -98,8 +98,7 @@ class ScheduleController extends BaseController {
                         case HISTORIA:
                             break;
                         case AUDITORIA:
-                            $progs = explode("|",$detail->TIPOVISITA);
-                            $detail->PROGRAMAS = is_array($progs) ? $progs : array() ;
+                            $detail->PROGRAMAS = array_filter(explode("|",$detail->TIPOVISITA));
                         break;
                     }
                     unset($detail->ID_PROGRAMACION);
