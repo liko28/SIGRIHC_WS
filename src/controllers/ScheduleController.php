@@ -88,6 +88,20 @@ class ScheduleController extends BaseController {
             //verificar si es el mismo ID_PROGRAMACION
             foreach ($details->model->getResult() as $_details => $detail){
                 if($detail->ID_PROGRAMACION == $schedule->ID_PROGRAMACION){
+
+                    //TODO si es de AUDITORIA debe llevar PROGRAMAS -> arreglo de programas
+                    switch ($client){
+                        //TODO si es de DEMANDA debe llevar la cuenta de servicios y eventos que tiene el usuario
+                        case DEMANDA:
+                        //TODO si es de SIGRI debe llevar la visita anterior
+                        case VISITA:
+                        case HISTORIA:
+                            break;
+                        case AUDITORIA:
+                            $detail->PROGRAMAS = explode($detail->TIPOVISITA,"|");
+
+                        break;
+                    }
                     unset($detail->ID_PROGRAMACION);
                     $schedule->PERSONAS[] = $detail;
                 }

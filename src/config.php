@@ -30,5 +30,8 @@ const AUDITORIA = "auditoria";
 const VISITA = "sigri";
 const HISTORIA = "sigri_hc";
 
+/** Utiles */
+const SEPARATOR = "|";
+
 /** Version */
 const VERSION = '1.0.0';
