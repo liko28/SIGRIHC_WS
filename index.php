@@ -932,14 +932,24 @@ $app->group('/Usuarios', function() {
      * {"USUARIOS":[{"ID":"1","NOMBRE":"admin","PASSWORD":"21232f297a57a5a743894a0e4a801fc3","TIPO_USUARIO":"1","ACTIVO":"0","EMAIL":"rennimunoz@saludfamiliar.com.co","DPTO":"08","PAIS":"57","CIUDAD":"758","MOVIL":"3162413498","TELEFONO":"3930527","DIRECCION":"Calle 73a # 22 - 45 PISO 2","DOC_IDENT":"73238372","NOMBRES":"RENNI DE JESUS","APELLIDOS":"MU\u00d1OZ OROZCO","CARGO":"ADMINISTRADOR","TIPO_DOC":"1","INFORMA_A":"1","FECHA_CREA":"2012-10-30 11:54:09.000000","USER_CREA":"admin","IP_CREA":"127.0.0.1","FECHA_MODI":"2015-10-17 09:47:06.000000","USER_MODI":"admin","IP_MODI":"181.192.158.23","START_LATITUD":"","START_LONGITUD":""},{...}]}
      *
      */
+
+
+
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
+        //Fecha Ultima Sincronizacion
+        //TODO no puede ser superior a la actual
+        $lastSyncDate = null;
+        if($args['lastSyncDate']) {
+            $lastSyncDate = new \DateTime();
+            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+        }
+
         $usuarios = new User($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
-            return $response->withJson(['USUARIOS' => $usuarios->getUpdates($lastSyncDate)->values()]);
         }
-        return $response->withJson(['USUARIOS' => $usuarios->getAll()->values()]);
+        return $response->withJson(['USUARIOS' => $usuarios->get($lastSyncDate)->values()]);
     });
 });
 
