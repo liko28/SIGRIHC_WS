@@ -80,7 +80,7 @@ class HcMedicaController extends BaseController {
                 $baseModel->insert(new Row(array(
                     'ID_NOVEDAD' => $idNovedad,
                     'COD_NOVEDAD' => $answers->MOTIVO,
-                    'VALOR' => 1
+                    'VALOR' => $answers->VALOR ? $answers->VALOR : 1
                 )));
             } catch (\Exception $e) {
                 db2_rollback($this->model->getConnection()->getConnectionResource());
