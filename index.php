@@ -32,6 +32,7 @@ use SIGRI_HC\Controllers\UserController as User;
 use SIGRI_HC\Controllers\ProcedureController as Procedure;
 use SIGRI_HC\Controllers\OptionController as Option;
 use SIGRI_HC\Controllers\ProgramController as Program;
+use SIGRI_HC\Controllers\DemandController as Demand;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -1223,6 +1224,7 @@ $app->group('/Programas', function () {
  **************************
  **/
 
+/** Historia Clinica */
 
 $app->group('/HistoriaClinica', function () {
     /**
@@ -1252,6 +1254,7 @@ $app->group('/HistoriaClinica', function () {
      * @apiSuccessExample {Json} Ejemplo Respuesta:
      * {"HISTORIA_MEDICA":["8","9",{"ERROR":"DESCRIPCION DEL ERROR"}]}
      */
+    /** Medico */
     $this->post('/medico',function (Request $request, Response $response){
         $historias = new HcMedica($this->db);
         $input = json_decode($request->getBody());
@@ -1302,6 +1305,19 @@ $app->group('/HistoriaClinica', function () {
         }
         return $response->withJson(["HISTORIA_MEDICA" => $historias->get($id)]);
 
+
+    });
+});
+
+/** Demanda */
+$app->group('/Demanda', function(){
+    $this->post('',function (Request $request, Response $response){
+        $demandas = new Demand($this->db);
+        $input = json_decode($request->getBody());
+        $this->logger->addInfo($request->getBody());
+        $ids = ["DEMANDA" => $demandas->create($input, $this->userName)];
+        $this->logger->addInfo(json_encode($ids));
+        return $response->withJson($ids);
     });
 });
 $app->run();

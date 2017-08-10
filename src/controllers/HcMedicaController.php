@@ -35,7 +35,7 @@ class HcMedicaController extends BaseController {
         $entities = array();
 
         /** VALIDACION DE SINCRONIZACIONES PREVIAS -DUPLICIDADES-*/
-        $existentId = $this->verify($answers->PROGRAMACION,$person, Generic::findAnswer("5",$answers->RESPUESTAS)[1],$user);
+        $existentId = $this->verify($answers->PROGRAMACION,$person, Generic::findInPairs("5",$answers->RESPUESTAS)[1],$user);
         if($existentId) {
             return $existentId;
         }
