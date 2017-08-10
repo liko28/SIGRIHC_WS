@@ -55,7 +55,7 @@ class DemandController extends BaseController {
                 //"DISPOSITIVO" => "1", TODO ESTO ME PARECE INNECESARIO
                 "LATITUD" => $block->LATITUD,
                 "LONGITUD" => $block->LONGITUD,
-                "ID_USER" => random_int(0,1000),//TODO ESTO ME PARECE INNECESARIO
+                "ID_USER" => rand(0,1000),//TODO ESTO ME PARECE INNECESARIO
                 "USERCREA" => $userName,
                 "IPCREA" => $_SERVER['REMOTE_ADDR']
             ]);
