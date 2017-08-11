@@ -46,9 +46,9 @@ class DemandController extends BaseController {
                 "DPTO" => $personData->DPTO,
                 "MUNICIPIO" => $personData->MUNICIPIO,
                 //TODO REVISAR ESTOS TRES CON VANE
-                "ZONA" => Generic::findInPairs("6",$answers)[1], //ESTO NO ESTÁ EN PERSONA
-                "BARRIO" => Generic::findInPairs("7",$answers)[1], //ESTO NO ESTÁ EN PERSONA
-                "DIRECCION" => Generic::findInPairs("8",$answers)[1], //ESTO NO ESTÁ EN PERSONA
+                "ZONA" => (int)Generic::findInPairs("6",$answers)[1], //ESTO NO ESTÁ EN PERSONA
+                "BARRIO" => (int)Generic::findInPairs("7",$answers)[1], //ESTO NO ESTÁ EN PERSONA
+                "DIRECCION" => (string)Generic::findInPairs("8",$answers)[1], //ESTO NO ESTÁ EN PERSONA
                 "TELEFONO" => $personData->CELULAR,
                 "FECINICIO" => $block->FECINICIO,
                 "FECFIN" => $block->FECFIN,
