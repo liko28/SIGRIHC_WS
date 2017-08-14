@@ -1014,10 +1014,14 @@ $app->group('/Programaciones',function() {
             case AUDITORIA:
             case VISITA:
             case HISTORIA:
-                return $response->withJson(['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, $client, $lastSyncDate)]);
+                $programaciones = ['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, $client, $lastSyncDate)];
+                $response->withAddedHeader('cantidad_registros',count($programaciones['PROGRAMACIONES']));
+                return $response->withJson($programaciones);
                 break;
             default:
-                return $response->withJson(['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, HISTORIA, $lastSyncDate)]);
+                $programaciones = ['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, HISTORIA, $lastSyncDate)];
+                $response->withAddedHeader('cantidad_registros',count($programaciones['PROGRAMACIONES']));
+                return $response->withJson($programaciones);
                 break;
         }
     });

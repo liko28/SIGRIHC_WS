@@ -28,7 +28,7 @@ const CONFIG = array("settings" => array("displayErrorDetails" => true),"determi
 const DEMANDA = "demanda";
 const AUDITORIA = "auditoria";
 const VISITA = "sigri";
-const HISTORIA = "sigri_hc";
+const HISTORIA = "sigrihc";
 
 /** Utiles */
 const SEPARATOR = "|";
