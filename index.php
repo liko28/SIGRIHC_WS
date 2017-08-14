@@ -1015,13 +1015,13 @@ $app->group('/Programaciones',function() {
             case VISITA:
             case HISTORIA:
                 $programaciones = ['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, $client, $lastSyncDate)];
-                $response->withAddedHeader('cantidad_registros',count($programaciones['PROGRAMACIONES']));
-                return $response->withJson($programaciones);
+                $newResponse = $response->withAddedHeader('cantidad_registros',count($programaciones['PROGRAMACIONES']));
+                return $newResponse->withJson($programaciones);
                 break;
             default:
                 $programaciones = ['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, HISTORIA, $lastSyncDate)];
-                $response->withAddedHeader('cantidad_registros',count($programaciones['PROGRAMACIONES']));
-                return $response->withJson($programaciones);
+                $newResponse =$response->withAddedHeader('cantidad_registros',count($programaciones['PROGRAMACIONES']));
+                return $newResponse->withJson($programaciones);
                 break;
         }
     });
