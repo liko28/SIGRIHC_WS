@@ -33,7 +33,7 @@ class QuestionModel extends BaseModel {
     }
 
     public function forAuditorias(){
-        $this->setTableName('AUDITORIA_PREGUNTAS');
+        $this->setTableName('AUDIT_PREGUNTAS');
         try {
             $res = $this->getAll();
         } catch (\Exception $e) {
@@ -44,7 +44,7 @@ class QuestionModel extends BaseModel {
 
     public function updatesForAuditorias(\DateTime $lastSyncDate){
         $date = $lastSyncDate->format('Y-m-d-H.i.s');
-        $this->setTableName('AUDITORIA_PREGUNTAS');
+        $this->setTableName('AUDIT_PREGUNTAS');
         try {
             $res = $this->getUpdates($date);
         } catch (\Exception $e) {
