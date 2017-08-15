@@ -89,7 +89,6 @@ class ScheduleController extends BaseController {
             foreach ($details->model->getResult() as $_details => $detail){
                 if($detail->ID_PROGRAMACION == $schedule->ID_PROGRAMACION){
 
-                    //TODO si es de AUDITORIA debe llevar PROGRAMAS -> arreglo de programas
                     switch ($client){
                         //TODO si es de DEMANDA debe llevar la cuenta de servicios y eventos que tiene el usuario
                         case DEMANDA:

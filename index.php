@@ -60,7 +60,7 @@ $container['password'] = function () {
 $container['errorHandler'] = function ($c) {
     return function ($request, $response, $exception) use ($c) {
         $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
-        if($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+        if($_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
             return $c['response']->withStatus(500)
                 ->withJson($exception);
         } else {
@@ -83,7 +83,7 @@ $container['notFoundHandler'] = function ($c) {
 $container['phpErrorHandler'] = function($c) {
     return function ($request, $response, $exception) use ($c) {
         $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
-        if($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+        if($_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
             return $c['response']->withStatus(500)
                 ->withJson($exception);
         } else {
@@ -854,8 +854,9 @@ $app->group('/Preguntas', function() {
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
 
+        //TODO, cambiar a un metodo generico
         switch ($client) {
-            case "demanda":
+            case DEMANDA:
                 try {
                     $data = ['PREGUNTAS' => $preguntas->getQuestionsDemanda($lastSyncDate)];
                 } catch (Exception $e) {
@@ -864,7 +865,7 @@ $app->group('/Preguntas', function() {
                 }
                 return $response->withJson($data);
                 break;
-            case "auditoria":
+            case AUDITORIA:
                 try {
                     $data = ['PREGUNTAS' => $preguntas->getQuestionsAuditoria($lastSyncDate)];
                 } catch (Exception $e) {
@@ -873,7 +874,7 @@ $app->group('/Preguntas', function() {
                 }
                 return $response->withJson($data);
                 break;
-            case "sigri":
+            case VISITA:
                 try {
                     $data = ['PREGUNTAS' => $preguntas->getQuestionsSigri($lastSyncDate)];
                 } catch (Exception $e) {
@@ -882,7 +883,7 @@ $app->group('/Preguntas', function() {
                 }
                 return $response->withJson($data);
                 break;
-            case "sigri_hc":
+            case HISTORIA:
                 try {
                     $data = ['PREGUNTAS' => $preguntas->getQuestionsSigriHc($lastSyncDate)];
                 } catch (Exception $e) {
@@ -1111,8 +1112,9 @@ $app->group('/Opciones', function () {
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
 
+        //TODO Cambiar a Metodos Genericos
         switch ($client) {
-            case "demanda":
+            case DEMANDA:
                 try {
                     $data = ['OPCIONES' => $opciones->getOptionsDemanda($lastSyncDate)];
                 } catch (Exception $e) {
@@ -1121,7 +1123,7 @@ $app->group('/Opciones', function () {
                 }
                 return $response->withJson($data);
                 break;
-            case "auditoria":
+            case AUDITORIA:
                 try {
                     $data = ['OPCIONES' => $opciones->getOptionsAuditoria($lastSyncDate)];
                 } catch (Exception $e) {
@@ -1130,7 +1132,7 @@ $app->group('/Opciones', function () {
                 }
                 return $response->withJson($data);
                 break;
-            case "sigri":
+            case VISITA:
                 /*try {
                     $data = ['OPCIONES' => $opciones->getOptionsDemanda($lastSyncDate)];
                 } catch (Exception $e) {
@@ -1138,7 +1140,7 @@ $app->group('/Opciones', function () {
                 }
                 return $response->withJson($data);*/
                 break;
-            case "sigri_hc":
+            case HISTORIA:
                 /*try {
                     $data = ['OPCIONES' => $opciones->getOptionsDemanda($lastSyncDate)];
                 } catch (Exception $e) {
@@ -1193,10 +1195,11 @@ $app->group('/Programas', function () {
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
 
+        //TODO Cambiar a Metrodo Generico
         switch ($client) {
-            case "demanda":
+            case DEMANDA:
                 break;
-            case "auditoria":
+            case AUDITORIA:
                 try {
                     $data = ['PROGRAMAS' => $programas->get()->values()];
                 } catch (Exception $e) {
@@ -1204,9 +1207,9 @@ $app->group('/Programas', function () {
                 }
                 return $response->withJson($data);
                 break;
-            case "sigri":
+            case VISITA:
                 break;
-            case "sigri_hc":
+            case HISTORIA:
                 break;
             default:
                 //TODO LOG

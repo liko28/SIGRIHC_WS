@@ -64,7 +64,6 @@ class DemandController extends BaseController {
             try{
                 $masterId = $this->model->insert($entities['SIGRI_MAESTRO']);
             } catch (\Exception $e) {
-                //TODO Log error
                 db2_rollback($this->model->getConnection()->getConnectionResource());
                 $idDemand[$ips] = ['ERROR' => $e->getMessage()];
                 continue;
@@ -75,7 +74,6 @@ class DemandController extends BaseController {
                 try{
                     $this->model->insert(new Row(["ID_VISITA" => $masterId, "VARIABLE" => $answer[0], "VALOR" => $answer[1]]));
                 } catch (\Exception $e) {
-                    //TODO Log error
                     db2_rollback($this->model->getConnection()->getConnectionResource());
                     $idDemand[$ips] = ['ERROR' => $e->getMessage()];
                     continue;
