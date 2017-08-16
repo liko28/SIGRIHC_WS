@@ -10,6 +10,7 @@ namespace SIGRI_HC\Models;
 
 
 use SIGRI_HC\Helpers\CustomArray;
+use SIGRI_HC\Helpers\Logger;
 
 class ScheduleModel extends BaseModel {
     /** @param Connection $connection */
@@ -43,16 +44,23 @@ class ScheduleModel extends BaseModel {
 
 
         if($date) {
-            return $this->query("SELECT {$this->getColumns()->commaSep()}
+            try{
+                return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()} PROG
 JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
+            }catch (\Exception $e) {
+                Logger::log(300, "EL ERROR ES EN ".$this->getQuery());
+            }
         }
 
-        return $this->query("SELECT {$this->getColumns()->commaSep()}
+        try{
+            return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()} PROG
 JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D')",$userId);
-
+        }catch (\Exception $e) {
+            Logger::log(300, "EL ERROR ES EN ".$this->getQuery());
+        }
     }
 }
