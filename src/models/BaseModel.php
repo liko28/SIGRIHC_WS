@@ -3,6 +3,7 @@
 namespace SIGRI_HC\Models;
 
 use SIGRI_HC\Helpers\CustomArray;
+use SIGRI_HC\Helpers\Logger;
 use SIGRI_HC\Helpers\Row;
 
 class BaseModel{
@@ -223,13 +224,16 @@ class BaseModel{
                             break;
                     }
                 }else {
+                    Logger::log(300, $this->getQuery());
                     throw new \Exception("ERROR DE EJECUCION ".db2_stmt_error().":".db2_stmt_errormsg()." en {$this->getSchema()}.{$this->getTableName()}");
                 }
             } else {
+                Logger::log(300, $this->getQuery());
                 throw new \Exception("ERROR DE PREPARACION ".db2_stmt_error().":".db2_stmt_errormsg());
 
             }
         } else {
+            Logger::log(300, $this->getQuery());
             throw new \Exception("ERROR DE CONEXION ".db2_conn_error().": ".db2_conn_errormsg());
         }
     }
