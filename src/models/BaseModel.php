@@ -158,9 +158,9 @@ class BaseModel{
             }
         }
         if(!$columns) {
-            array_walk($this->columns,function($key, $val){
-                $filteredColumns[$val] = "{$this->getSchema()}.{$this->tableName}.{$val}";
-            });
+            foreach ($this->columns as $name => $column) {
+                $filteredColumns[$column] = "{$this->getSchema()}.{$this->tableName}.{$column}";
+            }
         }
         return $filteredColumns;
     }
