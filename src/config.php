@@ -35,3 +35,9 @@ const SEPARATOR = "|";
 
 /** Version */
 const VERSION = '1.0.0';
+
+/** OTRAS CONSTANTES */
+const ESTADO_ACTIVO = "'A'";
+const ESTADO_INACTIVO = "'I'";
+const ESTADO_DESCARGADO = "'D'";
+const ESTADO_REALIZADO = "'OK'";

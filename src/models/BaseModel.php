@@ -142,21 +142,24 @@ class BaseModel{
     }
 
     /**
-     * @return array
+     * TODO sería bueno que esto me devuelva con alias para los joins
+     * @return array|CustomArray
      * @throws \Exception
      * */
     public function getColumns(...$columns)
     {
         $filteredColumns = new CustomArray();
         foreach ($columns as $column) {
-            if(array_key_exists($column,$this->getColumns())) {
-                $filteredColumns[$column] = $this->getSchema().'.'.$this->tableName.'.'.$column;
+            if(array_key_exists($column,$this->columns)) {
+                $filteredColumns[$column] = "{$this->getSchema()}.{$this->tableName}.{$column}";
             } else {
                 throw new \Exception("El Campo $column NO EXISTE EN LA TABLA $this->schema.$this->tableName");
             }
         }
         if(!$columns) {
-            return $this->columns;
+            array_walk($this->columns,function($key, $val){
+                $filteredColumns[$val] = "{$this->getSchema()}.{$this->tableName}.{$val}";
+            });
         }
         return $filteredColumns;
     }

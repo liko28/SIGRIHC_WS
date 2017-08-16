@@ -14,7 +14,7 @@ class OptionModel extends BaseModel {
 
     public function forDemandas(){
         try {
-            $res = $this->query("SELECT O.ID_OPCION, O.ID_LISTA, O.NOMBRE_LISTA, O.DESCRIPCION, O.VALOR, O.ESTADO, O.ORDEN, O.FECCREA, O.FECMODI FROM SALFAM2.SIGRI_OPCIONES O JOIN SALFAM2.DEMANDA_PREGUNTAS D ON D.ID_LISTA =  O.ID_LISTA;");
+            $res = $this->query("SELECT {$this->getColumns()} FROM {$this->getFullTableName()} O JOIN {$this->getSchema()}.DEMANDA_PREGUNTAS D ON D.ID_LISTA =  O.ID_LISTA;");
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -24,7 +24,7 @@ class OptionModel extends BaseModel {
     public function updatesForDemandas(\DateTime $lastSyncDate){
         $date = $lastSyncDate->format('Y-m-d-H.i.s');
         try {
-            $res = $this->query("SELECT O.ID_OPCION, O.ID_LISTA, O.NOMBRE_LISTA, O.DESCRIPCION, O.VALOR, O.ESTADO, O.ORDEN, O.FECCREA, O.FECMODI FROM SALFAM2.SIGRI_OPCIONES O JOIN SALFAM2.DEMANDA_PREGUNTAS D ON D.ID_LISTA =  O.ID_LISTA WHERE O.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR D.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $date,$date);
+            $res = $this->query("SELECT {$this->getColumns()} FROM {$this->getFullTableName()} O JOIN {$this->getSchema()}.DEMANDA_PREGUNTAS D ON D.ID_LISTA =  O.ID_LISTA WHERE O.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR D.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $date,$date);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -33,7 +33,7 @@ class OptionModel extends BaseModel {
 
     public function forAuditorias(){
         try {
-            $res = $this->query("SELECT O.ID_OPCION, O.ID_LISTA, O.NOMBRE_LISTA, O.DESCRIPCION, O.VALOR, O.ESTADO, O.ORDEN, O.FECCREA, O.FECMODI FROM SALFAM2.SIGRI_OPCIONES O JOIN SALFAM2.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  O.ID_LISTA;");
+            $res = $this->query("SELECT {$this->getColumns()} FROM {$this->getSchema()}.SIGRI_OPCIONES O JOIN {$this->getSchema()}.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  O.ID_LISTA;");
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -43,7 +43,7 @@ class OptionModel extends BaseModel {
     public function updatesForAuditorias(\DateTime $lastSyncDate){
         $date = $lastSyncDate->format('Y-m-d-H.i.s');
         try {
-            $res = $this->query("SELECT O.ID_OPCION, O.ID_LISTA, O.NOMBRE_LISTA, O.DESCRIPCION, O.VALOR, O.ESTADO, O.ORDEN, O.FECCREA, O.FECMODI FROM SALFAM2.SIGRI_OPCIONES O JOIN SALFAM2.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  O.ID_LISTA WHERE O.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR A.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $date, $date);
+            $res = $this->query("SELECT {$this->getColumns()} FROM {$this->getFullTableName()} O JOIN {$this->getSchema()}.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  O.ID_LISTA WHERE O.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR A.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $date, $date);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -52,43 +52,21 @@ class OptionModel extends BaseModel {
 
     //TODO Pendiente SQL Sigri
     public function forSigri(){
-        try {
-            $res = $this->query("SELECT O.ID_OPCION, O.ID_LISTA, O.NOMBRE_LISTA, O.DESCRIPCION, O.VALOR, O.ESTADO, O.ORDEN, O.FECCREA, O.FECMODI FROM SALFAM2.SIGRI_OPCIONES O JOIN SALFAM2.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  O.ID_LISTA;");
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-        return $res;
+        return [];
     }
 
     //TODO Pendiente SQL Sigri Updates
     public function updatesForSigri(\DateTime $lastSyncDate){
-        $date = $lastSyncDate->format('Y-m-d-H.i.s');
-        try {
-            $res = $this->query("SELECT O.ID_OPCION, O.ID_LISTA, O.NOMBRE_LISTA, O.DESCRIPCION, O.VALOR, O.ESTADO, O.ORDEN, O.FECCREA, O.FECMODI FROM SALFAM2.SIGRI_OPCIONES O JOIN SALFAM2.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  O.ID_LISTA WHERE O.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR A.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $date, $date);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-        return $res;
+        return [];
     }
 
     //TODO Pendiente SQL HC
     public function forSigriHc(){
-        try {
-            $res = $this->query("SELECT O.ID_OPCION, O.ID_LISTA, O.NOMBRE_LISTA, O.DESCRIPCION, O.VALOR, O.ESTADO, O.ORDEN, O.FECCREA, O.FECMODI FROM SALFAM2.SIGRI_OPCIONES O JOIN SALFAM2.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  O.ID_LISTA;");
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-        return $res;
+        return [];
     }
 
     //TODO Pendiente SQL HC Updates
     public function updatesForSigriHc(\DateTime $lastSyncDate){
-        $date = $lastSyncDate->format('Y-m-d-H.i.s');
-        try {
-            $res = $this->query("SELECT O.ID_OPCION, O.ID_LISTA, O.NOMBRE_LISTA, O.DESCRIPCION, O.VALOR, O.ESTADO, O.ORDEN, O.FECCREA, O.FECMODI FROM SALFAM2.SIGRI_OPCIONES O JOIN SALFAM2.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  O.ID_LISTA WHERE O.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR A.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $date, $date);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-        return $res;
+        return [];
     }
 }
