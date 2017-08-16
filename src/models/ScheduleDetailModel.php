@@ -24,12 +24,12 @@ class ScheduleDetailModel extends BaseModel {
             $date = $lastSyncDate->format('Y-m-d-H.i.s');
         }
         if($date){
-            return $this->query("SELECT {$this->getColumns()}
+            return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()} DET
 JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
         }
-        return $this->query("SELECT {$this->getColumns()}
+        return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()} DET
 JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? AND ESTADO IN('A','D');",$userId);
@@ -37,7 +37,7 @@ WHERE PROMOTOR = ? AND ESTADO IN('A','D');",$userId);
 
     /** @return CustomArray */
     public function getUpdates($userId,$lastSyncDate) {
-        return $this->query("SELECT {$this->getColumns()} ".
+        return $this->query("SELECT {$this->getColumns()->commaSep()} ".
             "FROM {$this->getFullTableName()} ".
             "JOIN {$this->getSchema()}.SF_PROGRAMACION ON {$this->getFullTableName()}.ID_PROGRAMACION = {$this->getSchema()}.SF_PROGRAMACION.ID_PROGRAMACION ".
             "WHERE PROMOTOR = ? AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP AND ESTADO IN (?,?)",$lastSyncDate,$userId,'A','D'

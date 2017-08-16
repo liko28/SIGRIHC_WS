@@ -43,13 +43,13 @@ class ScheduleModel extends BaseModel {
 
 
         if($date) {
-            return $this->query("SELECT {$this->getColumns()}
+            return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()} PROG
 JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
         }
 
-        return $this->query("SELECT {$this->getColumns()}
+        return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()} PROG
 JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D')",$userId);
