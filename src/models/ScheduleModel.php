@@ -46,21 +46,21 @@ class ScheduleModel extends BaseModel {
         if($date) {
             try{
                 return $this->query("SELECT {$this->getColumns()->commaSep()}
-FROM {$this->getFullTableName()} PROG
-JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+FROM {$this->getFullTableName()}
+JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
             }catch (\Exception $e) {
-                Logger::log(300, "EL ERROR ES EN ".$this->getQuery());
+                Logger::log(300, $e->getMessage());
             }
         }
 
         try{
             return $this->query("SELECT {$this->getColumns()->commaSep()}
-FROM {$this->getFullTableName()} PROG
-JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+FROM {$this->getFullTableName()}
+JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D')",$userId);
         }catch (\Exception $e) {
-            Logger::log(300, "EL ERROR ES EN ".$this->getQuery());
+            Logger::log(300, $e->getMessage());
         }
     }
 }

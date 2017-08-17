@@ -28,20 +28,20 @@ class ScheduleDetailModel extends BaseModel {
         if($date){
             try {
                 return $this->query("SELECT {$this->getColumns()->commaSep()}
-FROM {$this->getFullTableName()} DET
-JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+FROM {$this->getFullTableName()}
+JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = {$this->getFullTableName()}.ID_PROGRAMACION
 WHERE PROMOTOR = ? AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $userId, $date);
             } catch (\Exception $e) {
-                Logger::log(300,"error en 35 Schedule Detail Model".$e->getMessage());
+                Logger::log(300,$e->getMessage());
             }
         }
         try {
             return $this->query("SELECT {$this->getColumns()->commaSep()}
-FROM {$this->getFullTableName()} DET
-JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+FROM {$this->getFullTableName()} 
+JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = {$this->getFullTableName()}.ID_PROGRAMACION
 WHERE PROMOTOR = ? AND ESTADO IN('A','D');",$userId);
         } catch (\Exception $e) {
-            Logger::log(300,"error en 44 Schedule Detail Model".$e->getMessage());
+            Logger::log(300,$e->getMessage());
         }
     }
 
