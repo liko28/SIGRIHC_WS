@@ -47,7 +47,7 @@ class ScheduleModel extends BaseModel {
             try{
                 return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()}
-JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
+JOIN {$this->getSchema()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
             }catch (\Exception $e) {
                 Logger::log(300, $e->getMessage());
@@ -57,7 +57,7 @@ WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND C
         try{
             return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()}
-JOIN {$this->getTableName()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
+JOIN {$this->getSchema()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D')",$userId);
         }catch (\Exception $e) {
             Logger::log(300, $e->getMessage());
