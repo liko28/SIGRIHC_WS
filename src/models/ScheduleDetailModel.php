@@ -9,6 +9,8 @@
 namespace SIGRI_HC\Models;
 
 
+use SIGRI_HC\Helpers\Logger;
+
 class ScheduleDetailModel extends BaseModel {
     /** @param Connection $connection */
     public function __construct(Connection $connection) {
@@ -24,15 +26,23 @@ class ScheduleDetailModel extends BaseModel {
             $date = $lastSyncDate->format('Y-m-d-H.i.s');
         }
         if($date){
+            try {
+                return $this->query("SELECT {$this->getColumns()->commaSep()}
+FROM {$this->getFullTableName()} DET
+JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
+WHERE PROMOTOR = ? AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $userId, $date);
+            } catch (\Exception $e) {
+                Logger::log(300,"error en 35 Schedule Detail Model".$e->getMessage());
+            }
+        }
+        try {
             return $this->query("SELECT {$this->getColumns()->commaSep()}
 FROM {$this->getFullTableName()} DET
 JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
-WHERE PROMOTOR = ? AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
-        }
-        return $this->query("SELECT {$this->getColumns()->commaSep()}
-FROM {$this->getFullTableName()} DET
-JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? AND ESTADO IN('A','D');",$userId);
+        } catch (\Exception $e) {
+            Logger::log(300,"error en 44 Schedule Detail Model".$e->getMessage());
+        }
     }
 
     /** @return CustomArray */
