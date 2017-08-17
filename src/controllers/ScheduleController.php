@@ -92,6 +92,7 @@ class ScheduleController extends BaseController {
                     switch ($client){
                         case DEMANDA:
                             //TODO si es de DEMANDA debe llevar la cuenta de servicios y eventos que tiene el usuario
+                            $detail->FRECUENCIAS = array("32" => "1", "25" => "2", "42" => 10);
                         case VISITA:
                             //TODO si es de SIGRI debe llevar la visita anterior
                         case HISTORIA:
