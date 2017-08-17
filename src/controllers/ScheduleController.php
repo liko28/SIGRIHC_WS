@@ -90,16 +90,14 @@ class ScheduleController extends BaseController {
                 if($detail->ID_PROGRAMACION == $schedule->ID_PROGRAMACION){
 
                     switch ($client){
-                        //TODO si es de DEMANDA debe llevar la cuenta de servicios y eventos que tiene el usuario
                         case DEMANDA:
-                        //TODO si es de SIGRI debe llevar la visita anterior
+                            //TODO si es de DEMANDA debe llevar la cuenta de servicios y eventos que tiene el usuario
                         case VISITA:
+                            //TODO si es de SIGRI debe llevar la visita anterior
                         case HISTORIA:
                             break;
                         case AUDITORIA:
-                            $detail->PROGRAMAS = array_filter(explode("|",$detail->TIPOVISITA));
-                            unset($detail->TIPOVISITA);
-                        break;
+                            break;
                     }
                     unset($detail->ID_PROGRAMACION);
                     $schedule->PERSONAS[] = $detail;
