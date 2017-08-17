@@ -26,19 +26,26 @@ class Logger {
         mkdir($this->path,0777,true);
     }
 
+    public static function getPath($userName = null) {
+        $fileName = $userName ? "$userName.txt" : "log.txt";
+        $path = "logs/".date('Y-m-d')."/";
+        return $path.$fileName;
+
+    }
+
     /** @return \Monolog\Logger */
     public function getInstance() {
         return $this->loggerInstance;
     }
 
-    public static function log($level,$message){
+    public static function log($level,$message,$path){
         $logger = new Logger();
         switch ($level) {
             case 300:
-                $logger->getInstance()->addWarning($message);
+                $logger->getInstance()->pushHandler(new StreamHandler($path))->addWarning($message);
                 break;
             case 200:
-                $logger->getInstance()->addInfo($message);
+                $logger->getInstance()->pushHandler(new StreamHandler($path))->addInfo($message);
                 break;
         }
     }

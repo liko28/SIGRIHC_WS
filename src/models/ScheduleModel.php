@@ -50,7 +50,8 @@ FROM {$this->getFullTableName()}
 JOIN {$this->getSchema()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
             }catch (\Exception $e) {
-                Logger::log(300, $e->getMessage());
+                return ["ERROR" => $e->getMessage()];
+                Logger::log(300, $e->getMessage(),Logger::getPath(USER_NAME));
             }
         }
 
@@ -60,7 +61,8 @@ FROM {$this->getFullTableName()}
 JOIN {$this->getSchema()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D')",$userId);
         }catch (\Exception $e) {
-            Logger::log(300, $e->getMessage());
+            return ["ERROR" => $e->getMessage()];
+            Logger::log(300, $e->getMessage(),Logger::getPath(USER_NAME));
         }
     }
 }
