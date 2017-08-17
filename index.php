@@ -47,7 +47,7 @@ $container['db'] = function () {
 
 /** UserName */
 $container['userName'] = function () {
-    define("USER_NAME",$_SERVER['PHP_AUTH_USER']);
+    define("SIGRI_HC\Helpers\USER_NAME",$_SERVER['PHP_AUTH_USER']);
     return $_SERVER['PHP_AUTH_USER'];
 };
 

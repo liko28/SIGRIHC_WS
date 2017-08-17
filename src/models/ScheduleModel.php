@@ -51,7 +51,7 @@ JOIN {$this->getSchema()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
             }catch (\Exception $e) {
                 return ["ERROR" => $e->getMessage()];
-                Logger::log(300, $e->getMessage(),Logger::getPath(USER_NAME));
+                Logger::log(300, $e->getMessage(),Logger::getPath(constant("SIGRIHC\Helpers\USER_NAME")));
             }
         }
 
@@ -62,7 +62,7 @@ JOIN {$this->getSchema()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}
 WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D')",$userId);
         }catch (\Exception $e) {
             return ["ERROR" => $e->getMessage()];
-            Logger::log(300, $e->getMessage(),Logger::getPath(USER_NAME));
+            Logger::log(300, $e->getMessage(),Logger::getPath( constant("SIGRIHC\Helpers\USER_NAME")));
         }
     }
 }

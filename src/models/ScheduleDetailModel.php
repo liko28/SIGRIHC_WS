@@ -33,7 +33,7 @@ JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = {$this-
 WHERE PROMOTOR = ? AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $userId, $date);
             } catch (\Exception $e) {
                 return ["ERROR" => $e->getMessage()];
-                Logger::log(300,$e->getMessage(),Logger::getPath(USER_NAME));
+                Logger::log(300,$e->getMessage(),Logger::getPath(constant("SIGRIHC\Helpers\USER_NAME")));
             }
         }
         try {
@@ -43,7 +43,7 @@ JOIN {$this->getSchema()}.SF_PROGRAMACION PROG ON PROG.ID_PROGRAMACION = {$this-
 WHERE PROMOTOR = ? AND ESTADO IN('A','D');",$userId);
         } catch (\Exception $e) {
             return ["ERROR" => $e->getMessage()];
-            Logger::log(300,$e->getMessage(),Logger::getPath(USER_NAME));
+            Logger::log(300,$e->getMessage(),Logger::getPath(constant("SIGRIHC\Helpers\USER_NAME")));
         }
     }
 
