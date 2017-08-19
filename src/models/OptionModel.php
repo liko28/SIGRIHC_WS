@@ -33,7 +33,7 @@ class OptionModel extends BaseModel {
 
     public function forAuditorias(){
         try {
-            $res = $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.SIGRI_OPCIONES  JOIN {$this->getSchema()}.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  {$this->getFullTableName()}.ID_LISTA;");
+            $res = $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.SIGRI_OPCIONES JOIN {$this->getSchema()}.AUDIT_PREGUNTAS AP ON AP.ID_VARIABLE IS NOT NULL JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON SV.ID_LISTA = {$this->getFullTableName()}.ID_LISTA AND AP.ID_VARIABLE = SV.ID_VARIABLE;");
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -43,7 +43,7 @@ class OptionModel extends BaseModel {
     public function updatesForAuditorias(\DateTime $lastSyncDate){
         $date = $lastSyncDate->format('Y-m-d-H.i.s');
         try {
-            $res = $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getFullTableName()} JOIN {$this->getSchema()}.AUDITORIA_PREGUNTAS A ON A.ID_LISTA =  {$this->getFullTableName()}.ID_LISTA WHERE {$this->getFullTableName()}.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR A.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $date, $date);
+            $res = $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.SIGRI_OPCIONES JOIN {$this->getSchema()}.AUDIT_PREGUNTAS AP ON AP.ID_VARIABLE IS NOT NULL JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON SV.ID_LISTA = {$this->getFullTableName()}.ID_LISTA AND AP.ID_VARIABLE = SV.ID_VARIABLE WHERE {$this->getFullTableName()}.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR AP.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR SV.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;", $date, $date);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
