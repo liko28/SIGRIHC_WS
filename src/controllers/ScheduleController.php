@@ -43,7 +43,7 @@ class ScheduleController extends BaseController {
                 }
             }
 
-            if(!in_array($serverSchedule->ID_PROGRAMACION,$clientSchedules) && in_array($serverSchedule->ESTADO,array("A","D"))){
+            if((!in_array($serverSchedule->ID_PROGRAMACION,$clientSchedules) && in_array($serverSchedule->ESTADO,array("A","D"))) || $serverSchedule->ESTADO == "A"){
                 try {
                     $this->model->update($serverSchedule->ID_PROGRAMACION,new Row(['ESTADO' => "D"]));
                     $this->model->commit();
