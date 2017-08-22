@@ -18,7 +18,7 @@ class ScheduleModel extends BaseModel {
         parent::__construct($connection);
         $this->setTableName('SF_PROGRAMACION');
         $this->setPrimaryKey('ID_PROGRAMACION');
-        $this->addColumns('ID_PROGRAMACION', 'DPTO', 'MUNICIPIO', 'PROMOTOR', 'CEB', 'ESTADO', 'ID_VISITA', 'DIRECCION', 'OTRADIR', 'TELEFONO1', 'TELEFONO2', 'EMAIL', 'LATITUD', 'LONGITUD', 'ID_BARRIO', 'BARRIO', 'FECPROG', 'USERCREA', 'FECCREA', 'IPCREA', 'USERMODI', 'IPMODI', 'FECMODI');
+        $this->addColumns('ID_PROGRAMACION', 'DPTO', 'MUNICIPIO', 'PROMOTOR', 'CEB', 'ESTADO', 'ID_VISITA', 'DIRECCION', 'OTRADIR', 'TELEFONO1', 'TELEFONO2', 'EMAIL', 'LATITUD', 'LONGITUD', 'ID_BARRIO', 'BARRIO', 'FECPROG', 'USERCREA', 'FECCREA', 'IPCREA', 'USERMODI', 'IPMODI', 'FECMODI','IPS');
     }
 
     /** @return CustomArray */
