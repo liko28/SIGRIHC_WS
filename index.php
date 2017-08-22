@@ -1151,7 +1151,7 @@ $app->group('/Opciones', function () {
                 break;
             default:
                 try {
-                    $data = ['OPCIONES' => $opciones->get($lastSyncDate)];
+                    $data = ['OPCIONES' => $opciones->get($lastSyncDate)->values()];
                 } catch (Exception $e) {
                     return $response->withStatus(500,$e->getMessage());
                 }
