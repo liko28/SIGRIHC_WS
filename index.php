@@ -33,6 +33,7 @@ use SIGRI_HC\Controllers\ProcedureController as Procedure;
 use SIGRI_HC\Controllers\OptionController as Option;
 use SIGRI_HC\Controllers\ProgramController as Program;
 use SIGRI_HC\Controllers\DemandController as Demand;
+use SIGRI_HC\Controllers\AuditController as Audit;
 
 /** Instanciacion de la APP $app */
 $app = new \Slim\App(CONFIG);
@@ -1324,6 +1325,18 @@ $app->group('/Demanda', function(){
         $input = json_decode($request->getBody());
         $this->logger->addInfo($request->getBody());
         $ids = ["DEMANDA" => $demandas->create($input, $this->userName)];
+        $this->logger->addInfo(json_encode($ids));
+        return $response->withJson($ids);
+    });
+});
+
+/** Auditoria */
+$app->group('/Auditoria', function(){
+    $this->post('',function (Request $request, Response $response){
+        $auditorias = new Audit($this->db);
+        $input = json_decode($request->getBody());
+        $this->logger->addInfo($request->getBody());
+        $ids = ["AUDITORIA" => $auditorias->create($input, $this->userName)];
         $this->logger->addInfo(json_encode($ids));
         return $response->withJson($ids);
     });
