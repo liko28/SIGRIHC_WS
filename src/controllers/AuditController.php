@@ -29,59 +29,58 @@ class AuditController extends BaseController {
         $person->getModel()->get($personId);
         $personData = $person->getModel()->getResult()[0];
 
-        foreach ($block->RESPUESTAS as $answers) {
-            $entities = array();
-            /** INSERCION DE SIGRI_MAESTRO (PARENT) */
-            // TODO ID_USUARIO, ID_USER, FECVISITA se tiene que cambiar la FK
-            $entities['SIGRI_MAESTRO'] = new Row();
-            $entities['SIGRI_MAESTRO']->addField([
-                "FECVISITA" => $block->FECINICIO,
-                "ID_USUARIO" => $personId,
-                "CARNET" => $personData->CARNET,
-                "TIPODOC"=> $personData->TIPODOC,
-                "DOCUMENTO"=> $personData->DOCUMENTO,
-                "MOTVISITA" => $block->MOTIVO_VISITA,
-                "PROGRAMACION" => $block->PROGRAMACION,
-                "ESTADO" => 'A',
-                "DPTO" => $personData->DPTO,
-                "MUNICIPIO" => $personData->MUNICIPIO,
-                //TODO REVISAR ESTOS TRES CON VANE Y GIO
-                "ZONA" => (int)Generic::findInPairs("6",$answers)[1], //ESTO NO ESTÁ EN PERSONA
-                "BARRIO" => (int)Generic::findInPairs("7",$answers)[1], //ESTO NO ESTÁ EN PERSONA
-                "DIRECCION" => (string)Generic::findInPairs("8",$answers)[1], //ESTO NO ESTÁ EN PERSONA
-                "TELEFONO" => $personData->CELULAR,
-                "FECINICIO" => $block->FECINICIO,
-                "FECFIN" => $block->FECFIN,
-                //"DISPOSITIVO" => "1", TODO ESTO ME PARECE INNECESARIO
-                "LATITUD" => $block->LATITUD,
-                "LONGITUD" => $block->LONGITUD,
-                "ID_USER" => rand(0,1000),//TODO ESTO ME PARECE INNECESARIO
-                "USERCREA" => $userName,
-                "IPCREA" => $_SERVER['REMOTE_ADDR']
-            ]);
+        $entities = array();
+        /** INSERCION DE SIGRI_MAESTRO (PARENT) */
+        // TODO ID_USUARIO, ID_USER, FECVISITA se tiene que cambiar la FK
+        $entities['SIGRI_MAESTRO'] = new Row();
+        $entities['SIGRI_MAESTRO']->addField([
+            "FECVISITA" => $block->FECINICIO,
+            "ID_USUARIO" => $personId,
+            "CARNET" => $personData->CARNET,
+            "TIPODOC"=> $personData->TIPODOC,
+            "DOCUMENTO"=> $personData->DOCUMENTO,
+            "MOTVISITA" => $block->MOTIVO_VISITA,
+            "PROGRAMACION" => $block->PROGRAMACION,
+            "ESTADO" => 'A',
+            "DPTO" => $personData->DPTO,
+            "MUNICIPIO" => $personData->MUNICIPIO,
+            //TODO REVISAR ESTOS TRES CON VANE Y GIO
+            "ZONA" => (int)Generic::findInPairs("6",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
+            "BARRIO" => (int)Generic::findInPairs("7",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
+            "DIRECCION" => (string)Generic::findInPairs("8",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
+            "TELEFONO" => $personData->CELULAR,
+            "FECINICIO" => $block->FECINICIO,
+            "FECFIN" => $block->FECFIN,
+            //"DISPOSITIVO" => "1", TODO ESTO ME PARECE INNECESARIO
+            "LATITUD" => $block->LATITUD,
+            "LONGITUD" => $block->LONGITUD,
+            "ID_USER" => rand(0,1000),//TODO ESTO ME PARECE INNECESARIO
+            "USERCREA" => $userName,
+            "IPCREA" => $_SERVER['REMOTE_ADDR']
+        ]);
 
-            $this->model->setTableName("SIGRI_MAESTRO");
+        $this->model->setTableName("SIGRI_MAESTRO");
+        try{
+            $masterId = $this->model->insert($entities['SIGRI_MAESTRO']);
+        } catch (\Exception $e) {
+            db2_rollback($this->model->getConnection()->getConnectionResource());
+            $idAudit[] = ['ERROR' => $e->getMessage()];
+            return;
+        }
+
+        /** INSERCION DE SIGRI_DETALLE (CHILD) */
+        foreach ($block->RESPUESTAS as $answers) {
+            $this->getModel()->setTableName("SIGRI_DETALLE");
             try{
-                $masterId = $this->model->insert($entities['SIGRI_MAESTRO']);
+                $this->model->insert(new Row(["ID_VISITA" => $masterId, "VARIABLE" => $answers[0], "VALOR" => $answers[1]]));
             } catch (\Exception $e) {
                 db2_rollback($this->model->getConnection()->getConnectionResource());
                 $idAudit[] = ['ERROR' => $e->getMessage()];
                 continue;
             }
-            /** INSERCION DE SIGRI_DETALLE (CHILD) */
-            $this->getModel()->setTableName("SIGRI_DETALLE");
-            foreach ($answers as $answer) {
-                try{
-                    $this->model->insert(new Row(["ID_VISITA" => $masterId, "VARIABLE" => $answer[0], "VALOR" => $answer[1]]));
-                } catch (\Exception $e) {
-                    db2_rollback($this->model->getConnection()->getConnectionResource());
-                    $idAudit[] = ['ERROR' => $e->getMessage()];
-                    continue;
-                }
-            }
-            db2_commit($this->getModel()->getConnection()->getConnectionResource());
-            $idAudit[] = $masterId;
         }
+        db2_commit($this->getModel()->getConnection()->getConnectionResource());
+        $idAudit[] = $masterId;
 
         /** ACTUALIZACION DEL ESTADO DE LA PROGRAMACION */
         $scheduleStatus = $e ? ['ESTADO' => "P"] : ['ESTADO' => "OK"];
