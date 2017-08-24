@@ -97,7 +97,7 @@ $container['phpErrorHandler'] = function($c) {
 
 /** Logger */
 $container['logger'] = function ($c) {
-    $logger = new Logger($c['userName']);
+    $logger = new Logger($c['userName'],$c['db']);
     return $logger->getInstance();
 };
 /**

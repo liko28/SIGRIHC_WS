@@ -3,6 +3,8 @@
 namespace SIGRI_HC\Helpers;
 
 use Monolog\Handler\StreamHandler;
+use SIGRI_HC\Controllers\UserController;
+use SIGRI_HC\Models\Connection;
 
 class Logger {
     /** @var \Monolog\Logger  */
@@ -13,9 +15,17 @@ class Logger {
     private $fileName;
 
     /** @param string|null $userName*/
-    public function __construct($userName = null) {
+    public function __construct($userName = null, Connection $connection = null) {
         $this->fileName = $userName ? "$userName.txt" : "log.txt";
         $this->path = "logs/".date('Y-m-d')."/";
+
+        //Obtener Dpto y Municipio para el User
+        if($connection && $userName) {
+            $user = new UserController($connection);
+            $userData = $user->getByUserName($userName)[0];
+            $this->path .= $userData->DPTO."/".$userData->CIUDAD."/";
+        }
+
         $this->createPath();
         $this->loggerInstance = new \Monolog\Logger('SIGRIHC_LOGGER');
         $this->loggerInstance->pushHandler(new StreamHandler($this->path.$this->fileName));
