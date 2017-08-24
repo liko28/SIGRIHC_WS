@@ -63,8 +63,7 @@ class AuditController extends BaseController {
             $masterId = $this->model->insert($entities['SIGRI_MAESTRO']);
         } catch (\Exception $e) {
             db2_rollback($this->model->getConnection()->getConnectionResource());
-            $idAudit = ['ERROR' => $e->getMessage()];
-            return;
+            return ['ERROR' => $e->getMessage()];
         }
 
         /** INSERCION DE SIGRI_DETALLE (CHILD) */
@@ -74,12 +73,9 @@ class AuditController extends BaseController {
                 $this->model->insert(new Row(["ID_VISITA" => $masterId, "VARIABLE" => $answers[0], "VALOR" => $answers[1]]));
             } catch (\Exception $e) {
                 db2_rollback($this->model->getConnection()->getConnectionResource());
-                $idAudit = ['ERROR' => $e->getMessage()];
-                continue;
+                return ['ERROR' => $e->getMessage()];
             }
         }
-        db2_commit($this->getModel()->getConnection()->getConnectionResource());
-        $idAudit = $masterId;
 
         /** ACTUALIZACION DEL ESTADO DE LA PROGRAMACION */
         $scheduleStatus = $e ? ['ESTADO' => "P"] : ['ESTADO' => "OK"];
@@ -95,7 +91,7 @@ class AuditController extends BaseController {
         /** END */
         db2_commit($this->getModel()->getConnection()->getConnectionResource());
 
-        return $idAudit;
+        return $masterId;
     }
 
     //TODO Verificar si ya está sincronizado
