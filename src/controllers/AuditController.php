@@ -78,7 +78,7 @@ class AuditController extends BaseController {
         }
 
         /** ACTUALIZACION DEL ESTADO DE LA PROGRAMACION */
-        $scheduleStatus = $e ? ['ESTADO' => "P"] : ['ESTADO' => "OK"];
+        $scheduleStatus = $e ? ['ESTADO' => "P", "ID_VISITA" => $masterId] : ['ESTADO' => "OK", "ID_VISITA" => $masterId];
         try {
             $this->getModel()->setTableName("SF_PROGRAMACION");
             $this->getModel()->setPrimaryKey("ID_PROGRAMACION");
