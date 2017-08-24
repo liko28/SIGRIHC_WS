@@ -24,7 +24,7 @@ class ScheduleModel extends BaseModel {
     /** @return CustomArray */
     public function getAll($userId, $client, \DateTime $lastSyncDate = null){
         if($lastSyncDate) {
-            $date = $lastSyncDate->format('Y-m-d-H.i.s');
+            $date = $lastSyncDate->format('Y-m-d H:i:s');
         }
         $visitType = '';
         switch ($client) {

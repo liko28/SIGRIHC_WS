@@ -18,7 +18,7 @@ class PersonController extends BaseController {
 
     public function getUpdates($userName, \DateTime $lastSyncDate) {
         $user = new UserController($this->model->getConnection());
-        return $this->model->getUpdates($user->getByUserName($userName)[0]->DPTO, $user->getByUserName($userName)[0]->CIUDAD, $lastSyncDate->format('Y-m-d-H.i.s'));
+        return $this->model->getUpdates($user->getByUserName($userName)[0]->DPTO, $user->getByUserName($userName)[0]->CIUDAD, $lastSyncDate->format('Y-m-d H:i:s'));
     }
 
     public function getScheduled($userName) {
@@ -28,6 +28,6 @@ class PersonController extends BaseController {
 
     public function getUpdatedSchedules($userName, \DateTime $lastSyncDate) {
         $user = new UserController($this->model->getConnection());
-        return $this->model->getUpdatedSchedules($user->getByUserName($userName)[0]->ID, $lastSyncDate->format('Y-m-d-H.i.s'));
+        return $this->model->getUpdatedSchedules($user->getByUserName($userName)[0]->ID, $lastSyncDate->format('Y-m-d H:i:s'));
     }
 }

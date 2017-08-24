@@ -39,7 +39,7 @@ class BaseController {
      * @param \DateTime $lastSyncDate
      * @return CustomArray */
     public function getUpdates(\DateTime $lastSyncDate){
-        return $this->model->getUpdates($lastSyncDate->format('Y-m-d-H.i.s'));
+        return $this->model->getUpdates($lastSyncDate->format('Y-m-d H:i:s'));
     }
 
     /**

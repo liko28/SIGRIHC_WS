@@ -25,7 +25,7 @@ class QuestionModel extends BaseModel {
     }
 
     public function updatesForDemandas(\DateTime $lastSyncDate){
-        $date = $lastSyncDate->format('Y-m-d-H.i.s');
+        $date = $lastSyncDate->format('Y-m-d H:i:s');
         $this->setTableName('DEMANDA_PREGUNTAS');
         try {
             $res = $this->getUpdates($date);
@@ -48,12 +48,12 @@ class QuestionModel extends BaseModel {
     }
 
     public function updatesForAuditorias(\DateTime $lastSyncDate){
-        $date = $lastSyncDate->format('Y-m-d-H.i.s');
+        $date = $lastSyncDate->format('Y-m-d H:i:s');
         $this->setTableName('AUDIT_PREGUNTAS');
         $this->setColumns(new CustomArray());
         $this->addColumns("ID", "ID_VARIABLE", "DESCRIPCION", "PROGRAMA", "OBLIGATORIO", "EDAD_INICIAL", "EDAD_FINAL", "GENERO", "MAX", "MIN", "VISIBILIDAD", "NIVEL", "ORDEN", "ESTADO", "FECCREA", "FECMODI");
         try {
-            $res = $this->query("SELECT {$this->getColumns()->commaSep()}, SV.TIPO, SV.ID_LISTA, SV.NOMBRE_LISTA FROM {$this->getFullTableName()} JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON {$this->getFullTableName()}.ID_VARIABLE = SV.ID_VARIABLE WHERE {$this->getFullTableName()}.FECMODI BETWEEN '?' AND CURRENT_TIMESTAMP OR SV.FECMODI BETWEEN '?' AND CURRENT_TIMESTAMP",$date, $date);
+            $res = $this->query("SELECT {$this->getColumns()->commaSep()}, SV.TIPO, SV.ID_LISTA, SV.NOMBRE_LISTA FROM {$this->getFullTableName()} JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON {$this->getFullTableName()}.ID_VARIABLE = SV.ID_VARIABLE WHERE {$this->getFullTableName()}.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR SV.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP", $date, $date);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -71,7 +71,7 @@ class QuestionModel extends BaseModel {
     }
 
     public function updatesForSigri(\DateTime $lastSyncDate){
-        $date = $lastSyncDate->format('Y-m-d-H.i.s');
+        $date = $lastSyncDate->format('Y-m-d H:i:s');
         $this->setTableName('SF_PREGUNTAS');
         try {
             $res = $this->getUpdates($date);
@@ -92,7 +92,7 @@ class QuestionModel extends BaseModel {
     }
 
     public function updatesForSigriHc(\DateTime $lastSyncDate){
-        $date = $lastSyncDate->format('Y-m-d-H.i.s');
+        $date = $lastSyncDate->format('Y-m-d H:i:s');
         $this->setTableName('HC_PREGUNTAS');
         try {
             $res = $this->getUpdates($date);

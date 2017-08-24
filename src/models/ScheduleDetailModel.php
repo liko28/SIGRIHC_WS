@@ -23,7 +23,7 @@ class ScheduleDetailModel extends BaseModel {
     /** @return CustomArray */
     public function getAll($userId, $client, $lastSyncDate){
         if($lastSyncDate) {
-            $date = $lastSyncDate->format('Y-m-d-H.i.s');
+            $date = $lastSyncDate->format('Y-m-d H:i:s');
         }
         if($date){
             try {
