@@ -872,6 +872,7 @@ $app->group('/Preguntas', function() {
                     $data = ['PREGUNTAS' => $preguntas->getQuestionsAuditoria($lastSyncDate)];
                 } catch (Exception $e) {
                     //TODO LOG
+                    Logger::log(200,$e->getMessage(),Logger::getPath("ramiro.alvarez"));
                     return $response->withStatus(500,$e->getMessage());
                 }
                 return $response->withJson($data);
