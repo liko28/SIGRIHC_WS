@@ -16,16 +16,16 @@ class AuditController extends BaseController {
     /** @inject  Connection $connection */
     public function create($inputData, $user){
         $result = array();
-        foreach ($inputData as $person => $block) {
-            $result[$person] = $this->insert($block,$person,$user);;
+        foreach ($inputData as $programation => $block) {
+            $result[$programation] = $this->insert($block,$programation,$user);;
         }
         return $result;
     }
 
-    public function insert($block, $personId, $userName) {
+    public function insert($block, $programationId, $userName) {
         //Datos de la Persona
         $person = new PersonController($this->model->getConnection());
-        $person->getModel()->get($personId);
+        $person->getModel()->get($block->ID_USUARIO);
         $personData = $person->getModel()->getResult()[0];
 
         $entities = array();
@@ -34,12 +34,12 @@ class AuditController extends BaseController {
         $entities['SIGRI_MAESTRO'] = new Row();
         $entities['SIGRI_MAESTRO']->addField([
             "FECVISITA" => $block->FECINICIO,
-            "ID_USUARIO" => $personId,
+            "ID_USUARIO" => $block->ID_USUARIO,
             "CARNET" => $personData->CARNET,
             "TIPODOC"=> $personData->TIPODOC,
             "DOCUMENTO"=> $personData->DOCUMENTO,
             "MOTVISITA" => $block->MOTIVO_VISITA,
-            "PROGRAMACION" => $block->PROGRAMACION,
+            "PROGRAMACION" => $programationId,
             "ESTADO" => 'A',
             "DPTO" => $personData->DPTO,
             "MUNICIPIO" => $personData->MUNICIPIO,
@@ -86,7 +86,7 @@ class AuditController extends BaseController {
         try {
             $this->getModel()->setTableName("SF_PROGRAMACION");
             $this->getModel()->setPrimaryKey("ID_PROGRAMACION");
-            $this->getModel()->update($block->PROGRAMACION,new Row($scheduleStatus));
+            $this->getModel()->update($programationId,new Row($scheduleStatus));
         } catch (\Exception $e) {
             db2_rollback($this->getModel()->getConnection()->getConnectionResource());
             return ["ERROR" => $e->getMessage()];
