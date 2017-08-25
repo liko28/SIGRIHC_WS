@@ -21,7 +21,7 @@ const ERROR_404 = array("ERROR" => "LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ
 
 /** Configuracion de Slim */
 /** Errores detallados */
-const CONFIG = array("settings" => array("displayErrorDetails" => true),"determineRouteBeforeAppMiddleware" => true);
+const CONFIG = array("settings" => array("displayErrorDetails" => true,"determineRouteBeforeAppMiddleware" => true));
 
 
 /** PROGRAMAS */
