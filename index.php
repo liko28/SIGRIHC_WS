@@ -189,7 +189,7 @@ $app->group('/ListasReferencia', function(){
         $referenceList = new ReferenceList($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getAll()->values()]);
@@ -228,7 +228,7 @@ $app->group('/Municipios', function () {
         $municipios = new Municipio($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(["MUNICIPIOS" => $municipios->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(["MUNICIPIOS" => $municipios->getAll()->values()]);
@@ -267,7 +267,7 @@ $app->group('/Departamentos', function () {
         $departamentos = new Departamento($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['DEPARTAMENTOS' => $departamentos->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['DEPARTAMENTOS' => $departamentos->getAll()->values()]);
@@ -306,7 +306,7 @@ $app->group('/CIE10', function () {
         $cie10 = new CIE10($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['CIE10' => $cie10->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['CIE10' => $cie10->getAll()->values()]);
@@ -376,7 +376,7 @@ $app->group('/Areas', function () {
         $areas = new Area($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['AREAS' => $areas->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['AREAS' => $areas->getAll()->values()]);
@@ -416,7 +416,7 @@ $app->group('/Ips', function () {
         $ips = new Ips($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['IPS' => $ips->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['IPS' => $ips->getAll()->values()]);
@@ -455,7 +455,7 @@ $app->group('/Novedades/', function () {
         $tipos = new NewsType($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getAll()->values()]);
@@ -492,7 +492,7 @@ $app->group('/Novedades/', function () {
         $listas = new NewsList($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['LISTAS_NOVEDAD' => $listas->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['LISTAS_NOVEDAD' => $listas->getAll()->values()]);
@@ -559,7 +559,7 @@ $app->group('/PEC/', function() {
         $guias = new PECGuide($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['PEC_GUIAS' => $guias->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['PEC_GUIAS' => $guias->getAll()->values()]);
@@ -654,7 +654,7 @@ $app->group('/PEC/', function() {
         $temas = new PECTopic($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['PEC_TEMAS' => $temas->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['PEC_TEMAS' => $temas->getAll()->values()]);
@@ -691,7 +691,7 @@ $app->group('/Medicamentos', function() {
         $medicines = new Medicine($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['MEDICAMENTOS' => $medicines->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['MEDICAMENTOS' => $medicines->getAll()->values()]);
@@ -728,7 +728,7 @@ $app->group('/Procedimientos', function() {
         $procedures = new Procedure($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['PROCEDIMIENTOS' => $procedures->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['PROCEDIMIENTOS' => $procedures->getAll()->values()]);
@@ -765,7 +765,7 @@ $app->group('/Laboratorios', function() {
         $laboratories = new Laboratory($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['LABORATORIOS' => $laboratories->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['LABORATORIOS' => $laboratories->getAll()->values()]);
@@ -805,7 +805,7 @@ $app->group('/Modulos', function() {
         $modulos = new Module($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['MODULOS' => $modulos->getUpdates($lastSyncDate)->values()]);
         }
         return $response->withJson(['MODULOS' => $modulos->getAll()->values()]);
@@ -850,7 +850,7 @@ $app->group('/Preguntas', function() {
         $lastSyncDate = null;
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
         }
 
         //Origen Peticion y respuesta especifica para cada Cliente
@@ -946,13 +946,13 @@ $app->group('/Usuarios', function() {
         $lastSyncDate = null;
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
         }
 
         $usuarios = new User($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
         }
         return $response->withJson(['USUARIOS' => $usuarios->get($lastSyncDate)->values()]);
     });
@@ -1007,7 +1007,7 @@ $app->group('/Programaciones',function() {
         $lastSyncDate = null;
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
         }
 
         //Origen Peticion y respuesta especifica para cada Cliente
@@ -1064,7 +1064,7 @@ $app->group('/Personas',function(){
         $personas = new Person($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
             return $response->withJson(['PERSONAS' => $personas->getUpdatedSchedules($this->userName,$lastSyncDate)]);
         }
         return $response->withJson(['PERSONAS' => $personas->getScheduled($this->userName)]);
@@ -1109,7 +1109,7 @@ $app->group('/Opciones', function () {
         $lastSyncDate = null;
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
         }
 
         //Origen Peticion y respuesta especifica para cada Cliente
@@ -1200,7 +1200,7 @@ $app->group('/Programas', function () {
         $lastSyncDate = null;
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strtotime($args['lastSyncDate']));
+            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
         }
 
         //Origen Peticion y respuesta especifica para cada Cliente
