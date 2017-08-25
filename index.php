@@ -132,15 +132,15 @@ $app->add(function (Request $request, Response $response, $next){
 });
 
 /** Date -SyncDate-
- * @notImplemented
  */
-//TODO implementar este Mw cuando me respondan en Github
-$dateMw = function ($request, $response, $next) {
-    $lastSyncDate = $request->getAttribute('routeInfo')[2]['lastSyncDate'];
+$app->add(function (Request $request, $response, $next) use($container) {
+    $lastSyncDate = $request->getAttribute('route')->getArgument('lastSyncDate');
     $date = new \DateTime();
-    $date->setTimeStamp(strtotime($lastSyncDate));
-    return $next($request, $response,[],$date);
-};
+    $date->setTimeStamp(strpos($lastSyncDate,"-") > 0 ? strtotime($lastSyncDate): $lastSyncDate);
+
+    $container['lastSyncDate'] = $date;
+    return $next($request, $response);
+});
 
 /** Content Type */
 $app->add(function(Request $request, Response $response, $next){
@@ -190,7 +190,7 @@ $app->group('/ListasReferencia', function(){
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['LISTAS_REFERENCIA' => $referenceList->getAll()->values()]);
     });
@@ -229,7 +229,7 @@ $app->group('/Municipios', function () {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(["MUNICIPIOS" => $municipios->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(["MUNICIPIOS" => $municipios->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(["MUNICIPIOS" => $municipios->getAll()->values()]);
     });
@@ -268,7 +268,7 @@ $app->group('/Departamentos', function () {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['DEPARTAMENTOS' => $departamentos->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['DEPARTAMENTOS' => $departamentos->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['DEPARTAMENTOS' => $departamentos->getAll()->values()]);
 
@@ -307,7 +307,7 @@ $app->group('/CIE10', function () {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['CIE10' => $cie10->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['CIE10' => $cie10->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['CIE10' => $cie10->getAll()->values()]);
     });
@@ -377,7 +377,7 @@ $app->group('/Areas', function () {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['AREAS' => $areas->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['AREAS' => $areas->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['AREAS' => $areas->getAll()->values()]);
     });
@@ -417,7 +417,7 @@ $app->group('/Ips', function () {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['IPS' => $ips->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['IPS' => $ips->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['IPS' => $ips->getAll()->values()]);
     });
@@ -456,7 +456,7 @@ $app->group('/Novedades/', function () {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['TIPOS_NOVEDAD' => $tipos->getAll()->values()]);
     });
@@ -493,7 +493,7 @@ $app->group('/Novedades/', function () {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['LISTAS_NOVEDAD' => $listas->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['LISTAS_NOVEDAD' => $listas->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['LISTAS_NOVEDAD' => $listas->getAll()->values()]);
     });
@@ -560,7 +560,7 @@ $app->group('/PEC/', function() {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['PEC_GUIAS' => $guias->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['PEC_GUIAS' => $guias->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['PEC_GUIAS' => $guias->getAll()->values()]);
     });
@@ -655,7 +655,7 @@ $app->group('/PEC/', function() {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['PEC_TEMAS' => $temas->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['PEC_TEMAS' => $temas->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['PEC_TEMAS' => $temas->getAll()->values()]);
     });
@@ -692,7 +692,7 @@ $app->group('/Medicamentos', function() {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['MEDICAMENTOS' => $medicines->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['MEDICAMENTOS' => $medicines->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['MEDICAMENTOS' => $medicines->getAll()->values()]);
     });
@@ -729,7 +729,7 @@ $app->group('/Procedimientos', function() {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['PROCEDIMIENTOS' => $procedures->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['PROCEDIMIENTOS' => $procedures->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['PROCEDIMIENTOS' => $procedures->getAll()->values()]);
     });
@@ -766,7 +766,7 @@ $app->group('/Laboratorios', function() {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['LABORATORIOS' => $laboratories->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['LABORATORIOS' => $laboratories->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['LABORATORIOS' => $laboratories->getAll()->values()]);
     });
@@ -806,7 +806,7 @@ $app->group('/Modulos', function() {
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['MODULOS' => $modulos->getUpdates($lastSyncDate)->values()]);
+            return $response->withJson(['MODULOS' => $modulos->getUpdates($this->lastSyncDate)->values()]);
         }
         return $response->withJson(['MODULOS' => $modulos->getAll()->values()]);
     });
@@ -845,14 +845,6 @@ $app->group('/Preguntas', function() {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $preguntas = new Question($this->db);
 
-        //Fecha Ultima Sincronizacion
-        //TODO no puede ser superior a la actual
-        $lastSyncDate = null;
-        if($args['lastSyncDate']) {
-            $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-        }
-
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
 
@@ -860,7 +852,7 @@ $app->group('/Preguntas', function() {
         switch ($client) {
             case DEMANDA:
                 try {
-                    $data = ['PREGUNTAS' => $preguntas->getQuestionsDemanda($lastSyncDate)];
+                    $data = ['PREGUNTAS' => $preguntas->getQuestionsDemanda($this->lastSyncDate)];
                 } catch (Exception $e) {
                     //TODO LOG
                     return $response->withStatus(500,$e->getMessage());
@@ -869,17 +861,16 @@ $app->group('/Preguntas', function() {
                 break;
             case AUDITORIA:
                 try {
-                    $data = ['PREGUNTAS' => $preguntas->getQuestionsAuditoria($lastSyncDate)];
+                    $data = ['PREGUNTAS' => $preguntas->getQuestionsAuditoria($this->lastSyncDate)];
                 } catch (Exception $e) {
                     //TODO LOG
-                    Logger::log(200,$e->getMessage(),Logger::getPath("ramiro.alvarez"));
                     return $response->withStatus(500,$e->getMessage());
                 }
                 return $response->withJson($data);
                 break;
             case VISITA:
                 try {
-                    $data = ['PREGUNTAS' => $preguntas->getQuestionsSigri($lastSyncDate)];
+                    $data = ['PREGUNTAS' => $preguntas->getQuestionsSigri($this->lastSyncDate)];
                 } catch (Exception $e) {
                     //TODO LOG
                     return $response->withStatus(500,$e->getMessage());
@@ -888,7 +879,7 @@ $app->group('/Preguntas', function() {
                 break;
             case HISTORIA:
                 try {
-                    $data = ['PREGUNTAS' => $preguntas->getQuestionsSigriHc($lastSyncDate)];
+                    $data = ['PREGUNTAS' => $preguntas->getQuestionsSigriHc($this->lastSyncDate)];
                 } catch (Exception $e) {
                     //TODO LOG
                     return $response->withStatus(500,$e->getMessage());
@@ -897,7 +888,7 @@ $app->group('/Preguntas', function() {
                 break;
             default:
                 try {
-                    $data = ['PREGUNTAS' => $preguntas->get($lastSyncDate)->values()];
+                    $data = ['PREGUNTAS' => $preguntas->get($this->lastSyncDate)->values()];
                 } catch (Exception $e) {
                     //TODO LOG
                     return $response->withStatus(500,$e->getMessage());
@@ -941,20 +932,14 @@ $app->group('/Usuarios', function() {
 
 
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
-        //Fecha Ultima Sincronizacion
-        //TODO no puede ser superior a la actual
-        $lastSyncDate = null;
-        if($args['lastSyncDate']) {
-            $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-        }
+        
 
         $usuarios = new User($this->db);
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
         }
-        return $response->withJson(['USUARIOS' => $usuarios->get($lastSyncDate)->values()]);
+        return $response->withJson(['USUARIOS' => $usuarios->get($this->lastSyncDate)->values()]);
     });
 });
 
@@ -1002,13 +987,7 @@ $app->group('/Programaciones',function() {
         $programaciones = new Schedule($this->db);
         $input = $request->getParsedBody();
 
-        //Fecha Ultima Sincronizacion
-        //TODO no puede ser superior a la actual
-        $lastSyncDate = null;
-        if($args['lastSyncDate']) {
-            $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-        }
+        
 
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
@@ -1018,12 +997,12 @@ $app->group('/Programaciones',function() {
             case AUDITORIA:
             case VISITA:
             case HISTORIA:
-                $programaciones = ['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, $client, $lastSyncDate)];
+                $programaciones = ['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, $client, $this->lastSyncDate)];
                 $newResponse = $response->withAddedHeader('cantidad_registros',count($programaciones['PROGRAMACIONES']));
                 return $newResponse->withJson($programaciones);
                 break;
             default:
-                $programaciones = ['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, HISTORIA, $lastSyncDate)];
+                $programaciones = ['PROGRAMACIONES' => $programaciones->getSchedule($this->userName, $input, HISTORIA, $this->lastSyncDate)];
                 $newResponse =$response->withAddedHeader('cantidad_registros',count($programaciones['PROGRAMACIONES']));
                 return $newResponse->withJson($programaciones);
                 break;
@@ -1065,7 +1044,7 @@ $app->group('/Personas',function(){
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['PERSONAS' => $personas->getUpdatedSchedules($this->userName,$lastSyncDate)]);
+            return $response->withJson(['PERSONAS' => $personas->getUpdatedSchedules($this->userName,$this->lastSyncDate)]);
         }
         return $response->withJson(['PERSONAS' => $personas->getScheduled($this->userName)]);
     });
@@ -1104,13 +1083,7 @@ $app->group('/Opciones', function () {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $opciones = new Option($this->db);
 
-        //Fecha Ultima Sincronizacion
-        //TODO no puede ser superior a la actual
-        $lastSyncDate = null;
-        if($args['lastSyncDate']) {
-            $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-        }
+        
 
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
@@ -1119,7 +1092,7 @@ $app->group('/Opciones', function () {
         switch ($client) {
             case DEMANDA:
                 try {
-                    $data = ['OPCIONES' => $opciones->getOptionsDemanda($lastSyncDate)];
+                    $data = ['OPCIONES' => $opciones->getOptionsDemanda($this->lastSyncDate)];
                 } catch (Exception $e) {
                     //TODO LOG
                     return $response->withStatus(500,$e->getMessage());
@@ -1128,7 +1101,7 @@ $app->group('/Opciones', function () {
                 break;
             case AUDITORIA:
                 try {
-                    $data = ['OPCIONES' => $opciones->getOptionsAuditoria($lastSyncDate)];
+                    $data = ['OPCIONES' => $opciones->getOptionsAuditoria($this->lastSyncDate)];
                 } catch (Exception $e) {
                     //TODO LOG
                     return $response->withStatus(500,$e->getMessage());
@@ -1137,7 +1110,7 @@ $app->group('/Opciones', function () {
                 break;
             case VISITA:
                 /*try {
-                    $data = ['OPCIONES' => $opciones->getOptionsDemanda($lastSyncDate)];
+                    $data = ['OPCIONES' => $opciones->getOptionsDemanda($this->lastSyncDate)];
                 } catch (Exception $e) {
                     return $response->withStatus(500,$e->getMessage());
                 }
@@ -1145,7 +1118,7 @@ $app->group('/Opciones', function () {
                 break;
             case HISTORIA:
                 /*try {
-                    $data = ['OPCIONES' => $opciones->getOptionsDemanda($lastSyncDate)];
+                    $data = ['OPCIONES' => $opciones->getOptionsDemanda($this->lastSyncDate)];
                 } catch (Exception $e) {
                     return $response->withStatus(500,$e->getMessage());
                 }
@@ -1153,7 +1126,7 @@ $app->group('/Opciones', function () {
                 break;
             default:
                 try {
-                    $data = ['OPCIONES' => $opciones->get($lastSyncDate)->values()];
+                    $data = ['OPCIONES' => $opciones->get($this->lastSyncDate)->values()];
                 } catch (Exception $e) {
                     return $response->withStatus(500,$e->getMessage());
                 }
@@ -1195,13 +1168,7 @@ $app->group('/Programas', function () {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $programas = new Program($this->db);
 
-        //Fecha Ultima Sincronizacion
-        //TODO no puede ser superior a la actual
-        $lastSyncDate = null;
-        if($args['lastSyncDate']) {
-            $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-        }
+        
 
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
@@ -1212,7 +1179,7 @@ $app->group('/Programas', function () {
                 break;
             case AUDITORIA:
                 try {
-                    $data = ['PROGRAMAS' => $programas->get($lastSyncDate)->values()];
+                    $data = ['PROGRAMAS' => $programas->get($this->lastSyncDate)->values()];
                 } catch (Exception $e) {
                     return $response->withStatus(500,$e->getMessage());
                 }
