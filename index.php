@@ -1264,6 +1264,12 @@ $app->group('/HistoriaClinica', function () {
      * @apiParamExample {Json} Request-Example:
      * /HistoriaClinia/:id?person=true&last=true
      *
+     * @apiParam {String="EN","ME"} type Especifica el Tipo de Historia Clinica: Enfermería (EN), Médica (ME), unicamente se enviarán las Historias que coincidan con el tipo solicitado
+     * @apiParamExample {Json} Request-Example:
+     * /HistoriaClinia/:id?person=true&last=true&type=en
+     * @apiParamExample {Json} Request-Example:
+     * /HistoriaClinia/:id?person=true&last=true&type=ME
+     *
      * @apiHeader {String} Authorization Clave Unica de Acceso RFC2045-MIME (Base64).
      * @apiHeaderExample {Json} Ejemplo Header:
      * {"Authorization":"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3"}
@@ -1285,8 +1291,10 @@ $app->group('/HistoriaClinica', function () {
         $id = $args['id'];
         $byUser = $request->getQueryParam('person');
         $onlyLast = $request->getQueryParam('last');
+        $historyType = $request->getQueryParams('type');
+        //TODO Añadir Tipo de Historia
         if(filter_var($byUser,FILTER_VALIDATE_BOOLEAN) || filter_var($onlyLast, FILTER_VALIDATE_BOOLEAN)) {
-            return $response->withJson(["HISTORIA_MEDICA" => $historias->getByPerson($id,$onlyLast)]);
+            return $response->withJson(["HISTORIA_MEDICA" => $historias->getByPerson($id, $onlyLast, $historyType)]);
         }
         return $response->withJson(["HISTORIA_MEDICA" => $historias->get($id)]);
 

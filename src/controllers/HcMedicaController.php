@@ -282,10 +282,10 @@ class HcMedicaController extends BaseController {
         }
     }
 
-    public function getByPerson($personId,$onlyLast=false) {
+    public function getByPerson($personId, $onlyLast = false, $type = null) {
         //TODO refactor
         //obtener las visitas de esa persona
-        $historias = $this->model->getByPerson($personId);
+        $historias = $this->model->getByPerson($personId, $type);
 
         if(empty($historias->getArrayCopy())) {
             return array();

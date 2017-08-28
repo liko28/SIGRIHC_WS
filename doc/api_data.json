@@ -337,6 +337,17 @@
             "optional": false,
             "field": "last",
             "description": "<p>Si se pasa last=true como parametro se responderá unicamente con la ultima Historia Clinica registrada al usuario (más reciente), si el valor es &quot;true&quot; el valor implicito de &quot;person&quot; será true</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "\"EN\"",
+              "\"ME\""
+            ],
+            "optional": false,
+            "field": "type",
+            "description": "<p>Especifica el Tipo de Historia Clinica: Enfermería (EN), Médica (ME), unicamente se enviarán las Historias que coincidan con el tipo solicitado</p>"
           }
         ]
       },
@@ -349,6 +360,16 @@
         {
           "title": "Request-Example:",
           "content": "/HistoriaClinia/:id?person=true&last=true",
+          "type": "Json"
+        },
+        {
+          "title": "Request-Example:",
+          "content": "/HistoriaClinia/:id?person=true&last=true&type=en",
+          "type": "Json"
+        },
+        {
+          "title": "Request-Example:",
+          "content": "/HistoriaClinia/:id?person=true&last=true&type=ME",
           "type": "Json"
         }
       ]
@@ -1363,6 +1384,109 @@
     "filename": "./index.php",
     "groupTitle": "Novedades",
     "name": "GetNovedadesTiposDate"
+  },
+  {
+    "type": "GET",
+    "url": "/Opciones/:date",
+    "title": "",
+    "group": "Opciones",
+    "description": "<p>Retorna Todos los registros de Opciones, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
+    "permission": [
+      {
+        "name": "user",
+        "title": "Cualquier Usuario",
+        "description": "<p>Requiere User y Password validos definidos en Header</p>"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Header:",
+          "content": "{\"Authorization\":\"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date",
+            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "401",
+            "description": "<p>Usuario o Contraseña Invalidos</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "Json",
+            "optional": false,
+            "field": "404",
+            "description": "<p>LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Error 401:",
+          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
+          "type": "Json"
+        },
+        {
+          "title": "Ejemplo Error 404:",
+          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
+          "type": "Json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "200",
+            "description": "<p>Arreglo de Objetos de tipo AREA</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo Respuesta:",
+          "content": "{\"OPCIONES\":[{\"ID_VARIABLE\":\"14\",\"NOMBRE_VARIABLE\":\"APELLIDO1\",\"DESCRIPCION\":\"APELLIDO 1\",\"ENTIDAD\":\"SIGRI_MAESTRO\",\"ATRIBUTO\":\"APELLIDO1\",\"TIPOCAMPO\":\"VARCHAR\",\"LONCAMPO\":\"30\",\"DEPENDE\":\"10\",\"OBLIGATORIO\":\"S\",\"ID_LISTA\":\"\",\"NOMLISTA\":\"\",\"VALORLISTA\":\"\",\"ID_MODULO\":\"0\",\"TIPO\":\"T\",\"VALIDAR\":\"N\",\"EDADINI\":\"\",\"EDADFIN\":\"\",\"GENERO\":\"A\",\"ESTADO\":\"A\",\"VISIBILIDAD\":\"V\",\"NIVEL\":\"\",\"CODIGO\":\"\",\"ORDEN\":\"14\",\"FECCREA\":\"2017-07-24 17:16:39.412234\",\"FECMODI\":\"2017-07-24 17:16:39.412256\",\"INTERVALO\":\"\",\"FRECUENCIA\":\"\"},{...}]}",
+          "type": "Json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./index.php",
+    "groupTitle": "Opciones",
+    "name": "GetOpcionesDate"
   },
   {
     "type": "GET",
@@ -2561,108 +2685,5 @@
     "filename": "./index.php",
     "groupTitle": "Usuarios",
     "name": "GetUsuariosDate"
-  },
-  {
-    "type": "GET",
-    "url": "/Variables/:date",
-    "title": "",
-    "group": "Variables",
-    "description": "<p>Retorna Todos los registros de Variables, si se provee :date se filtraran los resultados modificados a partir de :date</p>",
-    "permission": [
-      {
-        "name": "user",
-        "title": "Cualquier Usuario",
-        "description": "<p>Requiere User y Password validos definidos en Header</p>"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Clave Unica de Acceso RFC2045-MIME (Base64).</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Header:",
-          "content": "{\"Authorization\":\"Basic cHJ1ZWJhOjM0MDVlMmY1ODYxOTNiMjQ0MDRkODlmMzZjNDdmYmU3\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Date",
-            "optional": true,
-            "field": "date",
-            "description": "<p>Fecha de Ultima Sincronizacion de Registros formato <strong>UNIX TIMESTAMP</strong> o <strong>yyyy-mm-dd</strong></p>"
-          }
-        ]
-      }
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "401",
-            "description": "<p>Usuario o Contraseña Invalidos</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "type": "Json",
-            "optional": false,
-            "field": "404",
-            "description": "<p>LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Error 401:",
-          "content": "{\"ERROR\":\"USARIO/CONTRASEÑA INVALIDOS\"}",
-          "type": "Json"
-        },
-        {
-          "title": "Ejemplo Error 404:",
-          "content": "{\"ERROR\":\"LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...\"}",
-          "type": "Json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "200",
-            "description": "<p>Arreglo de Objetos de tipo AREA</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo Respuesta:",
-          "content": "{\"VARIABLES\":[{\"ID_VARIABLE\":\"34\",\"NOMBRE_VARIABLE\":\"ID_SPYP_1\",\"DESCRIPCION\":\"REMISI\\u00d3N A VACUNACION MENORES DE 1 A\\u00d1O\",\"ENTIDAD\":\"SIGRI_DETALLE\",\"ATRIBUTO\":\"VALOR\",\"TIPOCAMPO\":\"INTEGER\",\"LONCAMPO\":\"\",\"DEPENDE\":\"33\",\"OBLIGATORIO\":\"N\",\"ID_LISTA\":\"34\",\"NOMLISTA\":\"id_spyp_1\",\"VALORLISTA\":\"1\",\"ID_MODULO\":\"1\",\"TIPO\":\"L\",\"VALIDAR\":\"E\",\"EDADINI\":\"0\",\"EDADFIN\":\"1\",\"GENERO\":\"A\",\"ESTADO\":\"A\",\"VISIBILIDAD\":\"V\",\"NIVEL\":\"\",\"CODIGO\":\"\",\"ORDEN\":\"34\",\"FECCREA\":\"2017-07-24 17:16:39.647516\",\"FECMODI\":\"2017-07-24 17:16:39.647536\",\"INTERVALO\":\"\",\"FRECUENCIA\":\"8\"},{...}",
-          "type": "Json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "./index.php",
-    "groupTitle": "Variables",
-    "name": "GetVariablesDate"
   }
 ]
