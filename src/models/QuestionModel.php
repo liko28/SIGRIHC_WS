@@ -40,7 +40,7 @@ class QuestionModel extends BaseModel {
         $this->setColumns(new CustomArray());
         $this->addColumns("ID", "ID_VARIABLE", "DESCRIPCION", "PROGRAMA", "OBLIGATORIO", "EDAD_INICIAL", "EDAD_FINAL", "GENERO", "MAX", "MIN", "VISIBILIDAD", "NIVEL", "ORDEN", "ESTADO", "FECCREA", "FECMODI");
         try {
-            $res = $this->query("SELECT {$this->getColumns()->commaSep()}, SV.TIPO, SV.ID_LISTA, SV.NOMBRE_LISTA FROM {$this->getFullTableName()} JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON {$this->getFullTableName()}.ID_VARIABLE = SV.ID_VARIABLE");
+            $res = $this->query("SELECT {$this->getColumns()->commaSep()}, SV.TIPO, SV.ID_LISTA, SV.NOMBRE_LISTA FROM {$this->getFullTableName()} LEFT JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON {$this->getFullTableName()}.ID_VARIABLE = SV.ID_VARIABLE");
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -53,7 +53,7 @@ class QuestionModel extends BaseModel {
         $this->setColumns(new CustomArray());
         $this->addColumns("ID", "ID_VARIABLE", "DESCRIPCION", "PROGRAMA", "OBLIGATORIO", "EDAD_INICIAL", "EDAD_FINAL", "GENERO", "MAX", "MIN", "VISIBILIDAD", "NIVEL", "ORDEN", "ESTADO", "FECCREA", "FECMODI");
         try {
-            $res = $this->query("SELECT {$this->getColumns()->commaSep()}, SV.TIPO, SV.ID_LISTA, SV.NOMBRE_LISTA FROM {$this->getFullTableName()} JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON {$this->getFullTableName()}.ID_VARIABLE = SV.ID_VARIABLE WHERE {$this->getFullTableName()}.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR SV.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP", $date, $date);
+            $res = $this->query("SELECT {$this->getColumns()->commaSep()}, SV.TIPO, SV.ID_LISTA, SV.NOMBRE_LISTA FROM {$this->getFullTableName()} LEFT JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON {$this->getFullTableName()}.ID_VARIABLE = SV.ID_VARIABLE WHERE {$this->getFullTableName()}.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR SV.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP", $date, $date);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
