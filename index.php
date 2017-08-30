@@ -58,7 +58,7 @@ $container['password'] = function () {
 };
 
 //TODO OTROS MENSAJES DE ERROR
-/** Error Conn */
+/** Error */
 $container['errorHandler'] = function ($c) {
     return function ($request, $response, $exception) use ($c) {
         $c['logger']->addCritical($request->getUri(),array("ERROR" => $exception));
@@ -78,6 +78,15 @@ $container['notFoundHandler'] = function ($c) {
         $c['logger']->addError($request->getUri(),ERROR_404);
         return $c['response']->withStatus(404)
             ->withJson(ERROR_404);
+    };
+};
+
+/** Error 405 */
+$container['notAllowedHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        $c['logger']->addError($request->getUri(),ERROR_405);
+        return $c['response']->withStatus(404)
+            ->withJson(ERROR_405);
     };
 };
 

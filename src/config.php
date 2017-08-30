@@ -18,6 +18,7 @@ const ERROR_AUTH = array("ERROR" => "USARIO/CONTRASEÑA INVALIDOS");
 const ERROR_CONN = array("ERROR" => "ME SIENTO AGOTADO, ESTOY TOMANDO UN DESCANSO...");
 const ERROR_500 = array("ERROR" => "NO ME SIENTO BIEN, LLAMA A UN INGENIERO...");
 const ERROR_404 = array("ERROR" => "LO QUE BUSCAS DEFINITIVAMENTE NO ESTÁ AQUÍ...");
+const ERROR_405 = array("ERROR" => "NO PUEDES HACER LAS COSAS COMO QUIERAS SINO COMO SON");
 
 /** Configuracion de Slim */
 /** Errores detallados */
