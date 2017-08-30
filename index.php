@@ -131,15 +131,20 @@ $app->add(function (Request $request, Response $response, $next){
     }
 });
 
-/** Date -SyncDate-
- */
-$app->add(function (Request $request, $response, $next) use($container) {
+/** Date -lastSyncDate- */
+$app->add(function (Request $request, Response $response, $next) use($container) {
     $lastSyncDate = $request->getAttribute('route')->getArgument('lastSyncDate');
     $date = new \DateTime();
     $date->setTimeStamp(strpos($lastSyncDate,"-") > 0 ? strtotime($lastSyncDate): $lastSyncDate);
 
     $container['lastSyncDate'] = $date;
     return $next($request, $response);
+});
+
+/** Cliente */
+$app->add(function (Request $request, Response $response, $next) use ($container) {
+    $container['client'] = $request->getHeaderLine('Client');
+    return $next($request,$response);
 });
 
 /** Content Type */
@@ -304,6 +309,7 @@ $app->group('/Departamentos', function () {
 $app->group('/CIE10', function () {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $cie10 = new CIE10($this->db);
+        //TODO usar aquí CLIENTE auditoria;
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
@@ -689,6 +695,7 @@ $app->group('/PEC/', function() {
 $app->group('/Medicamentos', function() {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response,$args) {
         $medicines = new Medicine($this->db);
+        //TODO usar aqui CLIENT;
         if($args['lastSyncDate']) {
             $lastSyncDate = new \DateTime();
             $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
@@ -845,11 +852,8 @@ $app->group('/Preguntas', function() {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $preguntas = new Question($this->db);
 
-        //Origen Peticion y respuesta especifica para cada Cliente
-        $client = $request->getHeaderLine('Client');
-
         //TODO, cambiar a un metodo generico
-        switch ($client) {
+        switch ($this->client) {
             case DEMANDA:
                 try {
                     $data = ['PREGUNTAS' => $preguntas->getQuestionsDemanda($this->lastSyncDate)];
