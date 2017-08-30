@@ -133,11 +133,14 @@ $app->add(function (Request $request, Response $response, $next) use ($container
 
 /** Date -lastSyncDate- */
 $app->add(function (Request $request, Response $response, $next) use($container) {
-    $lastSyncDate = $request->getAttribute('route')->getArgument('lastSyncDate');
-    $date = new \DateTime();
-    $date->setTimeStamp(strpos($lastSyncDate,"-") > 0 ? strtotime($lastSyncDate): $lastSyncDate);
+    $route = $request->getAttribute('route');
+    if($route) {
+        $lastSyncDate = $route->getArgument('lastSyncDate');
+        $date = new \DateTime();
+        $date->setTimeStamp(strpos($lastSyncDate,"-") > 0 ? strtotime($lastSyncDate): $lastSyncDate);
+        $container['lastSyncDate'] = $date;
+    }
 
-    $container['lastSyncDate'] = $date;
     return $next($request, $response);
 });
 
