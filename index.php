@@ -85,7 +85,7 @@ $container['notFoundHandler'] = function ($c) {
 $container['notAllowedHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
         $c['logger']->addError($request->getUri(),ERROR_405);
-        return $c['response']->withStatus(404)
+        return $c['response']->withStatus(405)
             ->withJson(ERROR_405);
     };
 };
