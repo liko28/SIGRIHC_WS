@@ -122,7 +122,7 @@ $container['logger'] = function ($c) {
 //TODO MiddleWare de Authenticacion aun no soporta tipos de usuario o perfiles de acceso
 
 /** Autenticacion */
-$app->add(function (Request $request, Response $response, $next){
+$app->add(function (Request $request, Response $response, $next) use ($container){
     if(Authenticator::authenticate()) {
         return $next($request, $response);
     } else {
@@ -148,7 +148,7 @@ $app->add(function (Request $request, Response $response, $next) use ($container
 });
 
 /** Content Type */
-$app->add(function(Request $request, Response $response, $next){
+$app->add(function(Request $request, Response $response, $next) use ($container){
     $contentType = 'application/json';
     if(($request->isPost() || $request->isPut()) && $request->getContentType() !== $contentType) {
         return $next($request->withHeader('Content-Type',$contentType),$response);
@@ -157,7 +157,7 @@ $app->add(function(Request $request, Response $response, $next){
 });
 
 /** Response Count */
-$app->add(function(Request $request, Response $response, $next){
+$app->add(function(Request $request, Response $response, $next) use ($container){
     $response = $next($request,$response);
     $body = json_decode($response->getBody(),true);
     $keys = array_keys($body);
