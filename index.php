@@ -161,7 +161,7 @@ $app->add(function(Request $request, Response $response, $next){
     $response = $next($request,$response);
     $body = json_decode($response->getBody(),true);
     $keys = array_keys($body);
-    return $response->withAddedHeader('count',count($body[$keys[0]]));
+    return $next($request,$response->withAddedHeader('count',count($body[$keys[0]])));
 });
 
 /**
