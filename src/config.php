@@ -28,8 +28,8 @@ const CONFIG = array("settings" => array("displayErrorDetails" => true,"determin
 /** PROGRAMAS */
 const DEMANDA = "demanda";
 const AUDITORIA = "auditoria";
-const VISITA = "sigri";
-const HISTORIA = "sigrihc";
+const VISITA = "visita";
+const HISTORIA = "historia";
 
 /** Utiles */
 const SEPARATOR = "|";

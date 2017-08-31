@@ -26,7 +26,7 @@ class UserController extends BaseController {
         return $this->model->getPassword($userName)[0]->PASSWORD;
     }
 
-    public function get(\DateTime $lastSyncDate = null) {
+    public function get(\DateTime $lastSyncDate = null, $asterisk=true) {
         $res = parent::get($lastSyncDate);
         foreach ($res as $users => $user) {
             if($user->FIRMA) {

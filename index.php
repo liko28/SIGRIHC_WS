@@ -160,7 +160,7 @@ $app->add(function (Request $request, Response $response, $next) use($container)
 
 /** Cliente */
 $app->add(function (Request $request, Response $response, $next) use ($container) {
-    $container['client'] = $request->getHeaderLine('Client');
+    $container['client'] = strtolower((string) $request->getHeaderLine('Client'));
     return $next($request,$response);
 });
 
@@ -956,7 +956,7 @@ $app->group('/Usuarios', function() {
 
 
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
-        
+
 
         $usuarios = new User($this->db);
         if($args['lastSyncDate']) {
@@ -1011,7 +1011,7 @@ $app->group('/Programaciones',function() {
         $programaciones = new Schedule($this->db);
         $input = $request->getParsedBody();
 
-        
+
 
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
@@ -1107,7 +1107,7 @@ $app->group('/Opciones', function () {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $opciones = new Option($this->db);
 
-        
+
 
         //Origen Peticion y respuesta especifica para cada Cliente
         $client = $request->getHeaderLine('Client');
@@ -1236,6 +1236,162 @@ $app->group('/Grupos', function () {
             default:
                 $data = ['GRUPOS' => $grupos->get($this->lastSyncDate)->values()];
                 return $response->withJson($data);
+        }
+    });
+});
+
+$app->group('/Transferencia', function(){
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
+
+        switch ($this->client) {
+            case DEMANDA:
+                //ejemplo
+                $demandas = [
+                    "10000077" => [
+                        "3072686" => [
+                            "41"=> "1",
+                            "43"=> "1",
+                            "50"=> "1",
+                            "78"=> "1",
+                            "79"=> "1",
+                            "80"=> "1",
+                            "39"=> "1",
+                            "53"=> "1",
+                            "38"=> "1",
+                            "52"=> "1",
+                            "56"=> "1",
+                            "73"=> "1",
+                            "74"=> "1",
+                            "77"=> "1",
+                            "82"=> "IPS MUNICIPIO"
+                        ]
+                    ],
+                    "10000088" => [
+                        "3096328" => [
+                            "38" => "1",
+                            "43" => "1",
+                            "50" => "1",
+                            "52" => "1",
+                            "58" => "1",
+                            "41" => "1",
+                            "62" => "1",
+                            "63" => "1",
+                            "59" => "1",
+                            "73" => "1",
+                            "74" => "1",
+                            "78" => "1",
+                        ]
+                    ]
+                ];
+                 return $response->withJson($demandas,200, JSON_FORCE_OBJECT);
+            case AUDITORIA:
+                //ejemplo
+                $auditorias = [
+                    "10000107" => [
+                        "12345" => [
+                            "238" => "0",
+                            "237" => "4",
+                            "236" => "0",
+                            "235" => "0",
+                            "234" => "4",
+                            "233" => "4",
+                            "232" => "2016-01-02",
+                            "231" => "1",
+                            "230" => "1",
+                            "229" => "1",
+                            "228" => "1",
+                            "227" => "1",
+                            "226" => "1",
+                            "225" => "0",
+                            "223" => "0",
+                            "217" => "0",
+                            "216" => "1",
+                            "205" => "0",
+                            "203" => "0",
+                            "202" => "0",
+                            "201" => "0",
+                            "200" => "0",
+                            "190" => "N",
+                            "189" => "21.72",
+                            "186" => "0",
+                            "184" => "1",
+                            "159" => "17",
+                            "154" => "2",
+                            "134" => "109",
+                            "132" => "0",
+                            "92" => "17",
+                            "90" => "57",
+                        ]
+                    ]
+                ];
+                return $response->withJson($auditorias,200, JSON_FORCE_OBJECT);
+            case VISITA:
+                //ejemplo
+                $visitas = [
+                    "2261" => [
+                        "132" => [
+                            "pregunta_1" => "2",
+                            "pregunta_2" => "3",
+                            "pregunta_4" => "5",
+                            "pregunta_6" => "7",
+                            "pregunta_8" => "9",
+                            "pregunta_10" => "11"
+                        ],
+                        "133" => [
+                            "pregunta_1" => "2",
+                            "pregunta_2" => "3",
+                            "pregunta_4" => "5",
+                            "pregunta_6" => "7",
+                            "pregunta_8" => "9",
+                            "pregunta_10" => "11"
+                        ],
+                        "560" => [
+                            "pregunta_1" => "2",
+                            "pregunta_2" => "3",
+                            "pregunta_4" => "5",
+                            "pregunta_6" => "7",
+                            "pregunta_8" => "9",
+                            "pregunta_10" => "11"
+                        ]
+                    ],
+                    "id_visita2" => [
+                        "id_usuario1" => [
+                            "pregunta_1" => "2",
+                            "pregunta_2" => "3",
+                            "pregunta_4" => "5",
+                            "pregunta_6" => "7",
+                            "pregunta_8" => "9",
+                            "pregunta_10" => "11"
+                        ]
+                    ]
+                ];
+                return $response->withJson($visitas,200, JSON_FORCE_OBJECT);
+            case HISTORIA:
+                //ejemplo
+                $historias = [
+                    "1158221" => [
+                        "1036664599" => [
+                            "pregunta_1" => "2",
+                            "pregunta_2" => "3",
+                            "pregunta_4" => "5",
+                            "pregunta_6" => "7",
+                            "pregunta_8" => "9",
+                            "pregunta_10" => "11"
+                        ]
+                    ],
+                    "1158221" => [
+                        "10366445262" => [
+                            "pregunta_1" => "2",
+                            "pregunta_2" => "3",
+                            "pregunta_4" => "5",
+                            "pregunta_6" => "7",
+                            "pregunta_8" => "9",
+                            "pregunta_10" => "11"
+                        ]
+                    ]
+                ];
+                return $response->withJson($historias,200, JSON_FORCE_OBJECT);
+            default:
         }
     });
 });
