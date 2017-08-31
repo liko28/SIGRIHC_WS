@@ -129,7 +129,17 @@ class HcMedicaController extends BaseController {
 
         /** INSERCION DE HC_MEDICA (PARENT) */
         //TODO ESTE ES UN ERROR EN LA TABLA PREGUNTAS, DEBERIA TENER TODOS LOS CAMPOS
-        $entities['HC_MEDICA']->addField(["ID_USUARIO"=>$person,"TIPOHC"=>$answers->TIPO_HISTORIA,"ESTADO" => "A","PROGRAMACION" => $answers->PROGRAMACION, "RIESGOCV" => 1, "IPCREA" => $_SERVER['REMOTE_ADDR'], "USERCREA" => $user]);
+        $entities['HC_MEDICA']->addField([
+            "ID_USUARIO"=>$person,
+            //Retrocompatibilidad con version-no-se-que de SIGRIHC
+            "TIPOHC"=>$answers->TIPO_HISTORIA ? $answers->TIPO_HISTORIA : "EN",
+            "ESTADO" => "A",
+            "PROGRAMACION" => $answers->PROGRAMACION,
+            "RIESGOCV" => 1,
+            "IPCREA" => $_SERVER['REMOTE_ADDR'],
+            "USERCREA" => $user]
+        );
+
         try{
             $hcId = $this->model->insert($entities['HC_MEDICA']);
         } catch (\Exception $e) {
