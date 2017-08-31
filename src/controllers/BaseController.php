@@ -31,8 +31,8 @@ class BaseController {
     }
 
     /** @return CustomArray */
-    public function getAll() {
-        return $this->model->getAll();
+    public function getAll($asterisk = true) {
+        return $this->model->getAll($asterisk);
     }
 
     /**
@@ -46,11 +46,11 @@ class BaseController {
      * @param \DateTime|null $lastSyncDate
      * @return CustomArray
      */
-    public function get(\DateTime $lastSyncDate = null){
+    public function get(\DateTime $lastSyncDate = null, $asterisk = true){
         if($lastSyncDate) {
             return $this->getUpdates($lastSyncDate);
         }
-        return $this->getAll();
+        return $this->getAll($asterisk);
     }
 
     public function insert(Row $object) {

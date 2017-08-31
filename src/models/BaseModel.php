@@ -307,8 +307,12 @@ class BaseModel{
         db2_commit($this->connection->getConnectionResource());
     }
 
-    public function getAll(){
-        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()}");
+    public function getAll($asterisk = true){
+        if($asterisk) {
+            return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()}");
+        } else {
+            return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+        }
     }
 
     /** @return CustomArray */
