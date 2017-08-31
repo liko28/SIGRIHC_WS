@@ -17,12 +17,16 @@ class CIE10Controller extends BaseController {
             case DEMANDA:
             case VISITA:
             case HISTORIA:
+                $asterisk = true;
                 break;
             case AUDITORIA:
                 $this->model->setColumns(new CustomArray(["ID", "CODIGO", "DESCRIPCION"]));
-                $result = parent::get($lastSyncDate, false);
+                $asterisk = false;
                 break;
+            default:
+                $asterisk = true;
         }
+        $result = parent::get($lastSyncDate, $asterisk);
         return $result;
     }
 }
