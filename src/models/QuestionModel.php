@@ -51,7 +51,7 @@ class QuestionModel extends BaseModel {
         $date = $lastSyncDate->format('Y-m-d H:i:s');
         $this->setTableName('AUDIT_PREGUNTAS');
         $this->setColumns(new CustomArray());
-        $this->addColumns("ID", "ID_VARIABLE", "DESCRIPCION", "PROGRAMA", "OBLIGATORIO", "EDAD_INICIAL", "EDAD_FINAL", "GENERO", "MAX", "MIN", "VISIBILIDAD", "NIVEL", "ORDEN", "ESTADO", "FECCREA", "FECMODI");
+        $this->addColumns("ID", "ID_VARIABLE", "DESCRIPCION", "PROGRAMA", "ID_GRUPO", "OBLIGATORIO", "EDAD_INICIAL", "EDAD_FINAL", "GENERO", "MAX", "MIN", "VISIBILIDAD", "NIVEL", "ORDEN", "ESTADO", "FECCREA", "FECMODI");
         try {
             $res = $this->query("SELECT {$this->getColumns()->commaSep()}, SV.TIPO, SV.ID_LISTA, SV.NOMBRE_LISTA FROM {$this->getFullTableName()} LEFT JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON {$this->getFullTableName()}.ID_VARIABLE = SV.ID_VARIABLE WHERE {$this->getFullTableName()}.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP OR SV.FECMODI BETWEEN ? AND CURRENT_TIMESTAMP", $date, $date);
         } catch (\Exception $e) {

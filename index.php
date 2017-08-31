@@ -32,6 +32,7 @@ use SIGRI_HC\Controllers\UserController as User;
 use SIGRI_HC\Controllers\ProcedureController as Procedure;
 use SIGRI_HC\Controllers\OptionController as Option;
 use SIGRI_HC\Controllers\ProgramController as Program;
+use SIGRI_HC\Controllers\GroupController as Group;
 use SIGRI_HC\Controllers\DemandController as Demand;
 use SIGRI_HC\Controllers\AuditController as Audit;
 
@@ -1192,13 +1193,8 @@ $app->group('/Programas', function () {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
         $programas = new Program($this->db);
 
-        
-
-        //Origen Peticion y respuesta especifica para cada Cliente
-        $client = $request->getHeaderLine('Client');
-
         //TODO Cambiar a Metrodo Generico
-        switch ($client) {
+        switch ($this->client) {
             case DEMANDA:
                 break;
             case AUDITORIA:
@@ -1223,6 +1219,24 @@ $app->group('/Programas', function () {
                 }
                 return $response->withJson($data);
                 break;
+        }
+    });
+});
+
+$app->group('/Grupos', function () {
+    //TODO Actualizar Documentacion
+
+    $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args) {
+        $grupos = new Group($this->db);
+        //TODO Cambiar a Metodo Generico
+        switch ($this->client) {
+            case DEMANDA:
+            case AUDITORIA:
+            case VISITA:
+            case HISTORIA:
+            default:
+                $data = ['GRUPOS' => $grupos->get($this->lastSyncDate)->values()];
+                return $response->withJson($data);
         }
     });
 });
