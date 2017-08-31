@@ -38,7 +38,7 @@ class QuestionModel extends BaseModel {
     public function forAuditorias(){
         $this->setTableName('AUDIT_PREGUNTAS');
         $this->setColumns(new CustomArray());
-        $this->addColumns("ID", "ID_VARIABLE", "DESCRIPCION", "PROGRAMA", "OBLIGATORIO", "EDAD_INICIAL", "EDAD_FINAL", "GENERO", "MAX", "MIN", "VISIBILIDAD", "NIVEL", "ORDEN", "ESTADO", "FECCREA", "FECMODI");
+        $this->addColumns("ID", "ID_VARIABLE", "DESCRIPCION", "PROGRAMA",  "ID_GRUPO", "OBLIGATORIO", "EDAD_INICIAL", "EDAD_FINAL", "GENERO", "MAX", "MIN", "VISIBILIDAD", "NIVEL", "ORDEN", "ESTADO", "FECCREA", "FECMODI");
         try {
             $res = $this->query("SELECT {$this->getColumns()->commaSep()}, SV.TIPO, SV.ID_LISTA, SV.NOMBRE_LISTA FROM {$this->getFullTableName()} LEFT JOIN {$this->getSchema()}.SIGRI_VARIABLES SV ON {$this->getFullTableName()}.ID_VARIABLE = SV.ID_VARIABLE");
         } catch (\Exception $e) {
