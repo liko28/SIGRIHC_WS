@@ -715,13 +715,7 @@ $app->group('/PEC/', function() {
 $app->group('/Medicamentos', function() {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response,$args) {
         $medicines = new Medicine($this->db);
-        //TODO usar aqui CLIENT;
-        if($args['lastSyncDate']) {
-            $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['MEDICAMENTOS' => $medicines->getUpdates($this->lastSyncDate)->values()]);
-        }
-        return $response->withJson(['MEDICAMENTOS' => $medicines->getAll()->values()]);
+        return $response->withJson(['MEDICAMENTOS' => $medicines->get($this->lastSyncDate, $this->client)->values()]);
     });
 });
 
