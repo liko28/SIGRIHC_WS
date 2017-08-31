@@ -153,14 +153,24 @@ class BaseModel{
         $filteredColumns = new CustomArray();
         foreach ($columns as $column) {
             if(array_key_exists($column,$this->columns)) {
-                $filteredColumns[$column] = "{$this->getSchema()}.{$this->tableName}.{$column}";
+                if(is_array($this->columns[$column])) {
+                    $filteredColumns[$column] = implode(" CONCAT ' ' CONCAT {$this->getSchema()}.{$this->tableName}.", $this->columns[$column]);
+                    $filteredColumns[$column] .= " AS $column";
+                } else {
+                    $filteredColumns[$column] = "{$this->getSchema()}.{$this->tableName}.{$column}";
+                }
             } else {
                 throw new \Exception("El Campo $column NO EXISTE EN LA TABLA $this->schema.$this->tableName");
             }
         }
         if(!$columns) {
             foreach ($this->columns as $name => $column) {
-                $filteredColumns[$column] = "{$this->getSchema()}.{$this->tableName}.{$column}";
+                if(is_array($column)) {
+                    $baseString = implode(" CONCAT ' ' CONCAT {$this->getSchema()}.{$this->tableName}.", $column);
+                    $filteredColumns[$name] = "{$this->getSchema()}.{$this->tableName}.$baseString AS $name";
+                } else {
+                    $filteredColumns[$column] = "{$this->getSchema()}.{$this->tableName}.{$column}";
+                }
             }
         }
         return $filteredColumns;
