@@ -144,12 +144,16 @@ $app->add(function (Request $request, Response $response, $next) use ($container
 /** Date -lastSyncDate- */
 $app->add(function (Request $request, Response $response, $next) use($container) {
     $route = $request->getAttribute('route');
+    $date = null;
     if($route) {
         $lastSyncDate = $route->getArgument('lastSyncDate');
+    }
+    if(isset($lastSyncDate) && $lastSyncDate){
         $date = new \DateTime();
         $date->setTimeStamp(strpos($lastSyncDate,"-") > 0 ? strtotime($lastSyncDate): $lastSyncDate);
-        $container['lastSyncDate'] = $date;
     }
+
+    $container['lastSyncDate'] = $date;
 
     return $next($request, $response);
 });
@@ -331,12 +335,7 @@ $app->group('/CIE10', function () {
     $this->get('[/{lastSyncDate}]', function (Request $request, Response $response, $args){
         $cie10 = new CIE10($this->db);
         //TODO usar aquí CLIENTE auditoria;
-        if($args['lastSyncDate']) {
-            $lastSyncDate = new \DateTime();
-            $lastSyncDate->setTimeStamp(strpos($args['lastSyncDate'],"-") > 0 ? strtotime($args['lastSyncDate']): $args['lastSyncDate'] );
-            return $response->withJson(['CIE10' => $cie10->getUpdates($this->lastSyncDate)->values()]);
-        }
-        return $response->withJson(['CIE10' => $cie10->getAll()->values()]);
+        return $response->withJson(['CIE10' => $cie10->get($this->lastSyncDate, $this->client)->values()]);
     });
 
 });
