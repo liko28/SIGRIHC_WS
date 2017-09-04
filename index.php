@@ -167,8 +167,11 @@ $app->add(function (Request $request, Response $response, $next) use ($container
 /** Content Type */
 $app->add(function(Request $request, Response $response, $next) use ($container){
     $contentType = 'application/json';
-    if(($request->isPost() || $request->isPut()) && $request->getContentType() !== $contentType) {
-        return $next($request->withHeader('Content-Type',$contentType),$response);
+    if(($request->isPost() || $request->isPut())) {
+        if($request->getBody()->getSize() > 0) {
+            return $next($request->withHeader('Content-Type',$contentType),$response);
+        }
+        else return $response->withStatus(400)->withJson(ERROR_400);
     }
     return $next($request,$response);
 });
