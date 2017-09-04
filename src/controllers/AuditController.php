@@ -69,11 +69,31 @@ class AuditController extends BaseController {
         /** INSERCION DE SIGRI_DETALLE (CHILD) */
         foreach ($block->RESPUESTAS as $answers) {
             $this->getModel()->setTableName("SIGRI_DETALLE");
-            try{
-                $this->model->insert(new Row(["ID_VISITA" => $masterId, "VARIABLE" => $answers[0], "VALOR" => $answers[1]]));
-            } catch (\Exception $e) {
-                db2_rollback($this->model->getConnection()->getConnectionResource());
-                return ['ERROR' => $e->getMessage()];
+            //TODO Si es un objeto tons es un grupo
+            if($answers->GRUPO) {
+                foreach ($answers->RESPUESTAS as $answer) {
+                    $detailRow = new Row(
+                        [
+                            "ID_VISITA" => $masterId,
+                            "VARIABLE" => $answer[0],
+                            "VALOR" => $answer[1],
+                            "GRUPO" => $answers->GRUPO,
+                            "SONSECUTIVO_GRUPO" => $answers->CONSECUTIVO
+                        ]);
+                    try{
+                        $this->model->insert($detailRow);
+                    } catch (\Exception $e) {
+                        db2_rollback($this->model->getConnection()->getConnectionResource());
+                        return ['ERROR' => $e->getMessage()];
+                    }
+                }
+            } else {
+                try{
+                    $this->model->insert(new Row(["ID_VISITA" => $masterId, "VARIABLE" => $answers[0], "VALOR" => $answers[1]]));
+                } catch (\Exception $e) {
+                    db2_rollback($this->model->getConnection()->getConnectionResource());
+                    return ['ERROR' => $e->getMessage()];
+                }
             }
         }
 
