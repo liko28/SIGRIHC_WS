@@ -181,6 +181,12 @@ $app->add(function(Request $request, Response $response, $next) use ($container)
     return $next($request,$response->withAddedHeader('count',count($body[$keys[0]])));
 });
 
+/** Server Time */
+$app->add(function(Request $request, Response $response, $next) use ($container) {
+    $db = new \SIGRI_HC\Models\BaseModel($container['db']);
+    return $next($request, $response->withAddedHeader('server_time', strtotime($db->getDBTime())));
+});
+
 /**
  ***********************
  * SERVICIOS GENERICOS *

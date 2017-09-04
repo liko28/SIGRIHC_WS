@@ -329,4 +329,9 @@ class BaseModel{
     public function getUpdates($lastSyncDate){
         return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
     }
+
+    public  function getDBTime(){
+        $this->query("SELECT CURRENT_TIMESTAMP AS NOW FROM SYSIBM.SYSCOLUMNS FETCH FIRST ROW ONLY");
+        return $this->getResult()[0]->NOW;
+    }
 }
