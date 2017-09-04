@@ -32,7 +32,6 @@ class DemandController extends BaseController {
         foreach ($block->RESPUESTAS as $ips => $answers) {
             $entities = array();
             /** INSERCION DE SIGRI_MAESTRO (PARENT) */
-            // TODO ID_USUARIO, ID_USER, FECVISITA se tiene que cambiar la FK
             $entities['SIGRI_MAESTRO'] = new Row();
             $entities['SIGRI_MAESTRO']->addField([
                 "FECVISITA" => $block->FECINICIO,
@@ -52,10 +51,8 @@ class DemandController extends BaseController {
                 "TELEFONO" => $personData->CELULAR,
                 "FECINICIO" => $block->FECINICIO,
                 "FECFIN" => $block->FECFIN,
-                //"DISPOSITIVO" => "1", TODO ESTO ME PARECE INNECESARIO
                 "LATITUD" => $block->LATITUD,
                 "LONGITUD" => $block->LONGITUD,
-                "ID_USER" => rand(0,1000),//TODO ESTO ME PARECE INNECESARIO
                 "USERCREA" => $userName,
                 "IPCREA" => $_SERVER['REMOTE_ADDR']
             ]);

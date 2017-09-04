@@ -23,6 +23,9 @@ class AuditController extends BaseController {
     }
 
     public function insert($block, $programationId, $userName) {
+        //User
+        $user = new UserController($this->getModel()->getConnection());
+        $user = $user->getByUserName($userName)[0];
         //Datos de la Persona
         $person = new PersonController($this->model->getConnection());
         $person->getModel()->get($block->ID_USUARIO);
@@ -30,7 +33,6 @@ class AuditController extends BaseController {
 
         $entities = array();
         /** INSERCION DE SIGRI_MAESTRO (PARENT) */
-        // TODO ID_USUARIO, ID_USER, FECVISITA se tiene que cambiar la FK
         $entities['SIGRI_MAESTRO'] = new Row();
         $entities['SIGRI_MAESTRO']->addField([
             "FECVISITA" => $block->FECINICIO,
@@ -50,10 +52,8 @@ class AuditController extends BaseController {
             "TELEFONO" => $personData->CELULAR,
             "FECINICIO" => $block->FECINICIO,
             "FECFIN" => $block->FECFIN,
-            //"DISPOSITIVO" => "1", TODO ESTO ME PARECE INNECESARIO
             "LATITUD" => $block->LATITUD,
             "LONGITUD" => $block->LONGITUD,
-            "ID_USER" => rand(0,1000),//TODO ESTO ME PARECE INNECESARIO
             "USERCREA" => $userName,
             "IPCREA" => $_SERVER['REMOTE_ADDR']
         ]);
@@ -79,7 +79,8 @@ class AuditController extends BaseController {
                             "VALOR" => $answer[1],
                             "GRUPO" => $answers->GRUPO,
                             "SONSECUTIVO_GRUPO" => $answers->CONSECUTIVO
-                        ]);
+                        ]
+                    );
                     try{
                         $this->model->insert($detailRow);
                     } catch (\Exception $e) {
