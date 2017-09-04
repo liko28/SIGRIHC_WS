@@ -23,9 +23,6 @@ class AuditController extends BaseController {
     }
 
     public function insert($block, $programationId, $userName) {
-        //User
-        $user = new UserController($this->getModel()->getConnection());
-        $user = $user->getByUserName($userName)[0];
         //Datos de la Persona
         $person = new PersonController($this->model->getConnection());
         $person->getModel()->get($block->ID_USUARIO);
@@ -46,9 +43,9 @@ class AuditController extends BaseController {
             "DPTO" => $personData->DPTO,
             "MUNICIPIO" => $personData->MUNICIPIO,
             //TODO REVISAR ESTOS TRES CON VANE Y GIO
-            "ZONA" => (int)Generic::findInPairs("6",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
-            "BARRIO" => (int)Generic::findInPairs("7",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
-            "DIRECCION" => (string)Generic::findInPairs("8",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
+            //"ZONA" => (int)Generic::findInPairs("6",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
+            //"BARRIO" => (int)Generic::findInPairs("7",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
+            //"DIRECCION" => (string)Generic::findInPairs("8",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
             "TELEFONO" => $personData->CELULAR,
             "FECINICIO" => $block->FECINICIO,
             "FECFIN" => $block->FECFIN,
@@ -78,7 +75,7 @@ class AuditController extends BaseController {
                             "VARIABLE" => $answer[0],
                             "VALOR" => $answer[1],
                             "GRUPO" => $answers->GRUPO,
-                            "SONSECUTIVO_GRUPO" => $answers->CONSECUTIVO
+                            "CONSECUTIVO_GRUPO" => $answers->CONSECUTIVO
                         ]
                     );
                     try{
