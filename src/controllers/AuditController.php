@@ -46,6 +46,7 @@ class AuditController extends BaseController {
             //"ZONA" => (int)Generic::findInPairs("6",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
             //"BARRIO" => (int)Generic::findInPairs("7",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
             //"DIRECCION" => (string)Generic::findInPairs("8",$block->RESPUESTAS)[1], //ESTO NO ESTÁ EN PERSONA
+            "TIPO" => 'AU',
             "TELEFONO" => $personData->CELULAR,
             "FECINICIO" => $block->FECINICIO,
             "FECFIN" => $block->FECFIN,
