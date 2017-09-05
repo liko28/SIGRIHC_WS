@@ -15,11 +15,6 @@ class CIE10Model extends BaseModel {
         parent::__construct($connection);
         $this->setTableName('CIE10');
         $this->setPrimaryKey('ID');
-        $this->addColumns('ID', 'CODIGO','DESCRIPCION','CLASE','ACTIVO');
-    }
-
-    /** @return CustomArray */
-    public function getAll(){
-        return $this->query("SELECT {$this->getColumns('ID', 'CODIGO','DESCRIPCION','CLASE','ACTIVO')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+        $this->addColumns('ID', 'CODIGO','DESCRIPCION','CLASE','ACTIVO','TIPO', 'FECCREA', 'FECMODI');
     }
 }

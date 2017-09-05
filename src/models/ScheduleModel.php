@@ -10,6 +10,7 @@ namespace SIGRI_HC\Models;
 
 
 use SIGRI_HC\Helpers\CustomArray;
+use SIGRI_HC\Helpers\Logger;
 
 class ScheduleModel extends BaseModel {
     /** @param Connection $connection */
@@ -17,17 +18,51 @@ class ScheduleModel extends BaseModel {
         parent::__construct($connection);
         $this->setTableName('SF_PROGRAMACION');
         $this->setPrimaryKey('ID_PROGRAMACION');
-        $this->addColumns('ID_PROGRAMACION', 'DPTO', 'MUNICIPIO', 'PROMOTOR', 'CEB', 'ESTADO', 'ID_VISITA', 'DIRECCION', 'OTRADIR', 'TELEFONO1', 'TELEFONO2', 'EMAIL', 'LATITUD', 'LONGITUD', 'ID_BARRIO', 'BARRIO', 'FECPROG', 'USERCREA', 'FECCREA', 'IPCREA', 'USERMODI', 'IPMODI', 'FECMODI');
+        $this->addColumns('ID_PROGRAMACION', 'DPTO', 'MUNICIPIO', 'PROMOTOR', 'CEB', 'ESTADO', 'ID_VISITA', 'DIRECCION', 'OTRADIR', 'TELEFONO1', 'TELEFONO2', 'EMAIL', 'LATITUD', 'LONGITUD', 'ID_BARRIO', 'BARRIO', 'FECPROG', 'USERCREA', 'FECCREA', 'IPCREA', 'USERMODI', 'IPMODI', 'FECMODI','IPS');
     }
 
     /** @return CustomArray */
-    public function getAll($userId){
-        return $this->query("SELECT {$this->getColumns('ID_PROGRAMACION', 'DPTO', 'MUNICIPIO', 'PROMOTOR', 'CEB', 'ESTADO', 'ID_VISITA', 'DIRECCION', 'OTRADIR', 'TELEFONO1', 'TELEFONO2', 'EMAIL', 'LATITUD', 'LONGITUD', 'ID_BARRIO', 'BARRIO', 'FECPROG')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE PROMOTOR = ? AND ESTADO IN (?,?)",$userId,'A','D');
-    }
+    public function getAll($userId, $client, \DateTime $lastSyncDate = null){
+        if($lastSyncDate) {
+            $date = $lastSyncDate->format('Y-m-d H:i:s');
+        }
+        $visitType = '';
+        switch ($client) {
+            case DEMANDA:
+                $visitType = "AND DET.TIPOVISITA IN('DI')";
+                break;
+            case AUDITORIA:
+                $visitType = "AND DET.TIPOVISITA IN('AU')";
+                break;
+            case VISITA:
+                $visitType = "AND DET.TIPOVISITA IS NULL";
+                break;
+            case HISTORIA:
+                $visitType ="AND DET.TIPOVISITA IN('ME', 'EN', 'MG', 'PS', 'TS')" ;
+                break;
+        }
 
-    /** @return CustomArray */
-    public function getUpdates($userId,$lastSyncDate) {
-        return $this->query("SELECT {$this->getColumns('ID_PROGRAMACION', 'DPTO', 'MUNICIPIO', 'PROMOTOR', 'CEB', 'ESTADO', 'ID_VISITA', 'DIRECCION', 'OTRADIR', 'TELEFONO1', 'TELEFONO2', 'EMAIL', 'LATITUD', 'LONGITUD', 'ID_BARRIO', 'BARRIO', 'FECPROG')->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()} WHERE PROMOTOR = ? AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP AND ESTADO IN (?,?,?)",$userId,$lastSyncDate,'I','A','D');
-    }
 
+        if($date) {
+            try{
+                return $this->query("SELECT {$this->getColumns()->commaSep()}
+FROM {$this->getFullTableName()}
+JOIN {$this->getSchema()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
+WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D') AND FECMODI BETWEEN ? AND CURRENT_TIMESTAMP;",$userId,$date);
+            }catch (\Exception $e) {
+                return ["ERROR" => $e->getMessage()];
+                Logger::log(300, $e->getMessage(),Logger::getPath(constant("SIGRIHC\Helpers\USER_NAME")));
+            }
+        }
+
+        try{
+            return $this->query("SELECT {$this->getColumns()->commaSep()}
+FROM {$this->getFullTableName()}
+JOIN {$this->getSchema()}.SF_PROGRAMACION_DET DET ON {$this->getFullTableName()}.ID_PROGRAMACION = DET.ID_PROGRAMACION
+WHERE PROMOTOR = ? $visitType AND ESTADO IN('A','D')",$userId);
+        }catch (\Exception $e) {
+            return ["ERROR" => $e->getMessage()];
+            Logger::log(300, $e->getMessage(),Logger::getPath( constant("SIGRIHC\Helpers\USER_NAME")));
+        }
+    }
 }

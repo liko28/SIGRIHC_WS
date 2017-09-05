@@ -2,7 +2,9 @@
 
 namespace SIGRI_HC\Models;
 
+use SIGRI_HC\Helpers;
 use SIGRI_HC\Helpers\CustomArray;
+use SIGRI_HC\Helpers\Logger;
 use SIGRI_HC\Helpers\Row;
 
 class BaseModel{
@@ -46,11 +48,19 @@ class BaseModel{
     }
 
     /**
+     * @return null|string
+     */
+    public function getFullTableName(){
+        return $this->getSchema().".".$this->getTableName();
+    }
+
+    /**
      * @param null|string $tableName
      */
     public function setTableName($tableName)
     {
         $this->tableName = $tableName;
+        $this->result = new CustomArray();
     }
 
     /**
@@ -134,21 +144,34 @@ class BaseModel{
     }
 
     /**
-     * @return array
-     * @throws \ErrorException
+     * TODO sería bueno que esto me devuelva con alias para los joins
+     * @return array|CustomArray
+     * @throws \Exception
      * */
     public function getColumns(...$columns)
     {
         $filteredColumns = new CustomArray();
         foreach ($columns as $column) {
-            if(array_key_exists($column,$this->getColumns())) {
-                $filteredColumns[$column] = $column;
+            if(array_key_exists($column,$this->columns)) {
+                if(is_array($this->columns[$column])) {
+                    $filteredColumns[$column] = implode(" CONCAT ' ' CONCAT {$this->getSchema()}.{$this->tableName}.", $this->columns[$column]);
+                    $filteredColumns[$column] .= " AS $column";
+                } else {
+                    $filteredColumns[$column] = "{$this->getSchema()}.{$this->tableName}.{$column}";
+                }
             } else {
-                throw new \ErrorException("El Campo $column NO EXISTE EN LA TABLA $this->schema.$this->tableName");
+                throw new \Exception("El Campo $column NO EXISTE EN LA TABLA $this->schema.$this->tableName");
             }
         }
         if(!$columns) {
-            return $this->columns;
+            foreach ($this->columns as $name => $column) {
+                if(is_array($column)) {
+                    $baseString = implode(" CONCAT ' ' CONCAT {$this->getSchema()}.{$this->tableName}.", $column);
+                    $filteredColumns[$name] = "{$this->getSchema()}.{$this->tableName}.$baseString AS $name";
+                } else {
+                    $filteredColumns[$column] = "{$this->getSchema()}.{$this->tableName}.{$column}";
+                }
+            }
         }
         return $filteredColumns;
     }
@@ -172,7 +195,7 @@ class BaseModel{
      * @param string $SQLsentence
      * @param mixed $arguments
      * @return string|CustomArray|bool
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function query($SQLsentence,...$arguments) {
         $this->setQuery($SQLsentence);
@@ -180,7 +203,8 @@ class BaseModel{
             $parameters = null;
             $preparedStmt = db2_prepare($this->connection->getConnectionResource(),$SQLsentence);
             foreach ($arguments as $argument) {
-                $parameters[] = $argument;
+                //$parameters[] = $argument;
+                $parameters[] = is_array($argument) ? implode(',',$argument): $argument;
                 $this->query = substr_replace($this->query,$argument,strpos($this->query,'?'),strlen('?'));
             }
             if($preparedStmt) {
@@ -188,7 +212,8 @@ class BaseModel{
                     $operation = substr($SQLsentence,0,strpos($SQLsentence," "));
                     switch ($operation) {
                         case "INSERT":
-                            return db2_last_insert_id($this->connection->getConnectionResource());
+                            $this->result = db2_last_insert_id($this->connection->getConnectionResource());
+                            return $this->result;
                             break;
                         case "SELECT":
                             if(LABELS) {
@@ -203,31 +228,43 @@ class BaseModel{
                             return $this->result;
                             break;
                         case "UPDATE":
-                            //TODO Caso si Update
+                            return db2_num_rows($preparedStmt);
                             break;
                         default:
                             return true;
-                        break;
+                            break;
                     }
                 }else {
-                    throw new \ErrorException("ERROR DE EJECUCION ".db2_stmt_error().":".db2_stmt_errormsg()." en {$this->getSchema()}.{$this->getTableName()}");
+                    Logger::log(300, $this->getQuery(),Logger::getPath(constant("SIGRIHC\Helpers\USER_NAME")));
+                    throw new \Exception("ERROR DE EJECUCION ".db2_stmt_error().":".db2_stmt_errormsg()." en {$this->getSchema()}.{$this->getTableName()}");
                 }
             } else {
-                throw new \ErrorException("ERROR DE PREPARACION ".db2_stmt_error().":".db2_stmt_errormsg());
+                Logger::log(300, $this->getQuery(),Logger::getPath(constant("SIGRIHC\Helpers\USER_NAME")));
+                throw new \Exception("ERROR DE PREPARACION ".db2_stmt_error().":".db2_stmt_errormsg());
+
             }
         } else {
-            throw new \ErrorException("ERROR DE CONEXION ".db2_conn_error().": ".db2_conn_errormsg());
+            Logger::log(300, $this->getQuery(),Logger::getPath(constant("SIGRIHC\Helpers\USER_NAME")));
+            throw new \Exception("ERROR DE CONEXION ".db2_conn_error().": ".db2_conn_errormsg());
         }
     }
 
     /** @param array $parameters
      * @return bool
+     * @throws \Exception
      */
     public function execute(&$preparedStmt,$parameters = null){
-        if(is_array($parameters)) {
-            return db2_execute($preparedStmt,$parameters);
+        if($parameters) {
+            $res = db2_execute($preparedStmt,$parameters);
+        } else {
+            $res = db2_execute($preparedStmt);
         }
-        return db2_execute($preparedStmt);
+
+        if($res) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function insert(Row $object) {
@@ -236,14 +273,65 @@ class BaseModel{
         foreach ($object as $field => $value) {
             $columns .= "$field, ";
             if (is_string($value)) {
-                $values .= "'$value', ";
+                $val = db2_escape_string($value);
+                $values .= "'$val', ";
             } elseif(is_numeric($value)) {
+                $values .= "$value, ";
+            } else {
                 $values .= "$value, ";
             }
         }
         $columns = trim($columns,', ');
         $values = trim($values,', ');
         $query = "INSERT INTO {$this->getSchema()}.{$this->getTableName()} ($columns) VALUES($values)";
-        return $this->query($query);
+        try {
+            $this->query($query);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+        return $this->result;
+    }
+
+    public function update($id, Row $object) {
+        $columns = "";
+        foreach ($object as $field => $value) {
+            if (is_string($value)) {
+                $val = db2_escape_string($value);
+                $columns .= "$field = '$val', ";
+            } elseif(is_numeric($value)) {
+                $columns .= "$field = $value, ";
+            } else {
+                $columns .= "$field = $value, ";
+            }
+        }
+        $columns = trim($columns,', ');
+        $query = "UPDATE {$this->getSchema()}.{$this->getTableName()} SET $columns WHERE {$this->getSchema()}.{$this->getTableName()}.{$this->getPrimaryKey()} = ?";
+        return $this->query($query,$id);
+    }
+
+    public function get($id){
+        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE {$this->getSchema()}.{$this->getTableName()}.{$this->getPrimaryKey()} = ?",$id);
+    }
+
+    public function commit(){
+        db2_commit($this->connection->getConnectionResource());
+    }
+
+    public function getAll($asterisk = true){
+        if($asterisk) {
+            return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()}");
+        } else {
+            return $this->query("SELECT {$this->getColumns()->commaSep()} FROM {$this->getSchema()}.{$this->getTableName()}");
+        }
+    }
+
+    /** @return CustomArray */
+    public function getUpdates($lastSyncDate){
+        return $this->query("SELECT * FROM {$this->getSchema()}.{$this->getTableName()} WHERE FECMODI BETWEEN ? AND CURRENT_TIMESTAMP",$lastSyncDate);
+    }
+
+    public  function getDBTime(){
+        $this->query("SELECT CURRENT_TIMESTAMP AS NOW FROM SYSIBM.SYSCOLUMNS FETCH FIRST ROW ONLY");
+        return $this->getResult()[0]->NOW;
     }
 }

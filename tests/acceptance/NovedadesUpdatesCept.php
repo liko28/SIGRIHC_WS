@@ -1,7 +1,7 @@
 <?php
 $I = new AcceptanceTester($scenario);
-$I->wantTo('Verificar que Lista de Referencia - Updates - Funciona');
-$I->amHttpAuthenticated("prueba","3405e2f586193b24404d89f36c47fbe7");
+$I->wantTo('Verificar que Novedades Tipo y Lista - Updates - Funciona');
+$I->amHttpAuthenticated("norys.palma","288f4d07498733bf2f6377b32f27e493");
 //Tipo
 $I->sendGET('/Novedades/tipos/1478001600');
 $I->seeResponseCodeIs(200);
@@ -12,11 +12,11 @@ try{
     $I->seeResponseMatchesJsonType(['TIPOS_NOVEDAD'=>'array']);
 }
 //Campos
-$I->sendGET('/Novedades/campos/1478001600');
+$I->sendGET('/Novedades/listas/1478001600');
 $I->seeResponseCodeIs(200);
 $I->seeResponseIsJson();
 try{
-    $I->seeResponseJsonMatchesJsonPath('CAMPOS_NOVEDAD.[*].COD_NOVEDAD');
+    $I->seeResponseJsonMatchesJsonPath('LISTAS_NOVEDAD.[*].COD_NOVEDAD');
 } catch (Exception $e) {
-    $I->seeResponseMatchesJsonType(['CAMPOS_NOVEDAD'=>'array']);
+    $I->seeResponseMatchesJsonType(['LISTAS_NOVEDAD'=>'array']);
 }

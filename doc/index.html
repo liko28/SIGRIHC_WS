@@ -9,6 +9,8 @@
   <link href="vendor/prettify.css" rel="stylesheet" media="screen">
   <link href="css/style.css" rel="stylesheet" media="screen, print">
   <link href="img/favicon.ico" rel="icon" type="image/x-icon">
+  <link href="prism/prism.css" rel="stylesheet" media="screen">
+  <script src="prism/prism.js"></script>
   <script src="vendor/polyfill.js"></script>
 </head>
 <body>
@@ -215,7 +217,7 @@
       <div class="tab-content">
       {{#each params.examples}}
         <div class="tab-pane{{#if_eq @index compare=0}} active{{/if_eq}}" id="{{../section}}-examples-{{../id}}-{{@index}}">
-        <pre class="prettyprint language-{{type}}" data-type="{{type}}"><code>{{{reformat content type}}}</code></pre>
+        <pre class="prettyprint language-{{type}}" data-type="{{type}}"><code class="language-{{type}}">{{{reformat content type}}}</code></pre>
         </div>
       {{/each}}
       </div>

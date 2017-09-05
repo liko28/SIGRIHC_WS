@@ -1,9 +1,8 @@
 <?php
 $I = new AcceptanceTester($scenario);
-$I->wantTo('Verificar que Datos de PEC - Updates - Funciona');
-$I->amHttpAuthenticated("prueba","3405e2f586193b24404d89f36c47fbe7");
-//Guias
-$I->sendGET('/Programaciones/1478001600');
+$I->wantTo('Verificar que Programacion - Updates - Funciona');
+$I->amHttpAuthenticated("norys.palma","288f4d07498733bf2f6377b32f27e493");
+$I->sendPost('/Programaciones/1478001600',[],[]);
 $I->seeResponseCodeIs(200);
 $I->seeResponseIsJson();
 try{
