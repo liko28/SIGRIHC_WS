@@ -13,12 +13,12 @@
     "flow/jsonpath": "^0.3.4"
   },
   "name":"liko28s/SIGRIHC_WS",
-  "version": "1.0",
+  "version": "1.5.0",
   "type": "api",
   "homepage": "http://www.saludfamiliar.co:2323/sigrihc/doc",
   "authors":[
     {
-      "name": "Xavier Lacot",
+      "name": "Ramiro Alvarez",
       "email": "liko28s@gmail.com",
       "homepage": "http://liko28s.tk",
       "role": "Developer"
