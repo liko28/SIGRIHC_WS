@@ -1487,7 +1487,7 @@ $app->group('/HistoriaClinica', function () {
         $id = $args['id'];
         $byUser = (bool)$request->getQueryParam('person');
         $onlyLast = (bool)$request->getQueryParam('last');
-        $historyType = $request->getQueryParams('type');
+        $historyType = $request->getQueryParam('type');
 
         if($byUser || $onlyLast) {
             return $response->withJson(["HISTORIA_MEDICA" => $historias->getByPerson($id, $onlyLast, $historyType)]);
