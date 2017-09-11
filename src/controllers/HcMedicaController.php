@@ -2,6 +2,7 @@
 
 namespace SIGRI_HC\Controllers;
 
+use SIGRI_HC\Helpers\Logger;
 use SIGRI_HC\Helpers\Row;
 use SIGRI_HC\Helpers\Generic;
 use SIGRI_HC\Models\BaseModel;
@@ -302,6 +303,7 @@ class HcMedicaController extends BaseController {
         }
         //Si es solo la ultima tons pedir solo esa y retornar
         if($onlyLast) {
+            Logger::log(200,$historias[0],Logger::getPath("ramiro.alvarez"));
             $idHc = $historias[0]->ID_HC;
             $fecha = new \DateTime($historias[0]->FECATENCION);
             foreach ($historias as $historia) {
