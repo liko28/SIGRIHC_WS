@@ -1487,7 +1487,7 @@ $app->group('/HistoriaClinica', function () {
         $id = $args['id'];
         $byUser = (bool)$request->getQueryParam('person');
         $onlyLast = (bool)$request->getQueryParam('last');
-        $historyType = (bool)$request->getQueryParams('type');
+        $historyType = $request->getQueryParams('type');
 
         if($byUser || $onlyLast) {
             $this->logger->addinfo("Enviando Historia(s) Clinica(s) en bloque id=$id person=$byUser, last=$onlyLast, type=$historyType");

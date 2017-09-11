@@ -9,6 +9,8 @@
 namespace SIGRI_HC\Models;
 
 
+use SIGRI_HC\Helpers\Logger;
+
 class HcMedicaModel extends BaseModel {
     /** @param Connection $connection */
     public function __construct(Connection $connection) {
@@ -20,7 +22,7 @@ class HcMedicaModel extends BaseModel {
 
     public function getByPerson($idUser, $type = null){
         $whereType = ";";
-        if($type){
+        if(strlen($type)>0){
             $type = strtoupper($type);
             $whereType = " AND TIPOHC = '$type'";
         }
