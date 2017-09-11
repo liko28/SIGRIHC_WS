@@ -1488,10 +1488,12 @@ $app->group('/HistoriaClinica', function () {
         $byUser = (bool)$request->getQueryParam('person');
         $onlyLast = (bool)$request->getQueryParam('last');
         $historyType = (bool)$request->getQueryParams('type');
-        $this->logger->addinfo("Enviando Historia(s) Clinica(s) $id person=$byUser, last=$onlyLast, type=$historyType");
+
         if($byUser || $onlyLast) {
+            $this->logger->addinfo("Enviando Historia(s) Clinica(s) en bloque id=$id person=$byUser, last=$onlyLast, type=$historyType");
             return $response->withJson(["HISTORIA_MEDICA" => $historias->getByPerson($id, $onlyLast, $historyType)]);
         }
+        $this->logger->addinfo("Enviando Historia(s) Clinica(s) fuera bloque id=$id person=$byUser, last=$onlyLast, type=$historyType");
         return $response->withJson(["HISTORIA_MEDICA" => $historias->get($id)]);
     });
 });
