@@ -1485,16 +1485,14 @@ $app->group('/HistoriaClinica', function () {
     $this->get('/{id}', function (Request $request, Response $response,$args){
         $historias = new HcMedica($this->db);
         $id = $args['id'];
-        $byUser = $request->getQueryParam('person');
-        $onlyLast = $request->getQueryParam('last');
-        $historyType = $request->getQueryParams('type');
-        //TODO Añadir Tipo de Historia
-        if(filter_var($byUser,FILTER_VALIDATE_BOOLEAN) || filter_var($onlyLast, FILTER_VALIDATE_BOOLEAN)) {
+        $byUser = (bool)$request->getQueryParam('person');
+        $onlyLast = (bool)$request->getQueryParam('last');
+        $historyType = (bool)$request->getQueryParams('type');
+        $this->logger->addinfo("Enviando Historia(s) Clinica(s) $id person=$byUser, last=$onlyLast, type=$historyType");
+        if($byUser || $onlyLast) {
             return $response->withJson(["HISTORIA_MEDICA" => $historias->getByPerson($id, $onlyLast, $historyType)]);
         }
         return $response->withJson(["HISTORIA_MEDICA" => $historias->get($id)]);
-
-
     });
 });
 

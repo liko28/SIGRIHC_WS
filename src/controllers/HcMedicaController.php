@@ -301,7 +301,7 @@ class HcMedicaController extends BaseController {
             return array();
         }
         //Si es solo la ultima tons pedir solo esa y retornar
-        if(filter_var($onlyLast,FILTER_VALIDATE_BOOLEAN)) {
+        if($onlyLast) {
             $idHc = $historias[0]->ID_HC;
             $fecha = new \DateTime($historias[0]->FECATENCION);
             foreach ($historias as $historia) {
